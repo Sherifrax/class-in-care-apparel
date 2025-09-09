@@ -5,7 +5,6 @@ import AuroraCollection from "@/components/AuroraCollection";
 import Features from "@/components/Features";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
-import ChatBot from "@/components/ChatBot";
 
 const Index = () => {
   return (
@@ -17,7 +16,6 @@ const Index = () => {
       <Features />
       <CTA />
       <Footer />
-      <ChatBot />
     </div>
   );
 };
