@@ -3,9 +3,9 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import AuroraCollection from "@/components/AuroraCollection";
 import Features from "@/components/Features";
-import VoiceAssistantSection from "@/components/VoiceAssistantSection";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import ChatBot from "@/components/ChatBot";
 
 const Index = () => {
   return (
@@ -15,9 +15,9 @@ const Index = () => {
       <About />
       <AuroraCollection />
       <Features />
-      <VoiceAssistantSection />
       <CTA />
       <Footer />
+      <ChatBot />
     </div>
   );
 };
