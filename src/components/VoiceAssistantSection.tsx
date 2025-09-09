@@ -16,7 +16,7 @@ const VoiceAssistantSection = () => {
           </div>
           
           <div className="max-w-md mx-auto">
-            <VapiVoiceBot />
+            <VapiVoiceBot assistantId="b2c0d644-eb09-4312-a92f-c8f4749811e5" />
           </div>
           
           <div className="mt-12 grid md:grid-cols-3 gap-6 text-center">
