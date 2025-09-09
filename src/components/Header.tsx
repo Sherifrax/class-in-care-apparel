@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 
 const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
   const navigation = [
@@ -23,7 +26,8 @@ const Header = () => {
             <span className="text-xl font-bold text-luxury-navy">Aura Medical</span>
           </Link>
           
-          <nav className="flex items-center space-x-8">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -46,6 +50,48 @@ const Header = () => {
               </Button>
             </Link>
           </nav>
+          
+          {/* Mobile Menu Button */}
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </Button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ${
+          isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}>
+          <div className="mt-4 pb-4 bg-background/95 backdrop-blur-sm border-t border-border">
+            <nav className="flex flex-col space-y-4 pt-4">
+              {navigation.map((item, index) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
+                    isActive(item.href) 
+                      ? 'text-medical-blue bg-medical-blue/10' 
+                      : 'text-foreground hover:text-medical-blue hover:bg-muted'
+                  }`}
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <div className="px-4">
+                <Link to="/products" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="default" size="sm" className="w-full hover:scale-105 transition-transform">
+                    Shop Now
+                  </Button>
+                </Link>
+              </div>
+            </nav>
+          </div>
         </div>
       </div>
     </header>
