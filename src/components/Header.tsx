@@ -26,23 +26,25 @@ const Header = () => {
             <span className="text-xl font-bold text-luxury-navy">Aura Medical</span>
           </Link>
           
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="hidden md:flex items-center space-x-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`text-sm font-medium transition-colors relative group ${
+                className={`text-sm font-medium transition-colors relative group px-2 py-1 ${
                   isActive(item.href) 
                     ? 'text-medical-blue' 
                     : 'text-foreground hover:text-medical-blue'
                 }`}
               >
                 {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-medical-blue transition-all duration-300 group-hover:w-full"></span>
+                <span className={`absolute -bottom-1 left-0 h-0.5 bg-medical-blue transition-all duration-300 ${
+                  isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
               </Link>
             ))}
             <Link to="/products">
-              <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
+              <Button variant="default" size="sm" className="ml-4 hover:scale-105 transition-transform">
                 Shop Now
               </Button>
             </Link>
