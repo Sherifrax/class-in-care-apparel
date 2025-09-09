@@ -59,31 +59,36 @@ const Header = () => {
         </div>
 
         {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 animate-fade-in">
-            <nav className="flex flex-col space-y-4">
-              {navigation.map((item) => (
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ${
+          isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}>
+          <div className="mt-4 pb-4 bg-background/95 backdrop-blur-sm border-t border-border">
+            <nav className="flex flex-col space-y-4 pt-4">
+              {navigation.map((item, index) => (
                 <Link
                   key={item.name}
                   to={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`text-sm font-medium transition-colors ${
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
                     isActive(item.href) 
-                      ? 'text-medical-blue' 
-                      : 'text-foreground hover:text-medical-blue'
+                      ? 'text-medical-blue bg-medical-blue/10' 
+                      : 'text-foreground hover:text-medical-blue hover:bg-muted'
                   }`}
+                  style={{ animationDelay: `${index * 50}ms` }}
                 >
                   {item.name}
                 </Link>
               ))}
-              <Link to="/products" onClick={() => setIsMenuOpen(false)}>
-                <Button variant="default" size="sm" className="w-full">
-                  Shop Now
-                </Button>
-              </Link>
+              <div className="px-4">
+                <Link to="/products" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="default" size="sm" className="w-full hover:scale-105 transition-transform">
+                    Shop Now
+                  </Button>
+                </Link>
+              </div>
             </nav>
           </div>
-        )}
+        </div>
       </div>
     </header>
   );
