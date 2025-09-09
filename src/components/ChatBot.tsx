@@ -14,7 +14,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hello! I'm here to help you with Aura Medical Uniforms. Ask me about our Aurora Collection, sizing, or any questions about our luxury medical apparel!",
+      text: "Hi there! This is Dr. Bayan from Aura Medical Uniforms customer support. I'm here to help you with any questions about our Aurora Collection, sizing, orders, or returns. How can I assist you today?",
       isUser: false,
       timestamp: new Date()
     }
@@ -76,31 +76,53 @@ const ChatBot = () => {
     
     const input = userInput.toLowerCase();
     
+    // Handle greetings with Dr Bayan persona
+    if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+      return "Hi there! This is Dr. Bayan from Aura Medical Uniforms customer support. I'm here to help you with any questions about our Aurora Collection, sizing, orders, or returns. How can I assist you today?";
+    }
+    
+    // Aurora Collection inquiries
     if (input.includes('aurora') || input.includes('collection')) {
-      return "The Aurora Collection is our flagship line of premium medical uniforms! It features breathable, wrinkle-resistant, and stretch-engineered fabrics designed for long shifts. We offer sleek full-sleeve sets that project authority and lightweight options for maximum flexibility. Would you like to know more about specific styles?";
+      return "Our Aurora Collection is the heart of what we do! It features premium medical apparel with wrinkle-resistant, breathable fabrics designed specifically for long shifts. We offer sleek full-sleeve sets that project authority and lightweight options for maximum flexibility. The fabric combines performance with luxury - think of it as performance sportswear styled for the clinic. What specific style interests you?";
     }
     
-    if (input.includes('size') || input.includes('sizing')) {
-      return "We offer comprehensive sizing from XS to 3XL with detailed size charts for the perfect fit. Our fabrics have four-way stretch for comfort and movement. Would you like me to help you find your size or would you prefer to speak with our sizing specialist?";
+    // Sizing assistance
+    if (input.includes('size') || input.includes('sizing') || input.includes('fit')) {
+      return "I'd be happy to help with sizing! Our uniforms come in multiple fits and sizes, designed with tailored precision. Could you tell me your height and preferred fit style? I can guide you through our size chart to ensure the perfect fit. We also offer free exchanges for size adjustments within 14 days.";
     }
     
-    if (input.includes('fabric') || input.includes('material')) {
-      return "Our premium fabrics are engineered for healthcare professionals! They're breathable for comfort during long shifts, wrinkle-resistant to maintain a professional appearance, and stretch-engineered for maximum mobility. The materials are also easy to care for and long-lasting.";
+    // Fabric and care questions
+    if (input.includes('fabric') || input.includes('material') || input.includes('care') || input.includes('wash')) {
+      return "Our fabrics are engineered for healthcare professionals - breathable for comfort during long shifts, wrinkle-resistant to maintain that professional appearance, and durable for repeated washing. For care: gentle cycle, low heat keeps the fabric sleek and extends its life. The performance-driven materials are designed to look great shift after shift.";
     }
     
-    if (input.includes('order') || input.includes('buy') || input.includes('purchase')) {
-      return "Ordering is easy! You can browse our collection, select your preferred style and size, and we offer hassle-free exchanges if needed. We also provide size guidance to ensure the perfect fit. Would you like help with placing an order?";
+    // Order and shipping inquiries
+    if (input.includes('order') || input.includes('ship') || input.includes('delivery') || input.includes('track')) {
+      return "Orders typically ship within 2-5 business days depending on your location, and you'll receive email and text tracking updates. If you have an order number, I can help you track its progress. Is there a specific order you'd like me to check on?";
     }
     
-    if (input.includes('price') || input.includes('cost')) {
-      return "Our Aurora Collection represents luxury medical apparel with premium pricing that reflects the quality. Each piece is an investment in your professional appearance and comfort. For specific pricing, I'd recommend checking our latest collection or speaking with our sales team.";
+    // Returns and exchanges
+    if (input.includes('return') || input.includes('exchange') || input.includes('refund')) {
+      return "We accept returns and exchanges within 14 days - items need to be unworn with tags attached. Exchanges for size or color are completely free of charge. The process is simple: repack in original packaging, schedule a pickup, and you'll receive a confirmation email. Would you like me to help you start a return?";
     }
     
-    if (input.includes('hello') || input.includes('hi')) {
-      return "Hello! Welcome to Aura Medical Uniforms - where we bring CLASS to CARE! I'm here to help you discover our luxury medical apparel. What would you like to know about our Aurora Collection?";
+    // Pricing inquiries
+    if (input.includes('price') || input.includes('cost') || input.includes('payment')) {
+      return "Our Aurora Collection represents premium medical apparel with pricing that reflects the luxury quality and performance features. For specific pricing and payment options, I'd recommend checking our latest collection. We believe in bringing class to care, and our pricing reflects that commitment to quality.";
     }
     
-    return "Thank you for your question about Aura Medical Uniforms! Our Aurora Collection combines luxury design with professional functionality. We specialize in premium medical scrubs that are breathable, wrinkle-resistant, and tailored for healthcare professionals who refuse to compromise on style. How can I help you find the perfect uniform?";
+    // Product availability
+    if (input.includes('available') || input.includes('stock') || input.includes('color')) {
+      return "Let me check our current stock for you. We offer the Aurora Collection in multiple colors and sizes. If a specific color isn't currently available, I can suggest alternatives that might suit your needs. What particular style and color are you looking for?";
+    }
+    
+    // General support
+    if (input.includes('help') || input.includes('support') || input.includes('problem') || input.includes('issue')) {
+      return "I'm here to help resolve any concerns you might have. Whether it's about sizing, orders, product care, or anything else related to your Aura uniforms, we'll get it sorted out together. Could you tell me a little more about what's happening?";
+    }
+    
+    // Default response with Dr Bayan's warmth
+    return "Thank you for reaching out to Aura Medical Uniforms! I want to make sure I give you the most helpful information. Could you tell me a bit more about what you're looking for? Whether it's about our Aurora Collection, sizing guidance, or any other questions - I'm here to help you find exactly what you need.";
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -138,8 +160,8 @@ const ChatBot = () => {
           <div className="bg-gradient-to-r from-luxury-navy to-medical-blue text-white p-4 rounded-t-lg">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold">Aura Assistant</h3>
-                <p className="text-xs text-white/80">Ask about our Aurora Collection</p>
+                <h3 className="font-semibold">Dr. Bayan - Aura Support</h3>
+                <p className="text-xs text-white/80">Customer service & product expert</p>
               </div>
               <Button
                 variant="ghost"
