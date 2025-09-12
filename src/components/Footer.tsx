@@ -13,7 +13,7 @@ const Footer = () => {
               Because caring for others begins with how you carry yourself.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-white/60 hover:text-medical-blue-light transition-colors">
+              <a href="https://www.instagram.com/auramedicaluniforms/?hl=en" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-medical-blue-light transition-colors">
                 Instagram
               </a>
               <a href="#" className="text-white/60 hover:text-medical-blue-light transition-colors">
@@ -47,7 +47,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-white/20 mt-12 pt-8 text-center text-white/60">
-          <p>&copy; 2024 Aura Medical Uniforms. All rights reserved. Founded by Dr. Bayan • Led by CEO Suhaal Hamdan</p>
+          <p>&copy; 2024 Aura Medical Uniforms. All rights reserved. Founded by <a href="https://www.instagram.com/dr.bayan_mhmhrs/?hl=en" target="_blank" rel="noopener noreferrer" className="hover:text-luxury-gold transition-colors">Dr. Bayan</a> • Led by CEO Suhaal Hamdan</p>
         </div>
       </div>
     </footer>
