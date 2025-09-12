@@ -1,14 +1,17 @@
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-medical-professional.jpg";
+import heroVideo from "@/assets/aura-hero-animation.mp4";
 
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background with gradient overlay */}
       <div className="absolute inset-0">
-        <img 
-          src={heroImage} 
-          alt="Professional healthcare worker in elegant Aura medical uniforms"
+        <video 
+          src={heroVideo} 
+          autoPlay
+          loop
+          muted
+          playsInline
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-luxury-navy/90 via-luxury-navy/70 to-transparent"></div>
