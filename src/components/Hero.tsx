@@ -21,7 +21,7 @@ const Hero = () => {
       <div className="relative z-10 container mx-auto px-6 text-center md:text-left">
         <div className="max-w-2xl bg-black/30 backdrop-blur-sm p-8 rounded-2xl border border-luxury-gold/20">
           <h1 className="font-posterama text-4xl md:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-2xl">
-            Where <span className="bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">PRESENCE</span> Becomes <span className="bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">POWER</span>
+            Where <span className="text-luxury-gold">PRESENCE</span> Becomes <span className="text-luxury-gold">POWER</span>
           </h1>
           
           <p className="font-posterama text-lg text-luxury-gold mb-8 leading-relaxed drop-shadow-xl">
