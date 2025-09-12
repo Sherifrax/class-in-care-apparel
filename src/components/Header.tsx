@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import auraLogo from "@/assets/aura-logo.jpg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,9 +22,15 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-medical-blue to-medical-teal rounded-lg group-hover:scale-110 transition-transform duration-300"></div>
-            <span className="text-xl font-bold text-luxury-navy">Aura Medical</span>
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="w-10 h-10 rounded-lg overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <img 
+                src={auraLogo} 
+                alt="AURA - Where Presence Becomes Power" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">AURA</span>
           </Link>
           
           {/* Desktop Navigation */}

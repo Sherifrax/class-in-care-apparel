@@ -18,20 +18,20 @@ const Hero = () => {
       <div className="relative z-10 container mx-auto px-6 text-center md:text-left">
         <div className="max-w-2xl">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            We bring <span className="text-medical-blue-light">CLASS</span> to <span className="text-medical-teal">CARE</span>
+            Where <span className="bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">PRESENCE</span> Becomes <span className="bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">POWER</span>
           </h1>
           
           <p className="text-xl text-white/90 mb-8 leading-relaxed">
-            Redefining medical uniforms with luxury-inspired design, premium fabrics, and professional elegance. 
-            Crafted for healthcare heroes who refuse to compromise on style.
+            Elevating medical uniforms with premium design and unmatched elegance. 
+            Crafted for healthcare professionals who command respect through presence.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button size="lg" className="bg-medical-blue hover:bg-medical-blue/90 text-white px-8 py-3 text-lg">
-              Explore Aurora Collection
+            <Button size="lg" className="bg-gradient-to-r from-luxury-gold to-luxury-gold-light hover:from-luxury-gold-dark hover:to-luxury-gold text-black font-semibold px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+              Explore AURA Collection
             </Button>
-            <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-luxury-navy px-8 py-3 text-lg">
-              Learn Our Story
+            <Button variant="outline" size="lg" className="border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-black px-8 py-3 text-lg">
+              Discover Our Power
             </Button>
           </div>
         </div>
