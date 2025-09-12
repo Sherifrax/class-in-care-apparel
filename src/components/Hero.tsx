@@ -24,7 +24,7 @@ const Hero = () => {
             Where <span className="bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">PRESENCE</span> Becomes <span className="bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">POWER</span>
           </h1>
           
-          <p className="font-posterama text-lg bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent mb-8 leading-relaxed drop-shadow-xl">
+          <p className="font-posterama text-lg text-luxury-gold mb-8 leading-relaxed drop-shadow-xl">
             Elevating medical uniforms with premium design and unmatched elegance. 
             Crafted for healthcare professionals who command respect through presence.
           </p>
