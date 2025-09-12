@@ -1,11 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
 import auraLogo from "@/assets/aura-logo.jpg";
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
   const navigation = [
@@ -33,8 +30,8 @@ const Header = () => {
             <span className="text-xl font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">AURA</span>
           </Link>
           
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          {/* Navigation */}
+          <nav className="flex items-center space-x-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -57,53 +54,6 @@ const Header = () => {
               </Button>
             </Link>
           </nav>
-          
-          {/* Mobile Menu Button */}
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="md:hidden"
-            aria-controls="mobile-menu"
-            aria-expanded={isMenuOpen}
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-          >
-            {isMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-          </Button>
-        </div>
-
-        {/* Mobile Menu */}
-        <div
-          id="mobile-menu"
-          className={`md:hidden overflow-hidden transition-all duration-300 ${
-            isMenuOpen ? 'max-h-screen opacity-100 pointer-events-auto' : 'max-h-0 opacity-0 pointer-events-none'
-          }`}
-        >
-          <div className="mt-4 pb-4 bg-background/95 backdrop-blur-sm border-t border-border">
-            <nav className="flex flex-col space-y-4 pt-4">
-              {navigation.map((item, index) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
-                    isActive(item.href) 
-                      ? 'text-medical-blue bg-medical-blue/10' 
-                      : 'text-foreground hover:text-medical-blue hover:bg-muted'
-                  }`}
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <div className="px-4">
-                <Link to="/products" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="default" size="sm" className="w-full hover:scale-105 transition-transform">
-                    Shop Now
-                  </Button>
-                </Link>
-              </div>
-            </nav>
-          </div>
         </div>
       </div>
     </header>
