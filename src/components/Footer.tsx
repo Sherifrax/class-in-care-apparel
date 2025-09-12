@@ -12,15 +12,12 @@ const Footer = () => {
               Redefining scrubs with elegance, comfort, and performance. 
               Because caring for others begins with how you carry yourself.
             </p>
-            <div className="flex space-x-4">
-              <a href="https://www.instagram.com/auramedicaluniforms/?hl=en" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-medical-blue-light transition-colors">
-                Instagram
+            <div className="flex space-x-6">
+              <a href="https://www.instagram.com/auramedicaluniforms/?hl=en" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-luxury-gold transition-colors">
+                @auramedicaluniforms
               </a>
-              <a href="#" className="text-white/60 hover:text-medical-blue-light transition-colors">
-                LinkedIn
-              </a>
-              <a href="#" className="text-white/60 hover:text-medical-blue-light transition-colors">
-                Facebook
+              <a href="https://www.instagram.com/dr.bayan_mhmhrs/?hl=en" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-luxury-gold transition-colors">
+                @dr.bayan_mhmhrs
               </a>
             </div>
           </div>
