@@ -63,16 +63,21 @@ const Header = () => {
             variant="outline" 
             size="sm" 
             className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-controls="mobile-menu"
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen((prev) => !prev)}
           >
             {isMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </Button>
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ${
-          isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}>
+        <div
+          id="mobile-menu"
+          className={`md:hidden overflow-hidden transition-all duration-300 ${
+            isMenuOpen ? 'max-h-screen opacity-100 pointer-events-auto' : 'max-h-0 opacity-0 pointer-events-none'
+          }`}
+        >
           <div className="mt-4 pb-4 bg-background/95 backdrop-blur-sm border-t border-border">
             <nav className="flex flex-col space-y-4 pt-4">
               {navigation.map((item, index) => (
