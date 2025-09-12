@@ -19,12 +19,12 @@ const Hero = () => {
       
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 text-center md:text-left">
-        <div className="max-w-2xl">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+        <div className="max-w-2xl bg-black/30 backdrop-blur-sm p-8 rounded-2xl border border-luxury-gold/20">
+          <h1 className="font-posterama text-4xl md:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-2xl">
             Where <span className="bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">PRESENCE</span> Becomes <span className="bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">POWER</span>
           </h1>
           
-          <p className="text-xl text-white/90 mb-8 leading-relaxed">
+          <p className="font-posterama text-lg text-white/95 mb-8 leading-relaxed drop-shadow-xl">
             Elevating medical uniforms with premium design and unmatched elegance. 
             Crafted for healthcare professionals who command respect through presence.
           </p>
