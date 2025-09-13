@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import VideoReviews from "@/components/VideoReviews";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -229,6 +230,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* AURA in Action - Video Reviews */}
+      <VideoReviews />
     </div>
   );
 };

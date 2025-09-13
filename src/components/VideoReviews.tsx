@@ -37,7 +37,7 @@ const VideoReviews = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
-            What Healthcare Professionals Say
+            AURA in Action
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             See real reviews from medical professionals who trust AURA uniforms for their daily work.

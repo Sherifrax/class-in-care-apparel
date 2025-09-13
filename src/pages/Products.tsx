@@ -1,4 +1,3 @@
-import VideoReviews from "@/components/VideoReviews";
 import AuroraCollection from "@/components/AuroraCollection";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -341,9 +340,6 @@ const Products = () => {
         </div>
       </section>
       
-      {/* Video Reviews Section */}
-      <VideoReviews />
-
       {/* Size Guide Section */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-6">
