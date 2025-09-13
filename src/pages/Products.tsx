@@ -4,101 +4,109 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Star, ShoppingCart, Heart, Eye, Filter, Grid, List, ArrowRight, Zap, Shield, Droplets } from "lucide-react";
+import blackFemale from "@/assets/collection-black-female.jpg";
+import blackMale from "@/assets/collection-black-male.jpg";
+import teamBlack from "@/assets/collection-team-black.jpg";
+import blackMale2 from "@/assets/collection-black-male-2.jpg";
+import blueScrubs from "@/assets/collection-blue-scrubs.jpg";
+import blackFemale2 from "@/assets/collection-black-female-2.jpg";
+import blackFemaleFun from "@/assets/collection-black-female-fun.jpg";
+import blackMaleClinic from "@/assets/collection-black-male-clinic.jpg";
 
 const Products = () => {
   const products = [
     {
       id: 1,
-      name: "Aurora Classic Set",
+      name: "Aurora Black Professional",
       price: "$149",
       originalPrice: "$199",
       rating: 4.9,
       reviews: 324,
-      image: "bg-gradient-to-br from-medical-blue/20 to-medical-teal/20",
-      description: "Our signature full-sleeve set combining elegance with performance",
-      colors: ["Navy", "Teal", "Charcoal", "White"],
+      image: blackFemale,
+      description: "Sophisticated black uniform with gold accents - perfect for professional settings",
+      colors: ["Black", "Charcoal", "Navy", "White"],
       features: ["4-Way Stretch", "Moisture-Wicking", "Wrinkle-Resistant"],
       badge: "Best Seller",
       sizes: ["XS", "S", "M", "L", "XL", "XXL"]
     },
     {
       id: 2,
-      name: "Aurora Flex Collection",
-      price: "$129",
-      originalPrice: "$159",
+      name: "Aurora Black Elite Men's",
+      price: "$149",
+      originalPrice: "$179",
       rating: 4.8,
       reviews: 256,
-      image: "bg-gradient-to-br from-medical-teal/20 to-medical-blue/20",
-      description: "Lightweight and flexible for maximum mobility",
-      colors: ["Sage", "Blush", "Steel", "Cream"],
+      image: blackMale,
+      description: "Premium black scrubs designed for male healthcare professionals",
+      colors: ["Black", "Navy", "Charcoal", "Steel"],
       features: ["Ultra-Lightweight", "Quick-Dry", "Antimicrobial"],
       badge: "New",
-      sizes: ["XS", "S", "M", "L", "XL"]
+      sizes: ["S", "M", "L", "XL", "XXL"]
     },
     {
       id: 3,
-      name: "Aurora Premium Edition",
-      price: "$199",
-      originalPrice: "$249",
+      name: "Aurora Blue Scrubs Collection",
+      price: "$179",
+      originalPrice: "$219",
       rating: 5.0,
       reviews: 189,
-      image: "bg-gradient-to-br from-luxury-navy/20 to-medical-blue/20",
-      description: "Ultimate luxury with advanced fabric technology",
-      colors: ["Midnight", "Rose Gold", "Platinum", "Pearl"],
-      features: ["Premium Fabric", "Enhanced Comfort", "Luxury Finish"],
-      badge: "Premium",
-      sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"]
+      image: blueScrubs,
+      description: "Classic blue scrubs with white lab coat - the traditional professional look",
+      colors: ["Royal Blue", "Navy", "Teal", "White"],
+      features: ["Premium Fabric", "Lab Coat Included", "Professional Fit"],
+      badge: "Premium Set",
+      sizes: ["XS", "S", "M", "L", "XL", "XXL"]
     },
     {
       id: 4,
-      name: "Aurora Sport Edition",
+      name: "Aurora Team Collection",
       price: "$139",
       originalPrice: "$169",
       rating: 4.7,
       reviews: 142,
-      image: "bg-gradient-to-br from-green-400/20 to-medical-teal/20",
-      description: "Athletic-inspired design for active healthcare professionals",
-      colors: ["Forest", "Ocean", "Coral", "Arctic"],
-      features: ["Athletic Fit", "Cooling Technology", "Stretch Panels"],
-      badge: "Limited",
+      image: teamBlack,
+      description: "Coordinated team uniforms for unified professional appearance",
+      colors: ["Team Black", "Team Navy", "Team Teal", "Team White"],
+      features: ["Team Coordination", "Bulk Discounts", "Custom Embroidery"],
+      badge: "Team Special",
       sizes: ["S", "M", "L", "XL", "XXL"]
     },
     {
       id: 5,
-      name: "Aurora Petite Collection",
-      price: "$139",
-      originalPrice: "$179",
+      name: "Aurora Clinical Black",
+      price: "$159",
+      originalPrice: "$189",
       rating: 4.9,
       reviews: 98,
-      image: "bg-gradient-to-br from-pink-400/20 to-medical-blue/20",
-      description: "Perfectly proportioned for petite healthcare professionals",
-      colors: ["Blush", "Lavender", "Mint", "Cream"],
-      features: ["Petite Fit", "Tailored Cut", "Comfortable Waist"],
-      badge: "Petite Exclusive",
-      sizes: ["XSP", "SP", "MP", "LP"]
+      image: blackMaleClinic,
+      description: "Clinical-grade black uniforms for demanding medical environments",
+      colors: ["Clinical Black", "Surgical Navy", "OR Green", "Lab White"],
+      features: ["Clinical Grade", "Stain Resistant", "Easy Care"],
+      badge: "Clinical Grade",
+      sizes: ["S", "M", "L", "XL", "XXL", "XXXL"]
     },
     {
       id: 6,
-      name: "Aurora Maternity Line",
-      price: "$159",
-      originalPrice: "$189",
+      name: "Aurora Confident Black",
+      price: "$149",
+      originalPrice: "$179",
       rating: 4.8,
-      reviews: 76,
-      image: "bg-gradient-to-br from-purple-400/20 to-medical-teal/20",
-      description: "Comfortable and stylish for expecting healthcare professionals",
-      colors: ["Soft Blue", "Rose", "Sage", "Charcoal"],
-      features: ["Maternity Fit", "Adjustable Waist", "Growing Room"],
-      badge: "Maternity",
-      sizes: ["S", "M", "L", "XL"]
+      reviews: 156,
+      image: blackFemale2,
+      description: "Empowering black uniforms that inspire confidence and professionalism",
+      colors: ["Confident Black", "Power Navy", "Elite Charcoal", "Pure White"],
+      features: ["Confidence Fit", "Professional Cut", "Comfortable All-Day"],
+      badge: "Confidence Line",
+      sizes: ["XS", "S", "M", "L", "XL", "XXL"]
     }
   ];
 
   const categories = [
-    { name: "All Products", count: 6, active: true },
-    { name: "Classic Collection", count: 1, active: false },
-    { name: "Flex Series", count: 2, active: false },
-    { name: "Premium Line", count: 1, active: false },
-    { name: "Specialty Fits", count: 2, active: false }
+    { name: "All Collections", count: 6, active: true },
+    { name: "Black Professional", count: 4, active: false },
+    { name: "Blue Classics", count: 1, active: false },
+    { name: "Team Uniforms", count: 1, active: false },
+    { name: "Premium Sets", count: 2, active: false }
   ];
 
   const filterOptions = [
@@ -178,10 +186,12 @@ const Products = () => {
                   <Heart className="w-4 h-4" />
                 </Button>
 
-                <div className={`${product.image} rounded-2xl h-64 mb-6 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 relative`}>
-                  <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center animate-float">
-                    <span className="text-2xl font-bold text-luxury-navy">A</span>
-                  </div>
+                <div className="rounded-2xl h-64 mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
                   
                   {/* Quick View Overlay */}
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center">
