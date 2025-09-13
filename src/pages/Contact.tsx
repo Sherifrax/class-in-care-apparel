@@ -67,7 +67,7 @@ const Contact = () => {
       title: "Email Support",
       subtitle: "Response within 4 hours",
       description: "For detailed inquiries, sizing questions, or order support.",
-      action: "Email support@auramedical.com",
+      action: "Email auramedicaluniforms@hotmail.com",
       highlight: false
     },
     {
@@ -327,7 +327,7 @@ const Contact = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Mail className="w-4 h-4 text-medical-blue" />
-                    <span className="text-sm">urgent@auramedical.com</span>
+                    <span className="text-sm">auramedicaluniforms@hotmail.com</span>
                   </div>
                 </div>
               </Card>

@@ -33,12 +33,12 @@ const Footer = () => {
           </div>
           
           <div>
-            <h4 className="font-semibold mb-6">Support</h4>
+            <h4 className="font-semibold mb-6">Contact</h4>
             <ul className="space-y-3 text-white/80">
+              <li><a href="mailto:auramedicaluniforms@hotmail.com" className="hover:text-white transition-colors">auramedicaluniforms@hotmail.com</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Size Guide</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Care Instructions</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Returns & Exchanges</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
             </ul>
           </div>
         </div>
