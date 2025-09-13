@@ -1,3 +1,4 @@
+import VideoReviews from "@/components/VideoReviews";
 import AuroraCollection from "@/components/AuroraCollection";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -26,8 +27,8 @@ const Products = () => {
     {
       id: 1,
       name: "Black Professional",
-      price: "$149",
-      originalPrice: "$199",
+      price: "275 AED",
+      originalPrice: "300 AED",
       rating: 4.9,
       reviews: 324,
       image: blackFemale,
@@ -40,8 +41,8 @@ const Products = () => {
     {
       id: 2,
       name: "Black Elite Men's",
-      price: "$149",
-      originalPrice: "$179",
+      price: "275 AED",
+      originalPrice: "300 AED",
       rating: 4.8,
       reviews: 256,
       image: blackMale,
@@ -54,8 +55,8 @@ const Products = () => {
     {
       id: 3,
       name: "Light Blue Professional",
-      price: "$159",
-      originalPrice: "$199",
+      price: "275 AED",
+      originalPrice: "300 AED",
       rating: 4.9,
       reviews: 218,
       image: lightBlueFront,
@@ -68,8 +69,8 @@ const Products = () => {
     {
       id: 4,
       name: "White Professional Set",
-      price: "$179",
-      originalPrice: "$219",
+      price: "275 AED",
+      originalPrice: "300 AED",
       rating: 5.0,
       reviews: 189,
       image: whiteLifestyle,
@@ -82,8 +83,8 @@ const Products = () => {
     {
       id: 5,
       name: "Team Collection",
-      price: "$139",
-      originalPrice: "$169",
+      price: "275 AED",
+      originalPrice: "300 AED",
       rating: 4.7,
       reviews: 142,
       image: teamBlack,
@@ -96,8 +97,8 @@ const Products = () => {
     {
       id: 6,
       name: "Clinical Black",
-      price: "$159",
-      originalPrice: "$189",
+      price: "275 AED",
+      originalPrice: "300 AED",
       rating: 4.9,
       reviews: 98,
       image: blackMaleClinic,
@@ -110,8 +111,8 @@ const Products = () => {
     {
       id: 7,
       name: "Light Blue Complete Set",
-      price: "$169",
-      originalPrice: "$199",
+      price: "275 AED",
+      originalPrice: "300 AED",
       rating: 4.8,
       reviews: 156,
       image: lightBlueFull,
@@ -124,8 +125,8 @@ const Products = () => {
     {
       id: 8,
       name: "Light Blue Side Design",
-      price: "$149",
-      originalPrice: "$179",
+      price: "275 AED",
+      originalPrice: "300 AED",
       rating: 4.7,
       reviews: 134,
       image: lightBlueSide,
@@ -306,6 +307,7 @@ const Products = () => {
                       {product.originalPrice && (
                         <span className="text-lg text-muted-foreground line-through">{product.originalPrice}</span>
                       )}
+                      <span className="text-sm text-muted-foreground">+ 25 AED shipping</span>
                     </div>
                     <Button size="sm" className="gap-2">
                       <ShoppingCart className="w-4 h-4" />
@@ -338,6 +340,9 @@ const Products = () => {
           </div>
         </div>
       </section>
+      
+      {/* Video Reviews Section */}
+      <VideoReviews />
 
       {/* Size Guide Section */}
       <section className="py-20 bg-background">
