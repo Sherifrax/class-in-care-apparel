@@ -8,9 +8,9 @@ import { ArrowRight, Award, Globe, Leaf, Shield, Calendar, MapPin, Target, Light
 const AboutPage = () => {
   const timeline = [
     { year: "2019", title: "The Vision", description: "Dr. Bayan identifies the gap in luxury medical apparel during her residency" },
-    { year: "2020", title: "First Prototype", description: "Development of the first Aurora uniform with advanced fabric technology" },
+    { year: "2020", title: "First Prototype", description: "Development of the first AURA uniform with advanced fabric technology" },
     { year: "2021", title: "Clinical Testing", description: "6-month pilot program with healthcare professionals across 5 hospitals" },
-    { year: "2022", title: "Official Launch", description: "Aura Medical Uniforms launches with the Aurora Collection" },
+    { year: "2022", title: "Official Launch", description: "Aura Medical Uniforms launches with the AURA Collection" },
     { year: "2023", title: "Global Expansion", description: "Serving healthcare professionals in 25+ countries" },
     { year: "2024", title: "Innovation Awards", description: "Recognition for excellence in healthcare apparel design" }
   ];

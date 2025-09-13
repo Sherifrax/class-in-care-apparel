@@ -55,7 +55,7 @@ const FeaturesPage = () => {
     {
       category: "Comfort",
       before: "Stiff, restrictive traditional scrubs",
-      after: "Flexible, breathable Aurora fabric",
+      after: "Flexible, breathable AURA fabric",
       improvement: "+85% comfort rating"
     },
     {

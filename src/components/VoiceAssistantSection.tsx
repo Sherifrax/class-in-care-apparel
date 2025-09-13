@@ -10,7 +10,7 @@ const VoiceAssistantSection = () => {
               Speak with Our AI Assistant
             </h2>
             <p className="text-xl text-muted-foreground leading-relaxed">
-              Get instant answers about our Aurora Collection, sizing, ordering, and more. 
+              Get instant answers about our AURA Collection, sizing, ordering, and more. 
               Our voice-powered assistant is here to help you find the perfect Aura uniforms.
             </p>
           </div>
@@ -27,7 +27,7 @@ const VoiceAssistantSection = () => {
                 </svg>
               </div>
               <h4 className="font-semibold text-luxury-navy">Product Questions</h4>
-              <p className="text-sm text-muted-foreground">Ask about Aurora Collection features and materials</p>
+              <p className="text-sm text-muted-foreground">Ask about AURA Collection features and materials</p>
             </div>
             
             <div className="space-y-2">

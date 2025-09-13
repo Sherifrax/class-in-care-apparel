@@ -106,7 +106,7 @@ const Home = () => {
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
             <div className="animate-slide-in-left">
-              <h3 className="text-3xl font-bold text-luxury-navy mb-6">Experience the Aurora Collection</h3>
+              <h3 className="text-3xl font-bold text-luxury-navy mb-6">Experience the AURA Collection</h3>
               <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                 Our flagship collection combines performance sportswear technology with clinical elegance. 
                 From sleek full-sleeve sets that project authority to lightweight options for maximum flexibility.
@@ -114,7 +114,7 @@ const Home = () => {
               <div className="flex flex-wrap gap-4">
                 <Link to="/products">
                   <Button size="lg" className="group">
-                    Shop Aurora Collection
+                    Shop AURA Collection
                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>

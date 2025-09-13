@@ -8,7 +8,7 @@ const AuroraCollection = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
-            The Aurora Collection
+            The AURA Collection
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Our flagship collection exemplifies luxury medical apparel. Breathable, wrinkle-resistant, 

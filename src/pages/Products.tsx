@@ -12,12 +12,20 @@ import blueScrubs from "@/assets/collection-blue-scrubs.jpg";
 import blackFemale2 from "@/assets/collection-black-female-2.jpg";
 import blackFemaleFun from "@/assets/collection-black-female-fun.jpg";
 import blackMaleClinic from "@/assets/collection-black-male-clinic.jpg";
+import lightBlueBack from "@/assets/collection-light-blue-back.jpg";
+import lightBlueFront from "@/assets/collection-light-blue-front.jpg";
+import lightBlueSide from "@/assets/collection-light-blue-side.jpg";
+import whiteLifestyle from "@/assets/collection-white-lifestyle.jpg";
+import whiteProfessional from "@/assets/collection-white-professional.jpg";
+import lightBluePants from "@/assets/collection-light-blue-pants.jpg";
+import lightBlueFull from "@/assets/collection-light-blue-full.jpg";
+import lightBlueDetail from "@/assets/collection-light-blue-detail.jpg";
 
 const Products = () => {
   const products = [
     {
       id: 1,
-      name: "Aurora Black Professional",
+      name: "Black Professional",
       price: "$149",
       originalPrice: "$199",
       rating: 4.9,
@@ -31,7 +39,7 @@ const Products = () => {
     },
     {
       id: 2,
-      name: "Aurora Black Elite Men's",
+      name: "Black Elite Men's",
       price: "$149",
       originalPrice: "$179",
       rating: 4.8,
@@ -45,21 +53,35 @@ const Products = () => {
     },
     {
       id: 3,
-      name: "Aurora Blue Scrubs Collection",
-      price: "$179",
-      originalPrice: "$219",
-      rating: 5.0,
-      reviews: 189,
-      image: blueScrubs,
-      description: "Classic blue scrubs with white lab coat - the traditional professional look",
-      colors: ["Royal Blue", "Navy", "Teal", "White"],
-      features: ["Premium Fabric", "Lab Coat Included", "Professional Fit"],
-      badge: "Premium Set",
+      name: "Light Blue Professional",
+      price: "$159",
+      originalPrice: "$199",
+      rating: 4.9,
+      reviews: 218,
+      image: lightBlueFront,
+      description: "Elegant light blue uniforms with superior comfort and style",
+      colors: ["Light Blue", "Mint", "Seafoam", "White"],
+      features: ["Ultra-Soft", "Breathable", "Wrinkle-Free"],
+      badge: "New",
       sizes: ["XS", "S", "M", "L", "XL", "XXL"]
     },
     {
       id: 4,
-      name: "Aurora Team Collection",
+      name: "White Professional Set",
+      price: "$179",
+      originalPrice: "$219",
+      rating: 5.0,
+      reviews: 189,
+      image: whiteLifestyle,
+      description: "Classic white scrubs - the traditional professional look with modern comfort",
+      colors: ["Pure White", "Off-White", "Cream", "Pearl"],
+      features: ["Premium Fabric", "Stain Resistant", "Professional Fit"],
+      badge: "Premium Set",
+      sizes: ["XS", "S", "M", "L", "XL", "XXL"]
+    },
+    {
+      id: 5,
+      name: "Team Collection",
       price: "$139",
       originalPrice: "$169",
       rating: 4.7,
@@ -72,8 +94,8 @@ const Products = () => {
       sizes: ["S", "M", "L", "XL", "XXL"]
     },
     {
-      id: 5,
-      name: "Aurora Clinical Black",
+      id: 6,
+      name: "Clinical Black",
       price: "$159",
       originalPrice: "$189",
       rating: 4.9,
@@ -86,27 +108,41 @@ const Products = () => {
       sizes: ["S", "M", "L", "XL", "XXL", "XXXL"]
     },
     {
-      id: 6,
-      name: "Aurora Confident Black",
-      price: "$149",
-      originalPrice: "$179",
+      id: 7,
+      name: "Light Blue Complete Set",
+      price: "$169",
+      originalPrice: "$199",
       rating: 4.8,
       reviews: 156,
-      image: blackFemale2,
-      description: "Empowering black uniforms that inspire confidence and professionalism",
-      colors: ["Confident Black", "Power Navy", "Elite Charcoal", "Pure White"],
-      features: ["Confidence Fit", "Professional Cut", "Comfortable All-Day"],
-      badge: "Confidence Line",
+      image: lightBlueFull,
+      description: "Complete light blue uniform set with matching top and pants",
+      colors: ["Light Blue", "Sky Blue", "Powder Blue", "Mint"],
+      features: ["Complete Set", "Professional Cut", "Comfortable All-Day"],
+      badge: "Complete Set",
+      sizes: ["XS", "S", "M", "L", "XL", "XXL"]
+    },
+    {
+      id: 8,
+      name: "Light Blue Side Design",
+      price: "$149",
+      originalPrice: "$179",
+      rating: 4.7,
+      reviews: 134,
+      image: lightBlueSide,
+      description: "Stylish light blue uniform with modern side design elements",
+      colors: ["Light Blue", "Aqua", "Teal", "Seafoam"],
+      features: ["Modern Design", "Side Details", "Comfortable Fit"],
+      badge: "Modern Style",
       sizes: ["XS", "S", "M", "L", "XL", "XXL"]
     }
   ];
 
   const categories = [
-    { name: "All Collections", count: 6, active: true },
-    { name: "Black Professional", count: 4, active: false },
-    { name: "Blue Classics", count: 1, active: false },
-    { name: "Team Uniforms", count: 1, active: false },
-    { name: "Premium Sets", count: 2, active: false }
+    { name: "All Collections", count: 8, active: true },
+    { name: "Black Professional", count: 3, active: false },
+    { name: "Light Blue", count: 3, active: false },
+    { name: "White Professional", count: 1, active: false },
+    { name: "Team Uniforms", count: 1, active: false }
   ];
 
   const filterOptions = [
@@ -160,7 +196,7 @@ const Products = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
-              Shop the <span className="text-gradient bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Aurora Collection</span>
+              Shop the <span className="text-gradient bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AURA Collection</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Discover our complete range of premium medical uniforms designed for the modern healthcare professional.

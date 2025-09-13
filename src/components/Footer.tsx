@@ -25,7 +25,7 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-6">Shop</h4>
             <ul className="space-y-3 text-white/80">
-              <li><a href="#" className="hover:text-white transition-colors">Aurora Collection</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">AURA Collection</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Full-Sleeve Sets</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Lightweight Options</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Accessories</a></li>
