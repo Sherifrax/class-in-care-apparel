@@ -94,10 +94,10 @@ const VideoReviews = () => {
         <div className="text-center mt-12">
           <div className="bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-2xl p-8 inline-block">
             <p className="text-lg text-muted-foreground mb-4">
-              <span className="font-bold text-luxury-navy">275 AED</span> per uniform
+              <span className="font-bold text-luxury-navy">250-300 AED</span> per uniform
             </p>
             <p className="text-sm text-muted-foreground">
-              + 25 AED shipping • Free exchanges within 14 days
+              Scrubs: 250-275 AED • Lab Coats: 300 AED • + 25 AED shipping
             </p>
           </div>
         </div>
