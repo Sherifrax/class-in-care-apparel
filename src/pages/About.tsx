@@ -1,4 +1,5 @@
 import About from "@/components/About";
+import FounderSection from "@/components/FounderSection";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -189,75 +190,8 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
-              Leadership Team
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Healthcare professionals and fashion innovators working together to create the future of medical apparel.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="p-8 text-center hover:shadow-xl transition-all duration-300 animate-scale-in" style={{animationDelay: "0.1s"}}>
-              <div className="w-32 h-32 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto mb-6 flex items-center justify-center">
-                <span className="text-4xl font-bold text-white">DB</span>
-              </div>
-              <h3 className="text-xl font-semibold text-luxury-navy mb-2">Dr. Bayan</h3>
-              <p className="text-medical-blue font-medium mb-3">Founder & Chief Designer</p>
-              <p className="text-muted-foreground text-sm mb-4">
-                Combining 15 years of healthcare experience with luxury fashion design principles.
-              </p>
-              <div className="text-xs text-muted-foreground">
-                MD, Harvard Medical School • Fashion Institute of Technology
-              </div>
-            </Card>
-
-            <Card className="p-8 text-center hover:shadow-xl transition-all duration-300 animate-scale-in" style={{animationDelay: "0.2s"}}>
-              <div className="w-32 h-32 bg-gradient-to-br from-medical-teal to-medical-blue rounded-full mx-auto mb-6 flex items-center justify-center">
-                <span className="text-4xl font-bold text-white">SA</span>
-              </div>
-              <h3 className="text-xl font-semibold text-luxury-navy mb-2">Sarah Ahmed</h3>
-              <p className="text-medical-blue font-medium mb-3">Head of Innovation</p>
-              <p className="text-muted-foreground text-sm mb-4">
-                Leading fabric technology research and sustainable manufacturing processes.
-              </p>
-              <div className="text-xs text-muted-foreground">
-                PhD Materials Science, MIT • Former Nike Innovation Team
-              </div>
-            </Card>
-
-            <Card className="p-8 text-center hover:shadow-xl transition-all duration-300 animate-scale-in" style={{animationDelay: "0.3s"}}>
-              <div className="w-32 h-32 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto mb-6 flex items-center justify-center">
-                <span className="text-4xl font-bold text-white">MR</span>
-              </div>
-              <h3 className="text-xl font-semibold text-luxury-navy mb-2">Marcus Rodriguez</h3>
-              <p className="text-medical-blue font-medium mb-3">Quality Director</p>
-              <p className="text-muted-foreground text-sm mb-4">
-                Ensuring every product meets our rigorous standards for comfort and durability.
-              </p>
-              <div className="text-xs text-muted-foreground">
-                MS Industrial Engineering • Former Lululemon Quality Lead
-              </div>
-            </Card>
-          </div>
-
-          <div className="text-center mt-16 animate-fade-in-up">
-            <h3 className="text-2xl font-bold text-luxury-navy mb-4">Want to Join Our Team?</h3>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              We're always looking for passionate individuals who want to make a difference in healthcare.
-            </p>
-            <Link to="/contact">
-              <Button size="lg">
-                View Career Opportunities
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* About Our Founder */}
+      <FounderSection />
     </div>
   );
 };
