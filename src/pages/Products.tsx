@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Star, ShoppingCart, Heart, Eye, Filter, Grid, List, ArrowRight, Zap, Shield, Droplets } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+
 import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { RefreshCw, AlertCircle } from "lucide-react";
@@ -61,49 +61,50 @@ const Products = () => {
   const fetchProducts = useCallback(async (attempt = 0) => {
     const maxRetries = 3;
     const retryDelay = Math.pow(2, attempt) * 1000; // Exponential backoff
-    
+    const functionUrl = "https://zawswrbiamtyprwdqjso.functions.supabase.co/public-products";
+
     try {
       setLoading(true);
       setError(null);
-      
-      console.log(`Fetching products (attempt ${attempt + 1}/${maxRetries + 1})...`);
-      
-      // Health check first
-      const healthCheck = await supabase.from('products').select('count').limit(1);
-      console.log('Health check result:', healthCheck);
-      
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('rating', { ascending: false });
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(`Database error: ${error.message}`);
+      console.log(`Fetching products via Edge Function (attempt ${attempt + 1}/${maxRetries + 1})...`);
+
+      const res = await fetch(functionUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-info": "aura-medical-client",
+        },
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Edge function HTTP error:", res.status, text);
+        throw new Error(`Server error: ${res.status} ${text}`);
       }
 
-      console.log('Products fetched successfully:', data);
-      setProducts(data || []);
+      const json = await res.json();
+      console.log("Products fetched successfully:", json);
+      setProducts(json.data || []);
       setRetryCount(0);
-      
+
       if (attempt > 0) {
         toast({
           title: "Connection restored",
           description: "Products loaded successfully!",
         });
       }
-      
     } catch (error: any) {
-      console.error('Fetch error:', error);
-      const errorMessage = error.message || 'Failed to load products';
-      
+      console.error("Fetch error:", error);
+      const errorMessage = error.message || "Failed to load products";
+
       if (attempt < maxRetries) {
         console.log(`Retrying in ${retryDelay}ms...`);
         setRetryCount(attempt + 1);
         setTimeout(() => fetchProducts(attempt + 1), retryDelay);
         return;
       }
-      
+
       setError(errorMessage);
       toast({
         title: "Connection error",
