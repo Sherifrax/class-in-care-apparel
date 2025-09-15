@@ -4,11 +4,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Star, ShoppingCart, Heart, Eye, Filter, Grid, List, ArrowRight, Zap, Shield, Droplets } from "lucide-react";
-
-import { useState, useEffect, useCallback } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { RefreshCw, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect } from "react";
 import blackFemale from "@/assets/collection-black-female.jpg";
 import blackMale from "@/assets/collection-black-male.jpg";
 import teamBlack from "@/assets/collection-team-black.jpg";
@@ -55,69 +52,30 @@ interface Product {
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [retryCount, setRetryCount] = useState(0);
-  const { toast } = useToast();
-
-  const fetchProducts = useCallback(async (attempt = 0) => {
-    const maxRetries = 3;
-    const retryDelay = Math.pow(2, attempt) * 1000; // Exponential backoff
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      console.log(`Fetching products via Edge Function (attempt ${attempt + 1}/${maxRetries + 1})...`);
-
-      const { data: payload, error: fnError } = await supabase.functions.invoke('public-products', {
-        // No body required; POST with Authorization header is added by supabase-js
-      });
-
-      if (fnError) {
-        console.error("Edge function error:", fnError);
-        throw new Error(fnError.message || "Unknown function error");
-      }
-
-      console.log("Products fetched successfully:", payload);
-      const rows = (payload as any)?.data ?? [];
-      setProducts(rows);
-      setRetryCount(0);
-
-      if (attempt > 0) {
-        toast({
-          title: "Connection restored",
-          description: "Products loaded successfully!",
-        });
-      }
-    } catch (error: any) {
-      console.error("Fetch error:", error);
-      const errorMessage = error.message || "Failed to load products";
-
-      if (attempt < maxRetries) {
-        console.log(`Retrying in ${retryDelay}ms...`);
-        setRetryCount(attempt + 1);
-        setTimeout(() => fetchProducts(attempt + 1), retryDelay);
-        return;
-      }
-
-      setError(errorMessage);
-      toast({
-        title: "Connection error",
-        description: "Unable to load products. Please check your connection.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [toast]);
-
-  const handleRetry = () => {
-    fetchProducts(0);
-  };
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('rating', { ascending: false });
+
+        if (error) {
+          console.error('Error fetching products:', error);
+          return;
+        }
+
+        setProducts(data || []);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProducts();
-  }, [fetchProducts]);
+  }, []);
 
   const categories = [
     { name: "All Collections", count: 8, active: true },
@@ -186,27 +144,7 @@ const Products = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {error ? (
-              // Error state
-              <div className="col-span-full">
-                <Card className="p-12 text-center border-destructive/20 bg-destructive/5">
-                  <AlertCircle className="w-16 h-16 text-destructive mx-auto mb-6" />
-                  <h3 className="text-xl font-semibold text-destructive mb-4">Connection Error</h3>
-                  <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                    {error}
-                    {retryCount > 0 && (
-                      <span className="block mt-2 text-sm">
-                        Retrying... (Attempt {retryCount}/3)
-                      </span>
-                    )}
-                  </p>
-                  <Button onClick={handleRetry} disabled={loading} className="gap-2">
-                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                    Try Again
-                  </Button>
-                </Card>
-              </div>
-            ) : loading ? (
+            {loading ? (
               // Loading skeleton
               Array.from({ length: 6 }).map((_, index) => (
                 <Card key={index} className="p-6 shadow-lg animate-pulse">
@@ -218,19 +156,6 @@ const Products = () => {
                   </div>
                 </Card>
               ))
-            ) : products.length === 0 ? (
-              // No products state
-              <div className="col-span-full">
-                <Card className="p-12 text-center">
-                  <h3 className="text-xl font-semibold text-muted-foreground mb-4">No Products Found</h3>
-                  <p className="text-muted-foreground mb-6">
-                    We couldn't find any products to display.
-                  </p>
-                  <Button onClick={handleRetry} variant="outline">
-                    Refresh
-                  </Button>
-                </Card>
-              </div>
             ) : (
               products.map((product, index) => (
                 <Card key={product.id} className="p-6 shadow-lg hover:shadow-xl transition-all duration-300 group animate-scale-in relative overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
