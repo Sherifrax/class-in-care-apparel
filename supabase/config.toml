@@ -1,1 +1,4 @@
 project_id = "zawswrbiamtyprwdqjso"
+
+[functions.public-products]
+verify_jwt = false
