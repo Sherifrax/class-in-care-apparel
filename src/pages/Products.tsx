@@ -8,6 +8,7 @@ import { Star, ShoppingCart, Heart, Eye, Filter, Grid, List, ArrowRight, Zap, Sh
 import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { RefreshCw, AlertCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import blackFemale from "@/assets/collection-black-female.jpg";
 import blackMale from "@/assets/collection-black-male.jpg";
 import teamBlack from "@/assets/collection-team-black.jpg";
@@ -61,7 +62,6 @@ const Products = () => {
   const fetchProducts = useCallback(async (attempt = 0) => {
     const maxRetries = 3;
     const retryDelay = Math.pow(2, attempt) * 1000; // Exponential backoff
-    const functionUrl = "https://zawswrbiamtyprwdqjso.functions.supabase.co/public-products";
 
     try {
       setLoading(true);
@@ -69,23 +69,18 @@ const Products = () => {
 
       console.log(`Fetching products via Edge Function (attempt ${attempt + 1}/${maxRetries + 1})...`);
 
-      const res = await fetch(functionUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-client-info": "aura-medical-client",
-        },
+      const { data: payload, error: fnError } = await supabase.functions.invoke('public-products', {
+        // No body required; POST with Authorization header is added by supabase-js
       });
 
-      if (!res.ok) {
-        const text = await res.text();
-        console.error("Edge function HTTP error:", res.status, text);
-        throw new Error(`Server error: ${res.status} ${text}`);
+      if (fnError) {
+        console.error("Edge function error:", fnError);
+        throw new Error(fnError.message || "Unknown function error");
       }
 
-      const json = await res.json();
-      console.log("Products fetched successfully:", json);
-      setProducts(json.data || []);
+      console.log("Products fetched successfully:", payload);
+      const rows = (payload as any)?.data ?? [];
+      setProducts(rows);
       setRetryCount(0);
 
       if (attempt > 0) {
