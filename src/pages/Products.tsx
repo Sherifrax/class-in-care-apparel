@@ -61,7 +61,7 @@ const Products = () => {
   const fetchProducts = useCallback(async (attempt = 0) => {
     const maxRetries = 3;
     const retryDelay = Math.pow(2, attempt) * 1000; // Exponential backoff
-    const functionUrl = "https://zawswrbiamtyprwdqjso.functions.supabase.co/public-products";
+    const functionUrl = "https://zawswrbiamtyprwdqjso.supabase.co/functions/v1/public-products";
 
     try {
       setLoading(true);
