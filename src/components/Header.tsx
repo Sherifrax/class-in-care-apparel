@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag } from "lucide-react";
+import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag, ShoppingCart } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,10 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Auth } from "@/components/auth/Auth";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import auraLogo from "@/assets/aura-logo.jpg";
 
@@ -22,7 +24,9 @@ const Header = () => {
   const [showAuth, setShowAuth] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { getTotalItems } = useCart();
   const isMobile = useIsMobile();
+  const cartItemCount = getTotalItems();
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -102,6 +106,21 @@ const Header = () => {
                 </Button>
               </Link>
               
+              {/* Cart Icon */}
+              <Link to="/cart" className="relative">
+                <Button variant="ghost" size="sm" className="relative">
+                  <ShoppingCart className="h-4 w-4" />
+                  {cartItemCount > 0 && (
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -top-1 -right-1 h-5 w-5 text-xs p-0 flex items-center justify-center"
+                    >
+                      {cartItemCount}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
+              
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -161,6 +180,21 @@ const Header = () => {
               <Link to="/products">
                 <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
                   <ShoppingBag className="h-4 w-4" />
+                </Button>
+              </Link>
+              
+              {/* Mobile Cart Icon */}
+              <Link to="/cart" className="relative">
+                <Button variant="ghost" size="sm" className="relative p-2">
+                  <ShoppingCart className="h-5 w-5" />
+                  {cartItemCount > 0 && (
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -top-1 -right-1 h-4 w-4 text-xs p-0 flex items-center justify-center"
+                    >
+                      {cartItemCount}
+                    </Badge>
+                  )}
                 </Button>
               </Link>
               
@@ -290,6 +324,22 @@ const Header = () => {
                       >
                         <ShoppingBag className="mr-3 h-5 w-5" />
                         Shop Now
+                      </Link>
+                      <Link
+                        to="/cart"
+                        onClick={closeMobileMenu}
+                        className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                      >
+                        <ShoppingCart className="mr-3 h-5 w-5" />
+                        Cart
+                        {cartItemCount > 0 && (
+                          <Badge 
+                            variant="destructive" 
+                            className="ml-auto h-5 w-5 text-xs p-0 flex items-center justify-center"
+                          >
+                            {cartItemCount}
+                          </Badge>
+                        )}
                       </Link>
                     </div>
                   </div>

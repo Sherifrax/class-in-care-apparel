@@ -1,12 +1,18 @@
+import React, { useState } from 'react';
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import AuroraCollection from "@/components/AuroraCollection";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-import { Star, ShoppingCart, Heart, Eye, Filter, Grid, List, ArrowRight, Zap, Shield, Droplets } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
+import { Star, ShoppingCart, Heart, Eye, Filter, Grid, List, Plus, Minus } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useCart } from '@/contexts/CartContext';
+import { cn } from "@/lib/utils";
 
 interface Product {
   id: string;
@@ -32,6 +38,10 @@ interface Category {
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All Collections");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string>('');
+  const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
 
   // Fetch products from Supabase
   const { data: products = [], isLoading: productsLoading } = useQuery({
@@ -93,6 +103,21 @@ const Products = () => {
       options: ["Under 200 AED", "200-300 AED", "Over 300 AED"]
     }
   ];
+
+  const handleAddToCart = async () => {
+    if (!selectedProduct || !selectedSize) return;
+    
+    await addToCart(selectedProduct.id, selectedSize, quantity);
+    setSelectedProduct(null);
+    setSelectedSize('');
+    setQuantity(1);
+  };
+
+  const openProductDialog = (product: Product) => {
+    setSelectedProduct(product);
+    setSelectedSize(product.sizes[0] || '');
+    setQuantity(1);
+  };
 
   if (productsLoading || categoriesLoading) {
     return (
@@ -193,7 +218,12 @@ const Products = () => {
                   
                   {/* Quick View Overlay */}
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center">
-                    <Button variant="secondary" size="sm" className="gap-2">
+                    <Button 
+                      variant="secondary" 
+                      size="sm" 
+                      className="gap-2"
+                      onClick={() => openProductDialog(product)}
+                    >
                       <Eye className="w-4 h-4" />
                       Quick View
                     </Button>
@@ -270,7 +300,11 @@ const Products = () => {
                       )}
                       <span className="text-sm text-muted-foreground">+ 25 AED shipping</span>
                     </div>
-                    <Button size="sm" className="gap-2">
+                    <Button 
+                      size="sm" 
+                      className="gap-2"
+                      onClick={() => openProductDialog(product)}
+                    >
                       <ShoppingCart className="w-4 h-4" />
                       Add to Cart
                     </Button>
@@ -301,6 +335,142 @@ const Products = () => {
           </div>
         </div>
       </section>
+      
+      {/* Product Detail Dialog */}
+      <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
+        <DialogContent className="max-w-2xl">
+          {selectedProduct && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selectedProduct.name}</DialogTitle>
+              </DialogHeader>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <img
+                    src={selectedProduct.image}
+                    alt={selectedProduct.name}
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-2xl font-bold text-luxury-navy">
+                        {selectedProduct.price}
+                      </span>
+                      {selectedProduct.original_price && (
+                        <span className="text-lg text-muted-foreground line-through">
+                          {selectedProduct.original_price}
+                        </span>
+                      )}
+                    </div>
+                    
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className={cn(
+                            "w-4 h-4",
+                            i < Math.floor(selectedProduct.rating) ? "fill-current text-yellow-500" : "text-gray-300"
+                          )} />
+                        ))}
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        ({selectedProduct.reviews} reviews)
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="text-muted-foreground">
+                    {selectedProduct.description}
+                  </p>
+
+                  <div>
+                    <Label htmlFor="size">Size</Label>
+                    <Select value={selectedSize} onValueChange={setSelectedSize}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select size" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {selectedProduct.sizes.map((size) => (
+                          <SelectItem key={size} value={size}>
+                            {size}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="quantity">Quantity</Label>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        disabled={quantity <= 1}
+                      >
+                        <Minus className="w-4 h-4" />
+                      </Button>
+                      <Input 
+                        id="quantity"
+                        value={quantity}
+                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                        className="w-20 text-center"
+                        type="number"
+                        min="1"
+                      />
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setQuantity(quantity + 1)}
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Button 
+                    className="w-full" 
+                    onClick={handleAddToCart}
+                    disabled={!selectedSize}
+                  >
+                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    Add to Cart ({quantity} item{quantity !== 1 ? 's' : ''})
+                  </Button>
+
+                  {selectedProduct.features.length > 0 && (
+                    <div>
+                      <h4 className="font-medium mb-2">Features</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedProduct.features.map((feature, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {feature}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedProduct.colors.length > 0 && (
+                    <div>
+                      <h4 className="font-medium mb-2">Available Colors</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedProduct.colors.map((color, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {color}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
       
       {/* Size Guide Section */}
       <section className="py-20 bg-background">
