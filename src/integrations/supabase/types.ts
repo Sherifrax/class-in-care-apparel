@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      cart_items: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          quantity: number
+          size: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          quantity?: number
+          size: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          quantity?: number
+          size?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_categories: {
         Row: {
           active: boolean
@@ -102,41 +140,33 @@ export type Database = {
       }
       profiles: {
         Row: {
-          id: string
-          full_name: string | null
-          phone: string | null
           address: string | null
           avatar_url: string | null
           created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
           updated_at: string
         }
         Insert: {
-          id: string
-          full_name?: string | null
-          phone?: string | null
           address?: string | null
           avatar_url?: string | null
           created_at?: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
           updated_at?: string
         }
         Update: {
-          id?: string
-          full_name?: string | null
-          phone?: string | null
           address?: string | null
           avatar_url?: string | null
           created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
