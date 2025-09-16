@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { LogIn, User, LogOut, Settings } from "lucide-react";
+import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,14 +10,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 import { Auth } from "@/components/auth/Auth";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import auraLogo from "@/assets/aura-logo.jpg";
 
 const Header = () => {
   const location = useLocation();
   const [showAuth, setShowAuth] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const isMobile = useIsMobile();
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -41,17 +46,23 @@ const Header = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
+      setMobileMenuOpen(false);
     } catch (error) {
       // Error is handled in the auth context
     }
   };
 
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-3 group">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3 group" onClick={closeMobileMenu}>
               <div className="w-10 h-10 rounded-lg overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg">
                 <img 
                   src={auraLogo} 
@@ -62,8 +73,8 @@ const Header = () => {
               <span className="text-xl font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">AURA</span>
             </Link>
             
-            {/* Navigation */}
-            <nav className="flex items-center space-x-8">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-8">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -80,69 +91,211 @@ const Header = () => {
                   }`}></span>
                 </Link>
               ))}
-              
-              {/* Authentication */}
-              <div className="flex items-center space-x-4">
-                <Link to="/products">
-                  <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
-                    Shop Now
-                  </Button>
-                </Link>
-                
-                {user ? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={user.user_metadata?.avatar_url} />
-                          <AvatarFallback className="text-xs">
-                            {user.user_metadata?.full_name ? getInitials(user.user_metadata.full_name) : 'U'}
-                          </AvatarFallback>
-                        </Avatar>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56" align="end" forceMount>
-                      <div className="flex items-center justify-start gap-2 p-2">
-                        <div className="flex flex-col space-y-1 leading-none">
-                          <p className="font-medium">{user.user_metadata?.full_name || 'User'}</p>
-                          <p className="w-[200px] truncate text-sm text-muted-foreground">
-                            {user.email}
-                          </p>
-                        </div>
-                      </div>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
-                        <Link to="/profile" className="flex items-center">
-                          <User className="mr-2 h-4 w-4" />
-                          <span>Profile</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link to="/settings" className="flex items-center">
-                          <Settings className="mr-2 h-4 w-4" />
-                          <span>Settings</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleSignOut}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        <span>Sign out</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowAuth(true)}
-                    className="flex items-center gap-2"
-                  >
-                    <LogIn className="h-4 w-4" />
-                    Sign In
-                  </Button>
-                )}
-              </div>
             </nav>
+            
+            {/* Desktop Authentication & CTA */}
+            <div className="hidden lg:flex items-center space-x-4">
+              <Link to="/products">
+                <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
+                  <ShoppingBag className="h-4 w-4 mr-2" />
+                  Shop Now
+                </Button>
+              </Link>
+              
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user.user_metadata?.avatar_url} />
+                        <AvatarFallback className="text-xs">
+                          {user.user_metadata?.full_name ? getInitials(user.user_metadata.full_name) : 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <div className="flex items-center justify-start gap-2 p-2">
+                      <div className="flex flex-col space-y-1 leading-none">
+                        <p className="font-medium">{user.user_metadata?.full_name || 'User'}</p>
+                        <p className="w-[200px] truncate text-sm text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile" className="flex items-center">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" className="flex items-center">
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Settings</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Sign out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowAuth(true)}
+                  className="flex items-center gap-2"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Sign In
+                </Button>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden flex items-center space-x-2">
+              <Link to="/products">
+                <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
+                  <ShoppingBag className="h-4 w-4" />
+                </Button>
+              </Link>
+              
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="sm" className="p-2">
+                    <Menu className="h-6 w-6" />
+                    <span className="sr-only">Open menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                  <SheetHeader>
+                    <SheetTitle className="flex items-center space-x-3">
+                      <div className="w-8 h-8 rounded-lg overflow-hidden">
+                        <img 
+                          src={auraLogo} 
+                          alt="AURA" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <span className="text-lg font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">
+                        AURA
+                      </span>
+                    </SheetTitle>
+                  </SheetHeader>
+                  
+                  <div className="mt-6 space-y-6">
+                    {/* Mobile Navigation Links */}
+                    <nav className="space-y-2">
+                      {navigation.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          onClick={closeMobileMenu}
+                          className={`flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors ${
+                            isActive(item.href)
+                              ? 'bg-medical-blue/10 text-medical-blue border-l-4 border-medical-blue'
+                              : 'text-foreground hover:bg-accent hover:text-accent-foreground'
+                          }`}
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                    </nav>
+
+                    <Separator />
+
+                    {/* Mobile Authentication */}
+                    <div className="space-y-4">
+                      {user ? (
+                        <div className="space-y-4">
+                          {/* User Info */}
+                          <div className="flex items-center space-x-3 p-3 rounded-lg bg-accent/50">
+                            <Avatar className="h-10 w-10">
+                              <AvatarImage src={user.user_metadata?.avatar_url} />
+                              <AvatarFallback>
+                                {user.user_metadata?.full_name ? getInitials(user.user_metadata.full_name) : 'U'}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium truncate">{user.user_metadata?.full_name || 'User'}</p>
+                              <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+                            </div>
+                          </div>
+
+                          {/* User Actions */}
+                          <div className="space-y-2">
+                            <Link
+                              to="/profile"
+                              onClick={closeMobileMenu}
+                              className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                            >
+                              <User className="mr-3 h-5 w-5" />
+                              Profile
+                            </Link>
+                            <Link
+                              to="/settings"
+                              onClick={closeMobileMenu}
+                              className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                            >
+                              <Settings className="mr-3 h-5 w-5" />
+                              Settings
+                            </Link>
+                            <button
+                              onClick={handleSignOut}
+                              className="flex items-center w-full px-3 py-3 rounded-lg text-base font-medium text-destructive hover:bg-destructive/10 transition-colors"
+                            >
+                              <LogOut className="mr-3 h-5 w-5" />
+                              Sign out
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          <Button
+                            onClick={() => {
+                              setShowAuth(true);
+                              closeMobileMenu();
+                            }}
+                            className="w-full flex items-center justify-center gap-2"
+                          >
+                            <LogIn className="h-4 w-4" />
+                            Sign In
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setShowAuth(true);
+                              closeMobileMenu();
+                            }}
+                            className="w-full"
+                          >
+                            Create Account
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+
+                    <Separator />
+
+                    {/* Additional Mobile Actions */}
+                    <div className="space-y-2">
+                      <Link
+                        to="/products"
+                        onClick={closeMobileMenu}
+                        className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                      >
+                        <ShoppingBag className="mr-3 h-5 w-5" />
+                        Shop Now
+                      </Link>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </header>
