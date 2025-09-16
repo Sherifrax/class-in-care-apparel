@@ -4,153 +4,111 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Star, ShoppingCart, Heart, Eye, Filter, Grid, List, ArrowRight, Zap, Shield, Droplets } from "lucide-react";
-import blackFemale from "@/assets/collection-black-female.jpg";
-import blackMale from "@/assets/collection-black-male.jpg";
-import teamBlack from "@/assets/collection-team-black.jpg";
-import blackMale2 from "@/assets/collection-black-male-2.jpg";
-import blueScrubs from "@/assets/collection-blue-scrubs.jpg";
-import blackFemale2 from "@/assets/collection-black-female-2.jpg";
-import blackFemaleFun from "@/assets/collection-black-female-fun.jpg";
-import blackMaleClinic from "@/assets/collection-black-male-clinic.jpg";
-import lightBlueBack from "@/assets/collection-light-blue-back.jpg";
-import lightBlueFront from "@/assets/collection-light-blue-front.jpg";
-import lightBlueSide from "@/assets/collection-light-blue-side.jpg";
-import whiteLifestyle from "@/assets/collection-white-lifestyle.jpg";
-import whiteProfessional from "@/assets/collection-white-professional.jpg";
-import lightBluePants from "@/assets/collection-light-blue-pants.jpg";
-import lightBlueFull from "@/assets/collection-light-blue-full.jpg";
-import lightBlueDetail from "@/assets/collection-light-blue-detail.jpg";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+
+interface Product {
+  id: string;
+  name: string;
+  price: string;
+  original_price: string | null;
+  rating: number;
+  reviews: number;
+  image: string;
+  description: string;
+  colors: string[];
+  features: string[];
+  badge: string | null;
+  sizes: string[];
+}
+
+interface Category {
+  id: string;
+  name: string;
+  count: number;
+  active: boolean;
+}
 
 const Products = () => {
-  const products = [
-    {
-      id: 1,
-      name: "Black Professional",
-      price: "250 AED",
-      originalPrice: "275 AED",
-      rating: 4.9,
-      reviews: 324,
-      image: blackFemale,
-      description: "Sophisticated black uniform with gold accents - perfect for professional settings",
-      colors: ["Black", "Charcoal", "Navy", "White"],
-      features: ["4-Way Stretch", "Moisture-Wicking", "Wrinkle-Resistant"],
-      badge: "Best Seller",
-      sizes: ["XS", "S", "M", "L", "XL", "XXL"]
+  const [selectedCategory, setSelectedCategory] = useState<string>("All Collections");
+
+  // Fetch products from Supabase
+  const { data: products = [], isLoading: productsLoading } = useQuery({
+    queryKey: ['products'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: true });
+      
+      if (error) throw error;
+      return data as Product[];
+    }
+  });
+
+  // Fetch categories from Supabase
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('product_categories')
+        .select('*')
+        .order('name', { ascending: true });
+      
+      if (error) throw error;
+      return data as Category[];
+    }
+  });
+
+  // Filter products based on selected category
+  const filteredProducts = selectedCategory === "All Collections" 
+    ? products 
+    : products.filter(product => {
+        switch (selectedCategory) {
+          case "Black Professional":
+            return product.name.toLowerCase().includes("black");
+          case "Light Blue":
+            return product.name.toLowerCase().includes("blue") || product.colors.some(color => color.toLowerCase().includes("blue"));
+          case "White Professional":
+            return product.name.toLowerCase().includes("white") || product.colors.some(color => color.toLowerCase().includes("white"));
+          case "Team Uniforms":
+            return product.name.toLowerCase().includes("team");
+          default:
+            return true;
+        }
+      });
+
+  // Get unique filter options from products
+  const filterOptions = [
+    { 
+      name: "Size", 
+      options: [...new Set(products.flatMap(p => p.sizes))].sort()
     },
-    {
-      id: 2,
-      name: "Black Elite Men's",
-      price: "250 AED",
-      originalPrice: "275 AED",
-      rating: 4.8,
-      reviews: 256,
-      image: blackMale,
-      description: "Premium black scrubs designed for male healthcare professionals",
-      colors: ["Black", "Navy", "Charcoal", "Steel"],
-      features: ["Ultra-Lightweight", "Quick-Dry", "Antimicrobial"],
-      badge: "New",
-      sizes: ["S", "M", "L", "XL", "XXL"]
+    { 
+      name: "Color", 
+      options: [...new Set(products.flatMap(p => p.colors))].sort()
     },
-    {
-      id: 3,
-      name: "Navy Blue Professional",
-      price: "275 AED",
-      originalPrice: "300 AED",
-      rating: 4.9,
-      reviews: 218,
-      image: lightBlueFront,
-      description: "Elegant light blue uniforms with superior comfort and style",
-      colors: ["Light Blue", "Mint", "Seafoam", "White"],
-      features: ["Ultra-Soft", "Breathable", "Wrinkle-Free"],
-      badge: "New",
-      sizes: ["XS", "S", "M", "L", "XL", "XXL"]
+    { 
+      name: "Features", 
+      options: [...new Set(products.flatMap(p => p.features))].sort()
     },
-    {
-      id: 4,
-      name: "White Professional Set",
-      price: "250 AED",
-      originalPrice: "275 AED",
-      rating: 5.0,
-      reviews: 189,
-      image: whiteLifestyle,
-      description: "Classic white scrubs - the traditional professional look with modern comfort",
-      colors: ["Pure White", "Off-White", "Cream", "Pearl"],
-      features: ["Premium Fabric", "Stain Resistant", "Professional Fit"],
-      badge: "Premium Set",
-      sizes: ["XS", "S", "M", "L", "XL", "XXL"]
-    },
-    {
-      id: 5,
-      name: "Team Collection",
-      price: "250 AED",
-      originalPrice: "275 AED",
-      rating: 4.7,
-      reviews: 142,
-      image: teamBlack,
-      description: "Coordinated team uniforms for unified professional appearance",
-      colors: ["Team Black", "Team Navy", "Team Teal", "Team White"],
-      features: ["Team Coordination", "Bulk Discounts", "Custom Embroidery"],
-      badge: "Team Special",
-      sizes: ["S", "M", "L", "XL", "XXL"]
-    },
-    {
-      id: 6,
-      name: "Clinical Black",
-      price: "250 AED",
-      originalPrice: "275 AED",
-      rating: 4.9,
-      reviews: 98,
-      image: blackMaleClinic,
-      description: "Clinical-grade black uniforms for demanding medical environments",
-      colors: ["Clinical Black", "Surgical Navy", "OR Green", "Lab White"],
-      features: ["Clinical Grade", "Stain Resistant", "Easy Care"],
-      badge: "Clinical Grade",
-      sizes: ["S", "M", "L", "XL", "XXL", "XXXL"]
-    },
-    {
-      id: 7,
-      name: "White Professional Complete Set",
-      price: "250 AED",
-      originalPrice: "275 AED",
-      rating: 4.8,
-      reviews: 156,
-      image: lightBlueFull,
-      description: "Complete light blue uniform set with matching top and pants",
-      colors: ["Light Blue", "Sky Blue", "Powder Blue", "Mint"],
-      features: ["Complete Set", "Professional Cut", "Comfortable All-Day"],
-      badge: "Complete Set",
-      sizes: ["XS", "S", "M", "L", "XL", "XXL"]
-    },
-    {
-      id: 8,
-      name: "Lab Coat Premium",
-      price: "300 AED",
-      originalPrice: "325 AED",
-      rating: 4.7,
-      reviews: 134,
-      image: whiteLifestyle,
-      description: "Premium lab coat for medical professionals - sophisticated and durable",
-      colors: ["Pure White", "Off-White", "Medical White", "Lab White"],
-      features: ["Premium Fabric", "Professional Design", "Stain Resistant"],
-      badge: "Lab Coat",
-      sizes: ["XS", "S", "M", "L", "XL", "XXL"]
+    { 
+      name: "Price Range", 
+      options: ["Under 200 AED", "200-300 AED", "Over 300 AED"]
     }
   ];
 
-  const categories = [
-    { name: "All Collections", count: 8, active: true },
-    { name: "Black Professional", count: 3, active: false },
-    { name: "Light Blue", count: 3, active: false },
-    { name: "White Professional", count: 1, active: false },
-    { name: "Team Uniforms", count: 1, active: false }
-  ];
-
-  const filterOptions = [
-    { name: "Size", options: ["XS", "S", "M", "L", "XL", "XXL"] },
-    { name: "Color", options: ["Navy", "Teal", "White", "Charcoal", "Sage"] },
-    { name: "Features", options: ["4-Way Stretch", "Moisture-Wicking", "Antimicrobial"] },
-    { name: "Price Range", options: ["Under $150", "$150-$200", "Over $200"] }
-  ];
+  if (productsLoading || categoriesLoading) {
+    return (
+      <div className="min-h-screen pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-medical-blue mx-auto mb-4"></div>
+          <p className="text-lg text-muted-foreground">Loading products...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20">
@@ -166,14 +124,15 @@ const Products = () => {
                 Filters
               </Button>
               <div className="flex gap-2">
-                {categories.map((category, index) => (
+                {categories.map((category) => (
                   <Button
-                    key={index}
-                    variant={category.active ? "default" : "ghost"}
+                    key={category.id}
+                    variant={selectedCategory === category.name ? "default" : "ghost"}
                     size="sm"
                     className="text-xs"
+                    onClick={() => setSelectedCategory(category.name)}
                   >
-                    {category.name} ({category.count})
+                    {category.name} ({selectedCategory === category.name ? filteredProducts.length : category.count})
                   </Button>
                 ))}
               </div>
@@ -204,7 +163,7 @@ const Products = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {products.map((product, index) => (
+            {filteredProducts.map((product, index) => (
               <Card key={product.id} className="p-6 shadow-lg hover:shadow-xl transition-all duration-300 group animate-scale-in relative overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
                 {/* Badge */}
                 {product.badge && (
@@ -222,9 +181,9 @@ const Products = () => {
                   <Heart className="w-4 h-4" />
                 </Button>
 
-                <div className="rounded-2xl h-64 mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
+                  <div className="rounded-2xl h-64 mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
                   <img 
-                    src={product.image} 
+                    src={product.image.replace('/src/', '')} 
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
@@ -303,8 +262,8 @@ const Products = () => {
                   <div className="flex items-center justify-between pt-4 border-t">
                     <div className="flex items-center gap-2">
                       <span className="text-2xl font-bold text-luxury-navy">{product.price}</span>
-                      {product.originalPrice && (
-                        <span className="text-lg text-muted-foreground line-through">{product.originalPrice}</span>
+                      {product.original_price && (
+                        <span className="text-lg text-muted-foreground line-through">{product.original_price}</span>
                       )}
                       <span className="text-sm text-muted-foreground">+ 25 AED shipping</span>
                     </div>
