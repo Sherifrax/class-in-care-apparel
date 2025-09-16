@@ -39,11 +39,11 @@ const Products = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select('*, product_categories(name)')
         .order('created_at', { ascending: true });
       
       if (error) throw error;
-      return data as Product[];
+      return data as (Product & { product_categories: { name: string } | null })[];
     }
   });
 
@@ -64,20 +64,15 @@ const Products = () => {
   // Filter products based on selected category
   const filteredProducts = selectedCategory === "All Collections" 
     ? products 
-    : products.filter(product => {
-        switch (selectedCategory) {
-          case "Black Professional":
-            return product.name.toLowerCase().includes("black");
-          case "Light Blue":
-            return product.name.toLowerCase().includes("blue") || product.colors.some(color => color.toLowerCase().includes("blue"));
-          case "White Professional":
-            return product.name.toLowerCase().includes("white") || product.colors.some(color => color.toLowerCase().includes("white"));
-          case "Team Uniforms":
-            return product.name.toLowerCase().includes("team");
-          default:
-            return true;
-        }
-      });
+    : products.filter(product => 
+        product.product_categories?.name === selectedCategory
+      );
+
+  // Calculate category counts dynamically
+  const categoriesWithCounts = categories.map(category => ({
+    ...category,
+    count: products.filter(p => p.product_categories?.name === category.name).length
+  }));
 
   // Get unique filter options from products
   const filterOptions = [
@@ -124,7 +119,15 @@ const Products = () => {
                 Filters
               </Button>
               <div className="flex gap-2">
-                {categories.map((category) => (
+                <Button
+                  variant={selectedCategory === "All Collections" ? "default" : "ghost"}
+                  size="sm"
+                  className="text-xs"
+                  onClick={() => setSelectedCategory("All Collections")}
+                >
+                  All Collections ({selectedCategory === "All Collections" ? filteredProducts.length : products.length})
+                </Button>
+                {categoriesWithCounts.map((category) => (
                   <Button
                     key={category.id}
                     variant={selectedCategory === category.name ? "default" : "ghost"}

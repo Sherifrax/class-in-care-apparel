@@ -41,6 +41,7 @@ export type Database = {
       products: {
         Row: {
           badge: string | null
+          category_id: string | null
           colors: string[]
           created_at: string
           description: string
@@ -57,6 +58,7 @@ export type Database = {
         }
         Insert: {
           badge?: string | null
+          category_id?: string | null
           colors?: string[]
           created_at?: string
           description: string
@@ -73,6 +75,7 @@ export type Database = {
         }
         Update: {
           badge?: string | null
+          category_id?: string | null
           colors?: string[]
           created_at?: string
           description?: string
@@ -87,7 +90,15 @@ export type Database = {
           sizes?: string[]
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "product_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
