@@ -133,14 +133,14 @@ const Cart = () => {
                     <span>AED {getTotalPrice().toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Shipping:</span>
-                    <span>Free</span>
+                    <span>Delivery:</span>
+                    <span>AED 25.00</span>
                   </div>
                   <div className="border-t pt-4">
-                    <div className="flex justify-between font-semibold text-lg">
-                      <span>Total:</span>
-                      <span>AED {getTotalPrice().toFixed(2)}</span>
-                    </div>
+                  <div className="flex justify-between font-semibold text-lg">
+                    <span>Total:</span>
+                    <span>AED {(getTotalPrice() + 25).toFixed(2)}</span>
+                  </div>
                   </div>
                   
                   <Button 

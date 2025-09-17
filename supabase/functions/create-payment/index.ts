@@ -47,11 +47,14 @@ serve(async (req) => {
       }
     }
 
-    // Calculate total amount in cents (AED)
-    const total = cart_items.reduce((sum: number, item: any) => {
+    // Calculate total amount in cents (AED) including delivery
+    const subtotal = cart_items.reduce((sum: number, item: any) => {
       const price = parseFloat(item.product.price.replace(/[^0-9.]/g, ''));
-      return sum + (price * item.quantity * 100); // Convert to cents
+      return sum + (price * item.quantity);
     }, 0);
+    
+    const deliveryCost = 25; // AED 25 delivery cost
+    const total = Math.round((subtotal + deliveryCost) * 100); // Convert to cents
 
     // Create a one-time payment session with flexible payment methods
     const session = await stripe.checkout.sessions.create({
