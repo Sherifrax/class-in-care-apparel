@@ -65,10 +65,10 @@ serve(async (req) => {
           price_data: {
             currency: currency.toLowerCase(),
             product_data: {
-              name: `Scrubs Order (${cart_items.length} items)`,
-              description: cart_items.map((item: any) => 
-                `${item.product.name} (${item.size}) x${item.quantity}`
-              ).join(', '),
+            name: `Scrubs Order (${cart_items.length} items)`,
+            description: cart_items.map((item: any) => 
+              `${item.product.name} (${item.size}) x${item.quantity}`
+            ).join(', '),
             },
             unit_amount: total,
           },
@@ -109,16 +109,18 @@ serve(async (req) => {
       success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get("origin")}/checkout?canceled=true`,
       
-      // Additional metadata
+      // Additional metadata for order processing
       metadata: {
         user_id: user?.id || 'guest',
         cart_items: JSON.stringify(cart_items.map((item: any) => ({
-          product_id: item.product.id,
+          product_id: item.product.id || item.id,
           name: item.product.name,
           size: item.size,
           quantity: item.quantity,
           price: item.product.price
         }))),
+        subtotal: subtotal.toString(),
+        delivery_cost: deliveryCost.toString(),
       },
     });
 

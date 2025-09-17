@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ArrowRight, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -17,8 +18,26 @@ const PaymentSuccess = () => {
       setSessionId(session_id);
       // Clear the cart after successful payment
       clearCart();
+      // Process the payment and create order
+      processPayment(session_id);
     }
   }, [searchParams, clearCart]);
+
+  const processPayment = async (sessionId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('process-payment', {
+        body: { session_id: sessionId }
+      });
+
+      if (error) {
+        console.error('Error processing payment:', error);
+      } else {
+        console.log('Payment processed successfully:', data);
+      }
+    } catch (error) {
+      console.error('Error processing payment:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
