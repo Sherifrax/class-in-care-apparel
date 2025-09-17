@@ -77,27 +77,23 @@ serve(async (req) => {
       ],
       mode: "payment",
       
-      // Enable flexible payment methods
-      payment_method_types: [
-        'card',
-        'apple_pay',
-        'google_pay',
-        'samsung_pay',
-        'link',
-        'paypal', // If enabled in your Stripe account
-      ],
+      // Enable automatic payment methods based on location
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: 'always', // Allow redirects for regional payment methods
+      },
       
       // Payment method options for better UX
       payment_method_options: {
         card: {
-          setup_future_usage: 'off_session', // Save payment method for future use
+          setup_future_usage: 'off_session',
         },
-      },
-      
-      // Enable automatic payment methods based on location
-      automatic_payment_methods: {
-        enabled: true,
-        allow_redirects: 'never', // Keep user on your site
+        apple_pay: {
+          setup_future_usage: 'off_session',
+        },
+        google_pay: {
+          setup_future_usage: 'off_session',
+        },
       },
       
       // Shipping address collection (optional)
