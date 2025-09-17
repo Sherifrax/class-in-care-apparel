@@ -30,6 +30,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return;
     }
 
+    // Check if user email is the admin email
+    if (user.email === 'amrodew@gmail.com') {
+      setIsAdmin(true);
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('profiles')
