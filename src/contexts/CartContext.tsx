@@ -21,6 +21,7 @@ interface CartContextType {
   addToCart: (productId: string, size: string, quantity?: number) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   removeFromCart: (itemId: string) => Promise<void>;
+  clearCart: () => Promise<void>;
   getTotalPrice: () => number;
   getTotalItems: () => number;
 }
@@ -176,6 +177,27 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const clearCart = async () => {
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('cart_items')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      setItems([]);
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      toast({
+        title: "Error",
+        description: "Failed to clear cart",
+        variant: "destructive",
+      });
+    }
+  };
+
   const getTotalPrice = () => {
     return items.reduce((total, item) => {
       const price = parseFloat(item.product.price.replace('$', ''));
@@ -193,6 +215,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     addToCart,
     updateQuantity,
     removeFromCart,
+    clearCart,
     getTotalPrice,
     getTotalItems,
   };

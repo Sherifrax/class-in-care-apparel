@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { CreditCard, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { supabase } from '@/integrations/supabase/client';
 
 const CheckoutContent = () => {
   const { items, getTotalPrice } = useCart();
@@ -32,13 +33,36 @@ const CheckoutContent = () => {
     );
   }
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // TODO: Implement Stripe payment processing
-    // This will be implemented once Stripe is properly enabled
-    
-    alert('Stripe payment integration will be implemented once Stripe is properly configured with the correct API key permissions.');
+    setLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: {
+          currency: 'aed',
+          cart_items: items
+        }
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (data?.url) {
+        // Open Stripe checkout in the same window
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error: any) {
+      console.error('Payment error:', error);
+      alert(`Payment failed: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -136,11 +160,22 @@ const CheckoutContent = () => {
                     </div>
 
                     <Button 
-                      type="submit" 
+                      type="submit"
                       className="w-full" 
                       size="lg"
+                      disabled={loading}
                     >
-                      Complete Payment (AED {getTotalPrice().toFixed(2)})
+                      {loading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <CreditCard className="w-4 h-4 mr-2" />
+                          Complete Payment (AED {getTotalPrice().toFixed(2)})
+                        </>
+                      )}
                     </Button>
                   </form>
                 </CardContent>
