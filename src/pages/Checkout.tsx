@@ -140,7 +140,7 @@ const CheckoutContent = () => {
                       className="w-full" 
                       size="lg"
                     >
-                      Complete Payment (${getTotalPrice().toFixed(2)})
+                      Complete Payment (AED {getTotalPrice().toFixed(2)})
                     </Button>
                   </form>
                 </CardContent>
@@ -170,7 +170,7 @@ const CheckoutContent = () => {
                           </p>
                         </div>
                         <span className="font-medium">
-                          ${(parseFloat(item.product.price.replace('$', '')) * item.quantity).toFixed(2)}
+                          AED {(parseFloat(item.product.price.replace('$', '')) * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     ))}
@@ -181,15 +181,11 @@ const CheckoutContent = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Subtotal:</span>
-                      <span>${getTotalPrice().toFixed(2)}</span>
+                      <span>AED {getTotalPrice().toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping:</span>
                       <span>Free</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Tax:</span>
-                      <span>${(getTotalPrice() * 0.1).toFixed(2)}</span>
                     </div>
                   </div>
                   
@@ -197,7 +193,7 @@ const CheckoutContent = () => {
                   
                   <div className="flex justify-between font-semibold text-lg">
                     <span>Total:</span>
-                    <span>${(getTotalPrice() * 1.1).toFixed(2)}</span>
+                    <span>AED {getTotalPrice().toFixed(2)}</span>
                   </div>
                 </CardContent>
               </Card>
