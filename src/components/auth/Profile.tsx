@@ -43,9 +43,16 @@ export const Profile: React.FC = () => {
 
   const fetchProfile = async () => {
     try {
+      // Log profile access for audit trail
+      await supabase.rpc('log_profile_access', {
+        p_user_id: user?.id,
+        p_action: 'PROFILE_VIEW'
+      });
+
+      // Select only necessary fields for security
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
+        .select('id, full_name, phone, address, avatar_url, created_at, updated_at')
         .eq('id', user?.id)
         .single();
 
@@ -69,24 +76,47 @@ export const Profile: React.FC = () => {
         });
       }
     } catch (error: any) {
+      console.error('Profile fetch error:', error);
       toast({
-        title: "Error",
+        title: "Error", 
         description: "Failed to fetch profile data",
         variant: "destructive",
       });
     }
   };
 
+  const sanitizeInput = (input: string): string => {
+    return input.trim().replace(/[<>\"'&]/g, '');
+  };
+
   const onSubmit = async (data: ProfileFormData) => {
     setLoading(true);
     try {
+      // Sanitize input data
+      const sanitizedData = {
+        fullName: data.fullName ? sanitizeInput(data.fullName) : '',
+        phone: data.phone ? sanitizeInput(data.phone) : '',
+        address: data.address ? sanitizeInput(data.address) : '',
+      };
+
+      // Validate phone number format on frontend
+      if (sanitizedData.phone && !/^[\+]?[0-9\-\(\)\s]+$/.test(sanitizedData.phone)) {
+        throw new Error('Invalid phone number format');
+      }
+
+      // Log profile update attempt
+      await supabase.rpc('log_profile_access', {
+        p_user_id: user?.id,
+        p_action: 'PROFILE_UPDATE'
+      });
+
       const { error } = await supabase
         .from('profiles')
         .upsert({
           id: user?.id,
-          full_name: data.fullName,
-          phone: data.phone,
-          address: data.address,
+          full_name: sanitizedData.fullName,
+          phone: sanitizedData.phone,
+          address: sanitizedData.address,
           updated_at: new Date().toISOString(),
         });
 
@@ -99,6 +129,7 @@ export const Profile: React.FC = () => {
 
       fetchProfile();
     } catch (error: any) {
+      console.error('Profile update error:', error);
       toast({
         title: "Error",
         description: error.message || "Failed to update profile",
