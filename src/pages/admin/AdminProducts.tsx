@@ -99,6 +99,17 @@ const AdminProductsContent: React.FC = () => {
     setUploading(true);
 
     try {
+      // Require an image file when creating a new product
+      if (!editingProduct && !formData.image) {
+        toast({
+          title: "Image required",
+          description: "Please upload a product image file.",
+          variant: "destructive",
+        });
+        setUploading(false);
+        return;
+      }
+
       let imageUrl = editingProduct?.image_url || '';
 
       if (formData.image) {
@@ -252,7 +263,7 @@ const AdminProductsContent: React.FC = () => {
             <p className="text-muted-foreground">Manage your product catalog</p>
           </div>
           
-          <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
+          <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
             <DialogTrigger asChild>
               <Button onClick={() => setIsDialogOpen(true)}>
                 <Plus className="w-4 h-4 mr-2" />
