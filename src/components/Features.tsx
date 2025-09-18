@@ -28,7 +28,7 @@ const Features = () => {
     <section id="features" className="py-20 bg-gradient-to-b from-soft-gray to-background">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
             Our Commitment Goes Beyond Design
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -43,7 +43,7 @@ const Features = () => {
               <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-bold text-luxury-navy mb-4">
+              <h3 className="text-xl font-bold text-primary mb-4">
                 {feature.title}
               </h3>
               <p className="text-muted-foreground leading-relaxed">
@@ -54,8 +54,8 @@ const Features = () => {
         </div>
         
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-medical-blue/10 to-medical-teal/10 rounded-2xl p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-luxury-navy mb-4">
+          <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-8 max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-primary mb-4">
               Join the Movement
             </h3>
             <p className="text-lg text-muted-foreground leading-relaxed">

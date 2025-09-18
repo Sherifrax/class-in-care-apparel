@@ -111,9 +111,9 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
   return (
     <Card className={`p-6 shadow-card ${className}`}>
       <div className="text-center space-y-4">
-        <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto flex items-center justify-center mb-4">
+        <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full mx-auto flex items-center justify-center mb-4">
           <svg 
-            className="w-8 h-8 text-white" 
+            className="w-8 h-8 text-primary-foreground"
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -127,7 +127,7 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
           </svg>
         </div>
         
-        <h3 className="text-xl font-bold text-luxury-navy">
+        <h3 className="text-xl font-bold text-primary">
           Voice Assistant
         </h3>
         
@@ -156,7 +156,7 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
               <Button 
                 onClick={startCall} 
                 disabled={isLoading || !vapi}
-                className="w-full bg-medical-blue hover:bg-medical-blue/90"
+                className="w-full bg-primary hover:bg-primary/90"
                 size="lg"
               >
                 {isLoading ? (
@@ -175,10 +175,10 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
               </Button>
             ) : (
               <div className="space-y-3">
-                <div className="flex items-center justify-center space-x-2 text-medical-blue">
-                  <div className="w-2 h-2 bg-medical-blue rounded-full animate-pulse"></div>
+                <div className="flex items-center justify-center space-x-2 text-primary">
+                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
                   <span className="text-sm font-medium">Voice call active</span>
-                  <div className="w-2 h-2 bg-medical-blue rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
                 </div>
                 <Button 
                   onClick={endCall}
