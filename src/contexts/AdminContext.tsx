@@ -31,7 +31,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
 
     // Check if user email is the admin email
-    if (user.email === 'Omarmaher929@gmail.com') {
+    if (user.email === 'amrodew@gmail.com') {
       setIsAdmin(true);
       setLoading(false);
       return;
