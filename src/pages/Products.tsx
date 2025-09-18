@@ -136,19 +136,19 @@ const Products = () => {
       <AuroraCollection />
       
       {/* Filter Bar */}
-      <section className="py-8 bg-background border-b">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm" className="gap-2">
+      <section className="py-4 sm:py-6 md:py-8 bg-background border-b">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              <Button variant="outline" size="sm" className="gap-2 min-h-[44px] w-full sm:w-auto">
                 <Filter className="w-4 h-4" />
                 Filters
               </Button>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                 <Button
                   variant={selectedCategory === "All Collections" ? "default" : "ghost"}
                   size="sm"
-                  className="text-xs"
+                  className="text-xs min-h-[40px] whitespace-nowrap"
                   onClick={() => setSelectedCategory("All Collections")}
                 >
                   All Collections ({selectedCategory === "All Collections" ? filteredProducts.length : products.length})
@@ -158,7 +158,7 @@ const Products = () => {
                     key={category.id}
                     variant={selectedCategory === category.name ? "default" : "ghost"}
                     size="sm"
-                    className="text-xs"
+                    className="text-xs min-h-[40px] whitespace-nowrap"
                     onClick={() => setSelectedCategory(category.name)}
                   >
                     {category.name} ({selectedCategory === category.name ? filteredProducts.length : category.count})
@@ -166,12 +166,12 @@ const Products = () => {
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">View:</span>
-              <Button variant="ghost" size="sm">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <span className="text-sm text-muted-foreground hidden sm:inline">View:</span>
+              <Button variant="ghost" size="sm" className="min-h-[44px] min-w-[44px]">
                 <Grid className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="min-h-[44px] min-w-[44px]">
                 <List className="w-4 h-4" />
               </Button>
             </div>
@@ -191,9 +191,9 @@ const Products = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-16">
             {filteredProducts.map((product, index) => (
-              <Card key={product.id} className="p-6 shadow-lg hover:shadow-xl transition-all duration-300 group animate-scale-in relative overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
+              <Card key={product.id} className="p-3 sm:p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 group animate-scale-in relative overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
                 {/* Badge */}
                 {product.badge && (
                   <Badge className="absolute top-4 left-4 z-10" variant={product.badge === "Best Seller" ? "default" : "secondary"}>
@@ -210,7 +210,7 @@ const Products = () => {
                   <Heart className="w-4 h-4" />
                 </Button>
 
-                  <div className="rounded-2xl h-64 mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
+                  <div className="rounded-2xl h-48 sm:h-56 md:h-64 mb-4 sm:mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
                   <img 
                     src={(product.images && product.images.length > 0) ? product.images[0] : product.image} 
                     alt={product.name}
@@ -308,11 +308,12 @@ const Products = () => {
                     </div>
                     <Button 
                       size="sm" 
-                      className="gap-2"
+                      className="gap-2 min-h-[44px] text-xs sm:text-sm"
                       onClick={() => openProductDialog(product)}
                     >
                       <ShoppingCart className="w-4 h-4" />
-                      Add to Cart
+                      <span className="hidden sm:inline">Add to Cart</span>
+                      <span className="sm:hidden">Add</span>
                     </Button>
                   </div>
                 </div>

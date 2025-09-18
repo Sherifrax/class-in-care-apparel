@@ -66,12 +66,12 @@ const CheckoutContent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-20">
+      <div className="container mx-auto px-4 py-4 sm:py-6 md:py-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Checkout</h1>
           
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             {/* Checkout Form */}
             <div className="space-y-6">
               <Card>
@@ -79,39 +79,39 @@ const CheckoutContent = () => {
                   <CardTitle>Shipping Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" required />
+                      <Input id="firstName" required className="min-h-[44px]" />
                     </div>
                     <div>
                       <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" required />
+                      <Input id="lastName" required className="min-h-[44px]" />
                     </div>
                   </div>
                   
                   <div>
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" required />
+                    <Input id="email" type="email" required className="min-h-[44px]" />
                   </div>
                   
                   <div>
                     <Label htmlFor="address">Address</Label>
-                    <Input id="address" required />
+                    <Input id="address" required className="min-h-[44px]" />
                   </div>
                   
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="sm:col-span-1">
                       <Label htmlFor="city">City</Label>
-                      <Input id="city" required />
+                      <Input id="city" required className="min-h-[44px]" />
                     </div>
-                    <div>
+                    <div className="sm:col-span-1">
                       <Label htmlFor="state">State</Label>
-                      <Input id="state" required />
+                      <Input id="state" required className="min-h-[44px]" />
                     </div>
-                    <div>
+                    <div className="sm:col-span-1">
                       <Label htmlFor="zipCode">ZIP Code</Label>
-                      <Input id="zipCode" required />
+                      <Input id="zipCode" required className="min-h-[44px]" />
                     </div>
                   </div>
                 </CardContent>
@@ -132,16 +132,18 @@ const CheckoutContent = () => {
                         id="cardNumber" 
                         placeholder="1234 5678 9012 3456" 
                         required 
+                        className="min-h-[44px]"
                       />
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="expiry">Expiry Date</Label>
                         <Input 
                           id="expiry" 
                           placeholder="MM/YY" 
                           required 
+                          className="min-h-[44px]"
                         />
                       </div>
                       <div>
@@ -150,6 +152,7 @@ const CheckoutContent = () => {
                           id="cvc" 
                           placeholder="123" 
                           required 
+                          className="min-h-[44px]"
                         />
                       </div>
                     </div>
@@ -161,7 +164,7 @@ const CheckoutContent = () => {
 
                     <Button 
                       type="submit"
-                      className="w-full" 
+                      className="w-full min-h-[50px]" 
                       size="lg"
                       disabled={loading}
                     >
@@ -184,7 +187,7 @@ const CheckoutContent = () => {
             
             {/* Order Summary */}
             <div>
-              <Card className="sticky top-8">
+              <Card className="lg:sticky lg:top-8">
                 <CardHeader>
                   <CardTitle>Order Summary</CardTitle>
                 </CardHeader>
