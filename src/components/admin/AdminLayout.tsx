@@ -190,8 +190,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-x-auto">
-          <div className="flex items-center justify-around py-2 min-w-max px-4">
+        <div className="md:hidden border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-x-auto scroll-smooth">
+          <div className="flex items-center gap-2 justify-start py-2 min-w-max px-4 whitespace-nowrap">
             {navigationItems.map((item) => {
               const Icon = item.icon;
               return (

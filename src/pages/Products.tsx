@@ -144,7 +144,7 @@ const Products = () => {
                 <Filter className="w-4 h-4" />
                 Filters
               </Button>
-              <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+              <div className="flex sm:flex-wrap flex-nowrap gap-2 w-full sm:w-auto overflow-x-auto -mx-4 px-4">
                 <Button
                   variant={selectedCategory === "All Collections" ? "default" : "ghost"}
                   size="sm"

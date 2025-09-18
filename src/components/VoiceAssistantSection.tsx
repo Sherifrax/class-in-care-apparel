@@ -2,14 +2,14 @@ import VapiVoiceBot from "./VapiVoiceBot";
 
 const VoiceAssistantSection = () => {
   return (
-    <section className="py-20 bg-soft-gray">
+    <section className="py-10 sm:py-14 md:py-20 bg-soft-gray">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-luxury-navy mb-6">
               Speak with Our AI Assistant
             </h2>
-            <p className="text-xl text-muted-foreground leading-relaxed">
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
               Get instant answers about our AURA Collection, sizing, ordering, and more. 
               Our voice-powered assistant is here to help you find the perfect Aura uniforms.
             </p>

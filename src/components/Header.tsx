@@ -78,7 +78,7 @@ const Header = () => {
             </Link>
             
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
+            <nav className="hidden lg:flex items-center space-x-8 overflow-x-auto whitespace-nowrap">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -205,7 +205,7 @@ const Header = () => {
                     <span className="sr-only">Open menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetContent side="right" className="w-[300px] sm:w-[400px] max-h-[100dvh] overflow-y-auto">
                   <SheetHeader>
                     <SheetTitle className="flex items-center space-x-3">
                       <div className="w-8 h-8 rounded-lg overflow-hidden">

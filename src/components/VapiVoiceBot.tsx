@@ -109,9 +109,9 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
   };
 
   return (
-    <Card className={`p-3 sm:p-4 md:p-6 shadow-card max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto ${className}`}>
+    <Card className={`p-2 sm:p-4 md:p-5 shadow-card w-full max-w-[320px] sm:max-w-[420px] md:max-w-md lg:max-w-lg mx-auto ${className}`}>
       <div className="text-center space-y-3 sm:space-y-4">
-        <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-primary to-accent rounded-full mx-auto flex items-center justify-center mb-3 sm:mb-4">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-primary to-accent rounded-full mx-auto flex items-center justify-center mb-3 sm:mb-4">
           <svg 
             className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary-foreground"
             fill="none" 
@@ -127,7 +127,7 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
           </svg>
         </div>
         
-        <h3 className="text-lg sm:text-xl font-bold text-primary">
+        <h3 className="text-base sm:text-lg font-bold text-primary">
           Voice Assistant
         </h3>
         
