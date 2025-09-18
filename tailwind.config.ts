@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        posterama: ['Posterama', 'sans-serif'],
+        posterama: ['Posterama', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -54,6 +54,9 @@ export default {
         'medical-blue-light': "hsl(var(--medical-blue-light))",
         'medical-teal': "hsl(var(--medical-teal))",
         'luxury-navy': "hsl(var(--luxury-navy))",
+        'luxury-gold': "hsl(var(--luxury-gold))",
+        'luxury-gold-light': "hsl(var(--luxury-gold-light))",
+        'luxury-gold-dark': "hsl(var(--luxury-gold-dark))",
         'soft-gray': "hsl(var(--soft-gray))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -144,10 +147,10 @@ export default {
         },
         "pulse-glow": {
           "0%, 100%": { 
-            boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)" 
+            boxShadow: "0 0 20px hsl(var(--luxury-gold) / 0.5)" 
           },
           "50%": { 
-            boxShadow: "0 0 40px rgba(59, 130, 246, 0.8)" 
+            boxShadow: "0 0 40px hsl(var(--luxury-gold) / 0.8)" 
           }
         }
       },

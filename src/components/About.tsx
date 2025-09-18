@@ -5,7 +5,7 @@ const About = () => {
     <section id="about" className="py-20 bg-gradient-to-b from-background to-soft-gray">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
             Founded by Excellence, Led by Vision
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed">
@@ -16,7 +16,7 @@ const About = () => {
         
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h3 className="text-3xl font-bold text-luxury-navy mb-6">Our Mission</h3>
+            <h3 className="text-3xl font-bold text-primary mb-6">Our Mission</h3>
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
               We create medical uniforms that are more than scrubs — they are a statement of professionalism, 
               elegance, and resilience. Every Aura piece combines modern tailoring, high-performance fabrics, 
@@ -29,10 +29,10 @@ const About = () => {
           
           <Card className="p-8 shadow-luxury">
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto mb-6 flex items-center justify-center">
-                <span className="text-2xl font-bold text-white">A</span>
+              <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-6 flex items-center justify-center">
+                <span className="text-2xl font-bold text-primary-foreground">A</span>
               </div>
-              <h4 className="text-2xl font-bold text-luxury-navy mb-4">"CLASS to CARE"</h4>
+              <h4 className="text-2xl font-bold text-primary mb-4">"CLASS to CARE"</h4>
               <p className="text-muted-foreground italic">
                 Our founding philosophy that drives every design decision, every fabric choice, 
                 and every detail that makes Aura uniforms extraordinary.

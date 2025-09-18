@@ -7,11 +7,24 @@
   src: url('/fonts/Posterama_1913_W01_Bold.ttf') format('truetype');
   font-weight: bold;
   font-display: swap;
+  font-style: normal;
 }
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
+Mobile-first responsive design with proper scaling and no horizontal overflow.
 */
+
+/* Base mobile-first responsive styles */
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  min-width: 320px;
+}
 
 @layer base {
   :root {
