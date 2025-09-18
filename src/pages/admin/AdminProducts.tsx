@@ -52,6 +52,8 @@ const AdminProductsContent: React.FC = () => {
     reviews: 0
   });
 
+  const [imagesToRemove, setImagesToRemove] = useState<string[]>([]);
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -118,6 +120,12 @@ const AdminProductsContent: React.FC = () => {
 
       let imageUrls = editingProduct?.images || [];
 
+      // Remove images that were marked for removal
+      if (editingProduct && imagesToRemove.length > 0) {
+        imageUrls = imageUrls.filter(url => !imagesToRemove.includes(url));
+      }
+
+      // Add new images
       if (formData.images.length > 0) {
         const newImageUrls = await uploadMultipleImages(formData.images);
         imageUrls = editingProduct ? [...imageUrls, ...newImageUrls] : newImageUrls;
@@ -166,6 +174,7 @@ const AdminProductsContent: React.FC = () => {
 
       setIsDialogOpen(false);
       resetForm();
+      setImagesToRemove([]);
       fetchProducts();
     } catch (error: any) {
       console.error('Error saving product:', error);
@@ -239,11 +248,20 @@ const AdminProductsContent: React.FC = () => {
       reviews: 0
     });
     setEditingProduct(null);
+    setImagesToRemove([]);
   };
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
     resetForm();
+  };
+
+  const removeImage = (imageUrl: string) => {
+    setImagesToRemove(prev => [...prev, imageUrl]);
+  };
+
+  const undoRemoveImage = (imageUrl: string) => {
+    setImagesToRemove(prev => prev.filter(url => url !== imageUrl));
   };
 
   if (loading) {
@@ -416,15 +434,47 @@ const AdminProductsContent: React.FC = () => {
                     <div className="mt-2">
                       <p className="text-sm font-medium mb-2">Current images:</p>
                       <div className="flex flex-wrap gap-2">
-                        {editingProduct.images.map((imageUrl, index) => (
-                          <img 
-                            key={index}
-                            src={imageUrl} 
-                            alt={`Product image ${index + 1}`} 
-                            className="w-20 h-20 object-cover rounded border"
-                          />
-                        ))}
+                        {editingProduct.images.map((imageUrl, index) => {
+                          const isMarkedForRemoval = imagesToRemove.includes(imageUrl);
+                          return (
+                            <div key={index} className="relative group">
+                              <img 
+                                src={imageUrl} 
+                                alt={`Product image ${index + 1}`} 
+                                className={`w-20 h-20 object-cover rounded border transition-opacity ${
+                                  isMarkedForRemoval ? 'opacity-50 grayscale' : ''
+                                }`}
+                              />
+                              {isMarkedForRemoval ? (
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  className="absolute -top-2 -right-2 h-6 w-6 p-0 bg-green-500 text-white hover:bg-green-600"
+                                  onClick={() => undoRemoveImage(imageUrl)}
+                                >
+                                  +
+                                </Button>
+                              ) : (
+                                <Button
+                                  type="button"
+                                  variant="destructive"
+                                  size="sm"
+                                  className="absolute -top-2 -right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => removeImage(imageUrl)}
+                                >
+                                  ×
+                                </Button>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
+                      {imagesToRemove.length > 0 && (
+                        <p className="text-sm text-orange-600 mt-2">
+                          {imagesToRemove.length} image(s) marked for removal. Click + to undo.
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
