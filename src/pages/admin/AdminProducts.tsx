@@ -24,6 +24,7 @@ interface Product {
   badge?: string;
   image?: string;
   image_url?: string;
+  images?: string[];
   rating: number;
   reviews: number;
 }
@@ -46,7 +47,7 @@ const AdminProductsContent: React.FC = () => {
     colors: '',
     features: '',
     badge: '',
-    image: null as File | null,
+    images: [] as File[],
     rating: 0,
     reviews: 0
   });
@@ -94,26 +95,32 @@ const AdminProductsContent: React.FC = () => {
     return data.publicUrl;
   };
 
+  const uploadMultipleImages = async (files: File[]): Promise<string[]> => {
+    const uploadPromises = files.map(file => uploadImage(file));
+    return await Promise.all(uploadPromises);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
 
     try {
-      // Require an image file when creating a new product
-      if (!editingProduct && !formData.image) {
+      // Require images when creating a new product
+      if (!editingProduct && formData.images.length === 0) {
         toast({
-          title: "Image required",
-          description: "Please upload a product image file.",
+          title: "Images required",
+          description: "Please upload at least one product image.",
           variant: "destructive",
         });
         setUploading(false);
         return;
       }
 
-      let imageUrl = editingProduct?.image_url || '';
+      let imageUrls = editingProduct?.images || [];
 
-      if (formData.image) {
-        imageUrl = await uploadImage(formData.image);
+      if (formData.images.length > 0) {
+        const newImageUrls = await uploadMultipleImages(formData.images);
+        imageUrls = editingProduct ? [...imageUrls, ...newImageUrls] : newImageUrls;
       }
 
       const productData = {
@@ -125,8 +132,9 @@ const AdminProductsContent: React.FC = () => {
         colors: formData.colors.split(',').map(c => c.trim()),
         features: formData.features.split(',').map(f => f.trim()),
         badge: formData.badge || null,
-        image_url: imageUrl,
-        image: imageUrl, // Keep compatibility with existing image field
+        images: imageUrls,
+        image_url: imageUrls[0] || '', // Keep compatibility - use first image
+        image: imageUrls[0] || '', // Keep compatibility - use first image
         rating: Number(formData.rating),
         reviews: Number(formData.reviews)
       };
@@ -182,7 +190,7 @@ const AdminProductsContent: React.FC = () => {
       colors: product.colors.join(', '),
       features: product.features.join(', '),
       badge: product.badge || '',
-      image: null,
+      images: [],
       rating: product.rating,
       reviews: product.reviews
     });
@@ -226,7 +234,7 @@ const AdminProductsContent: React.FC = () => {
       colors: '',
       features: '',
       badge: '',
-      image: null,
+      images: [],
       rating: 0,
       reviews: 0
     });
@@ -393,20 +401,30 @@ const AdminProductsContent: React.FC = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="image">Product Image</Label>
+                  <Label htmlFor="images">Product Images</Label>
                   <Input
-                    id="image"
+                    id="images"
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setFormData({...formData, image: e.target.files?.[0] || null})}
+                    multiple
+                    onChange={(e) => setFormData({...formData, images: Array.from(e.target.files || [])})}
                   />
-                  {editingProduct?.image_url && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Select multiple images for your product. First image will be the main display image.
+                  </p>
+                  {editingProduct?.images && editingProduct.images.length > 0 && (
                     <div className="mt-2">
-                      <img 
-                        src={editingProduct.image_url} 
-                        alt="Current product image" 
-                        className="w-20 h-20 object-cover rounded"
-                      />
+                      <p className="text-sm font-medium mb-2">Current images:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {editingProduct.images.map((imageUrl, index) => (
+                          <img 
+                            key={index}
+                            src={imageUrl} 
+                            alt={`Product image ${index + 1}`} 
+                            className="w-20 h-20 object-cover rounded border"
+                          />
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -437,7 +455,20 @@ const AdminProductsContent: React.FC = () => {
             <Card key={product.id}>
               <CardHeader className="p-4">
                 <div className="aspect-square relative bg-gray-100 rounded-lg overflow-hidden mb-4">
-                  {product.image_url || product.image ? (
+                  {product.images && product.images.length > 0 ? (
+                    <div className="relative w-full h-full">
+                      <img
+                        src={product.images[0]}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                      {product.images.length > 1 && (
+                        <Badge className="absolute bottom-2 right-2 bg-black/70 text-white">
+                          +{product.images.length - 1} more
+                        </Badge>
+                      )}
+                    </div>
+                  ) : product.image_url || product.image ? (
                     <img
                       src={product.image_url || product.image}
                       alt={product.name}

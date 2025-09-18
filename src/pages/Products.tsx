@@ -22,6 +22,7 @@ interface Product {
   rating: number;
   reviews: number;
   image: string;
+  images?: string[];
   description: string;
   colors: string[];
   features: string[];
@@ -211,10 +212,15 @@ const Products = () => {
 
                   <div className="rounded-2xl h-64 mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
                   <img 
-                    src={product.image} 
+                    src={(product.images && product.images.length > 0) ? product.images[0] : product.image} 
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
+                  {product.images && product.images.length > 1 && (
+                    <Badge className="absolute top-4 left-4 bg-black/70 text-white">
+                      +{product.images.length - 1} more
+                    </Badge>
+                  )}
                   
                   {/* Quick View Overlay */}
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center">
@@ -347,11 +353,35 @@ const Products = () => {
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <img
-                    src={selectedProduct.image}
-                    alt={selectedProduct.name}
-                    className="w-full h-64 object-cover rounded-lg"
-                  />
+                  {selectedProduct.images && selectedProduct.images.length > 1 ? (
+                    <div className="space-y-2">
+                      <img
+                        src={selectedProduct.images[0]}
+                        alt={selectedProduct.name}
+                        className="w-full h-64 object-cover rounded-lg"
+                      />
+                      <div className="flex gap-2 overflow-x-auto">
+                        {selectedProduct.images.map((image, index) => (
+                          <img
+                            key={index}
+                            src={image}
+                            alt={`${selectedProduct.name} ${index + 1}`}
+                            className="w-16 h-16 object-cover rounded border-2 border-transparent hover:border-primary cursor-pointer flex-shrink-0"
+                            onClick={(e) => {
+                              const mainImage = e.currentTarget.parentElement?.previousElementSibling as HTMLImageElement;
+                              if (mainImage) mainImage.src = image;
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <img
+                      src={(selectedProduct.images && selectedProduct.images.length > 0) ? selectedProduct.images[0] : selectedProduct.image}
+                      alt={selectedProduct.name}
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
+                  )}
                 </div>
                 
                 <div className="space-y-4">
