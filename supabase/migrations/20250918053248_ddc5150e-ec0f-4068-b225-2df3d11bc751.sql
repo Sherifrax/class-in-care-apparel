@@ -1,0 +1,8 @@
+-- Update products to use correct public image URLs for display
+UPDATE products SET image_url = 'https://ceymokfcuingwrafxpzy.supabase.co/storage/v1/object/public/product-images/products/collection-black-female.jpg' WHERE image LIKE '%collection-black-female%';
+UPDATE products SET image_url = 'https://ceymokfcuingwrafxpzy.supabase.co/storage/v1/object/public/product-images/products/collection-black-male.jpg' WHERE image LIKE '%collection-black-male.jpg';
+UPDATE products SET image_url = 'https://ceymokfcuingwrafxpzy.supabase.co/storage/v1/object/public/product-images/products/collection-light-blue-front.jpg' WHERE image LIKE '%collection-light-blue-front%';
+UPDATE products SET image_url = 'https://ceymokfcuingwrafxpzy.supabase.co/storage/v1/object/public/product-images/products/collection-white-lifestyle.jpg' WHERE image LIKE '%collection-white-lifestyle%';
+UPDATE products SET image_url = 'https://ceymokfcuingwrafxpzy.supabase.co/storage/v1/object/public/product-images/products/collection-team-black.jpg' WHERE image LIKE '%collection-team-black%';
+UPDATE products SET image_url = 'https://ceymokfcuingwrafxpzy.supabase.co/storage/v1/object/public/product-images/products/collection-black-male-clinic.jpg' WHERE image LIKE '%collection-black-male-clinic%';
+UPDATE products SET image_url = 'https://ceymokfcuingwrafxpzy.supabase.co/storage/v1/object/public/product-images/products/collection-light-blue-full.jpg' WHERE image LIKE '%collection-light-blue-full%';
