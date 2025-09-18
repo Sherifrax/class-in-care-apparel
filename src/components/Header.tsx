@@ -74,23 +74,23 @@ const Header = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="text-xl font-bold text-primary">AURA</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">AURA</span>
             </Link>
             
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8 overflow-x-auto whitespace-nowrap">
+            <nav className="hidden lg:flex items-center space-x-8">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
                   className={`text-sm font-medium transition-colors relative group px-2 py-1 ${
                     isActive(item.href) 
-                      ? 'text-primary' 
-                      : 'text-foreground hover:text-primary'
+                      ? 'text-medical-blue' 
+                      : 'text-foreground hover:text-medical-blue'
                   }`}
                 >
                   {item.name}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
+                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-medical-blue transition-all duration-300 ${
                     isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
                   }`}></span>
                 </Link>
@@ -205,7 +205,7 @@ const Header = () => {
                     <span className="sr-only">Open menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px] max-h-[100dvh] overflow-y-auto">
+                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                   <SheetHeader>
                     <SheetTitle className="flex items-center space-x-3">
                       <div className="w-8 h-8 rounded-lg overflow-hidden">
@@ -215,7 +215,7 @@ const Header = () => {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <span className="text-lg font-bold text-primary">
+                      <span className="text-lg font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">
                         AURA
                       </span>
                     </SheetTitle>
@@ -231,7 +231,7 @@ const Header = () => {
                           onClick={closeMobileMenu}
                           className={`flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors ${
                             isActive(item.href)
-                              ? 'bg-primary/10 text-primary border-l-4 border-primary'
+                              ? 'bg-medical-blue/10 text-medical-blue border-l-4 border-medical-blue'
                               : 'text-foreground hover:bg-accent hover:text-accent-foreground'
                           }`}
                         >

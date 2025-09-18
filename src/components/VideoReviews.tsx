@@ -36,7 +36,7 @@ const VideoReviews = () => {
     <section className="py-20 bg-gradient-to-b from-background to-soft-gray/20">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
             AURA in Action
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -47,7 +47,7 @@ const VideoReviews = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {reviews.map((review, index) => (
             <Card key={review.id} className="p-6 shadow-lg hover:shadow-xl transition-all duration-300 group animate-scale-in" style={{animationDelay: `${index * 0.1}s`}}>
-              <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary/10 to-accent/10">
+              <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10">
                 <video 
                   className="w-full h-64 object-cover cursor-pointer"
                   poster=""
@@ -59,7 +59,7 @@ const VideoReviews = () => {
                 </video>
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                   <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center">
-                    <Play className="w-6 h-6 text-primary ml-1" />
+                    <Play className="w-6 h-6 text-medical-blue ml-1" />
                   </div>
                 </div>
               </div>
@@ -71,17 +71,17 @@ const VideoReviews = () => {
                   ))}
                 </div>
                 
-                <h3 className="text-xl font-semibold text-primary">{review.title}</h3>
+                <h3 className="text-xl font-semibold text-luxury-navy">{review.title}</h3>
                 
                 <div className="pt-4 border-t">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
-                      <span className="text-primary-foreground font-semibold text-sm">
+                    <div className="w-10 h-10 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center">
+                      <span className="text-white font-semibold text-sm">
                         {review.reviewer.split(' ').map(n => n[0]).join('')}
                       </span>
                     </div>
                     <div>
-                      <p className="font-semibold text-primary">{review.reviewer}</p>
+                      <p className="font-semibold text-luxury-navy">{review.reviewer}</p>
                       <p className="text-sm text-muted-foreground">{review.profession}</p>
                     </div>
                   </div>
@@ -92,9 +92,9 @@ const VideoReviews = () => {
         </div>
 
         <div className="text-center mt-12">
-          <div className="bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-8 inline-block">
+          <div className="bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-2xl p-8 inline-block">
             <p className="text-lg text-muted-foreground mb-4">
-              <span className="font-bold text-primary">250-300 AED</span> per uniform
+              <span className="font-bold text-luxury-navy">250-300 AED</span> per uniform
             </p>
             <p className="text-sm text-muted-foreground">
               Scrubs: 250-275 AED • Lab Coats: 300 AED • + 25 AED shipping

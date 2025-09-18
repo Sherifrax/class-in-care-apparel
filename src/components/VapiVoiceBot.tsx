@@ -109,11 +109,11 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
   };
 
   return (
-    <Card className={`p-2 sm:p-4 md:p-5 shadow-card w-full max-w-[320px] sm:max-w-[420px] md:max-w-md lg:max-w-lg mx-auto ${className}`}>
-      <div className="text-center space-y-3 sm:space-y-4">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-primary to-accent rounded-full mx-auto flex items-center justify-center mb-3 sm:mb-4">
+    <Card className={`p-6 shadow-card ${className}`}>
+      <div className="text-center space-y-4">
+        <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto flex items-center justify-center mb-4">
           <svg 
-            className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary-foreground"
+            className="w-8 h-8 text-white" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -127,11 +127,11 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
           </svg>
         </div>
         
-        <h3 className="text-base sm:text-lg font-bold text-primary">
+        <h3 className="text-xl font-bold text-luxury-navy">
           Voice Assistant
         </h3>
         
-        <p className="text-sm sm:text-base text-muted-foreground px-2">
+        <p className="text-muted-foreground">
           Speak with our AI assistant about Aura medical uniforms, sizing, and orders.
         </p>
         
@@ -142,9 +142,9 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
               placeholder="Enter your Vapi Public Key"
               value={vapiPublicKey}
               onChange={(e) => setVapiPublicKey(e.target.value)}
-              className="w-full px-3 py-2 min-h-[44px] border border-border rounded-md text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              className="w-full px-3 py-2 border border-border rounded-md text-sm"
             />
-            <p className="text-xs text-muted-foreground px-1">
+            <p className="text-xs text-muted-foreground">
               Get your public key from your Vapi dashboard
             </p>
           </div>
@@ -156,7 +156,7 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
               <Button 
                 onClick={startCall} 
                 disabled={isLoading || !vapi}
-                className="w-full bg-primary hover:bg-primary/90 min-h-[44px] text-sm sm:text-base"
+                className="w-full bg-medical-blue hover:bg-medical-blue/90"
                 size="lg"
               >
                 {isLoading ? (
@@ -175,16 +175,16 @@ const VapiVoiceBot = ({ assistantId, className = "" }: VapiBotProps) => {
               </Button>
             ) : (
               <div className="space-y-3">
-                <div className="flex items-center justify-center space-x-2 text-primary">
-                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                <div className="flex items-center justify-center space-x-2 text-medical-blue">
+                  <div className="w-2 h-2 bg-medical-blue rounded-full animate-pulse"></div>
                   <span className="text-sm font-medium">Voice call active</span>
-                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-medical-blue rounded-full animate-pulse"></div>
                 </div>
                 <Button 
                   onClick={endCall}
                   variant="destructive" 
                   size="lg"
-                  className="w-full min-h-[44px] text-sm sm:text-base"
+                  className="w-full"
                 >
                   End Call
                 </Button>

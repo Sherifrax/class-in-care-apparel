@@ -190,18 +190,18 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-x-auto scroll-smooth">
-          <div className="flex items-center gap-2 justify-start py-2 min-w-max px-4 whitespace-nowrap">
+        <div className="md:hidden border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex items-center justify-around py-2">
             {navigationItems.map((item) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg text-xs transition-colors min-h-[44px] justify-center min-w-[60px] ${
+                  className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg text-xs transition-colors ${
                     item.current
-                      ? 'text-primary bg-primary/10'
-                      : 'text-muted-foreground hover:text-primary'
+                      ? 'text-primary'
+                      : 'text-muted-foreground'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -215,22 +215,22 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
       {/* Welcome Banner */}
       <div className="border-b bg-gradient-to-r from-primary/5 via-blue-50/50 to-purple-50/30">
-        <div className="container px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="container px-6 py-4">
+          <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base sm:text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-foreground">
                 Welcome back, {user?.user_metadata?.full_name?.split(' ')[0] || 'Admin'}! 👋
               </h2>
               <p className="text-sm text-muted-foreground">
                 Here's what's happening with your store today.
               </p>
             </div>
-            <div className="text-left sm:text-right">
+            <div className="text-right">
               <p className="text-sm font-medium text-foreground">
                 {new Date().toLocaleDateString('en-US', { 
-                  weekday: window.innerWidth >= 640 ? 'long' : 'short', 
+                  weekday: 'long', 
                   year: 'numeric', 
-                  month: window.innerWidth >= 640 ? 'long' : 'short', 
+                  month: 'long', 
                   day: 'numeric' 
                 })}
               </p>

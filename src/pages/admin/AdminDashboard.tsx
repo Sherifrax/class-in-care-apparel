@@ -124,30 +124,28 @@ const AdminDashboardContent: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
+    <div className="container mx-auto px-6 py-8">
       {/* Quick Actions */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground">Dashboard Overview</h1>
-          <p className="text-sm sm:text-base text-muted-foreground">Monitor your business performance</p>
+          <h1 className="text-2xl font-bold text-foreground">Dashboard Overview</h1>
+          <p className="text-muted-foreground">Monitor your business performance</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
-          <Button onClick={() => navigate('/admin/products')} variant="outline" className="min-h-[44px] justify-center">
+        <div className="flex gap-3">
+          <Button onClick={() => navigate('/admin/products')} variant="outline">
             <Package className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Manage Products</span>
-            <span className="sm:hidden">Products</span>
+            Manage Products
           </Button>
-          <Button onClick={() => navigate('/admin/sales')} className="min-h-[44px] justify-center">
+          <Button onClick={() => navigate('/admin/sales')}>
             <BarChart3 className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">View Sales</span>
-            <span className="sm:hidden">Sales</span>
+            View Sales
             <ArrowUpRight className="w-4 h-4 ml-1" />
           </Button>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card className="border-0 shadow-md bg-gradient-to-br from-blue-50 to-blue-100/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-blue-700">Total Orders</CardTitle>
