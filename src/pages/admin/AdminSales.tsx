@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminRoute } from '@/components/admin/AdminRoute';
+import { AdminLayout } from '@/components/admin/AdminLayout';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -217,271 +218,262 @@ const AdminSalesContent: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="container mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/admin/dashboard')}
-              className="mb-4"
-            >
-              ← Back to Dashboard
-            </Button>
-            <h1 className="text-3xl font-bold">Sales Management</h1>
-            <p className="text-muted-foreground">Track and manage your sales</p>
-          </div>
-          
-          <Button onClick={exportToCSV}>
-            <Download className="w-4 h-4 mr-2" />
-            Export CSV
-          </Button>
+    <div className="container mx-auto px-6 py-8">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-2xl font-bold">Sales Management</h1>
+          <p className="text-muted-foreground">Track and manage your sales performance</p>
         </div>
+        
+        <Button onClick={exportToCSV}>
+          <Download className="w-4 h-4 mr-2" />
+          Export CSV
+        </Button>
+      </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">AED {stats.totalRevenue.toFixed(2)}</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalOrders}</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Average Order Value</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">AED {stats.averageOrderValue.toFixed(2)}</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Top Products */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Top Selling Products</CardTitle>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {stats.topProducts.length === 0 ? (
-              <p className="text-muted-foreground">No sales data available</p>
-            ) : (
-              <div className="space-y-2">
-                {stats.topProducts.map((product, index) => (
-                  <div key={product.name} className="flex items-center justify-between p-3 border rounded-lg">
+            <div className="text-2xl font-bold">AED {stats.totalRevenue.toFixed(2)}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalOrders}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Average Order Value</CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">AED {stats.averageOrderValue.toFixed(2)}</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Top Products */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>Top Selling Products</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {stats.topProducts.length === 0 ? (
+            <p className="text-muted-foreground">No sales data available</p>
+          ) : (
+            <div className="space-y-2">
+              {stats.topProducts.map((product, index) => (
+                <div key={product.name} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <span className="font-medium">#{index + 1} {product.name}</span>
+                    <span className="text-sm text-muted-foreground ml-2">
+                      {product.total_sold} sold
+                    </span>
+                  </div>
+                  <span className="font-medium">AED {product.revenue.toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Filters */}
+      <Card className="mb-6">
+        <CardContent className="p-4">
+          <div className="flex gap-4 items-center">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search by email, order ID, or session ID..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-48">
+                <Filter className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="processing">Processing</SelectItem>
+                <SelectItem value="shipped">Shipped</SelectItem>
+                <SelectItem value="delivered">Delivered</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Orders List */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Orders ({filteredOrders.length})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {filteredOrders.length === 0 ? (
+            <p className="text-muted-foreground text-center py-8">No orders found</p>
+          ) : (
+            <div className="space-y-4">
+              {filteredOrders.map((order) => (
+                <div key={order.id} className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
                     <div>
-                      <span className="font-medium">#{index + 1} {product.name}</span>
+                      <span className="font-medium">Order #{order.id.slice(0, 8)}</span>
                       <span className="text-sm text-muted-foreground ml-2">
-                        {product.total_sold} sold
+                        {order.customer_email}
                       </span>
                     </div>
-                    <span className="font-medium">AED {product.revenue.toFixed(2)}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">AED {order.total_amount.toFixed(2)}</span>
+                      {getStatusBadge(order.status)}
+                    </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                  
+                  <div className="text-sm text-muted-foreground mb-3">
+                    Date: {new Date(order.created_at).toLocaleDateString()} • 
+                    Items: {order.order_items?.length || 0} • 
+                    Subtotal: AED {order.subtotal.toFixed(2)} • 
+                    Delivery: AED {order.delivery_cost.toFixed(2)}
+                  </div>
 
-        {/* Filters */}
-        <Card className="mb-6">
-          <CardContent className="p-4">
-            <div className="flex gap-4 items-center">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search by email, order ID, or session ID..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-48">
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Filter by status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="processing">Processing</SelectItem>
-                  <SelectItem value="shipped">Shipped</SelectItem>
-                  <SelectItem value="delivered">Delivered</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Orders List */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Orders ({filteredOrders.length})</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {filteredOrders.length === 0 ? (
-              <p className="text-muted-foreground text-center py-8">No orders found</p>
-            ) : (
-              <div className="space-y-4">
-                {filteredOrders.map((order) => (
-                  <div key={order.id} className="border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <span className="font-medium">Order #{order.id.slice(0, 8)}</span>
-                        <span className="text-sm text-muted-foreground ml-2">
-                          {order.customer_email}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">AED {order.total_amount.toFixed(2)}</span>
-                        {getStatusBadge(order.status)}
+                  {order.order_items && order.order_items.length > 0 && (
+                    <div className="mb-3">
+                      <div className="text-sm font-medium mb-1">Items:</div>
+                      <div className="text-sm text-muted-foreground">
+                        {order.order_items.map((item, index) => (
+                          <span key={item.id}>
+                            {item.product_name} ({item.size}) x{item.quantity}
+                            {index < order.order_items!.length - 1 && ', '}
+                          </span>
+                        ))}
                       </div>
                     </div>
+                  )}
+
+                  <div className="flex gap-2">
+                    <Select
+                      value={order.status}
+                      onValueChange={(value) => updateOrderStatus(order.id, value)}
+                    >
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="processing">Processing</SelectItem>
+                        <SelectItem value="shipped">Shipped</SelectItem>
+                        <SelectItem value="delivered">Delivered</SelectItem>
+                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                      </SelectContent>
+                    </Select>
                     
-                    <div className="text-sm text-muted-foreground mb-3">
-                      Date: {new Date(order.created_at).toLocaleDateString()} • 
-                      Items: {order.order_items?.length || 0} • 
-                      Subtotal: AED {order.subtotal.toFixed(2)} • 
-                      Delivery: AED {order.delivery_cost.toFixed(2)}
-                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setSelectedOrder(order)}
+                    >
+                      <Eye className="w-4 h-4 mr-1" />
+                      View Details
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-                    {order.order_items && order.order_items.length > 0 && (
-                      <div className="mb-3">
-                        <div className="text-sm font-medium mb-1">Items:</div>
-                        <div className="text-sm text-muted-foreground">
-                          {order.order_items.map((item, index) => (
-                            <span key={item.id}>
-                              {item.product_name} ({item.size}) x{item.quantity}
-                              {index < order.order_items!.length - 1 && ', '}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+      {/* Order Details Modal */}
+      {selectedOrder && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <CardHeader>
+              <CardTitle>Order Details - #{selectedOrder.id.slice(0, 8)}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <strong>Customer Email:</strong>
+                  <p>{selectedOrder.customer_email}</p>
+                </div>
+                <div>
+                  <strong>Status:</strong>
+                  <div className="mt-1">{getStatusBadge(selectedOrder.status)}</div>
+                </div>
+                <div>
+                  <strong>Order Date:</strong>
+                  <p>{new Date(selectedOrder.created_at).toLocaleString()}</p>
+                </div>
+                <div>
+                  <strong>Session ID:</strong>
+                  <p className="text-sm font-mono">{selectedOrder.session_id}</p>
+                </div>
+              </div>
 
-                    <div className="flex gap-2">
-                      <Select
-                        value={order.status}
-                        onValueChange={(value) => updateOrderStatus(order.id, value)}
-                      >
-                        <SelectTrigger className="w-32">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="pending">Pending</SelectItem>
-                          <SelectItem value="processing">Processing</SelectItem>
-                          <SelectItem value="shipped">Shipped</SelectItem>
-                          <SelectItem value="delivered">Delivered</SelectItem>
-                          <SelectItem value="cancelled">Cancelled</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setSelectedOrder(order)}
-                      >
-                        <Eye className="w-4 h-4 mr-1" />
-                        View Details
-                      </Button>
-                    </div>
+              {selectedOrder.shipping_address && (
+                <div>
+                  <strong>Shipping Address:</strong>
+                  <pre className="text-sm mt-1 p-2 bg-gray-50 rounded">
+                    {JSON.stringify(selectedOrder.shipping_address, null, 2)}
+                  </pre>
+                </div>
+              )}
+
+              <div>
+                <strong>Order Items:</strong>
+                {selectedOrder.order_items?.map((item) => (
+                  <div key={item.id} className="flex justify-between items-center p-2 border rounded mt-2">
+                    <span>{item.product_name} ({item.size})</span>
+                    <span>x{item.quantity} @ AED {item.unit_price.toFixed(2)}</span>
                   </div>
                 ))}
               </div>
-            )}
-          </CardContent>
-        </Card>
 
-        {/* Order Details Modal */}
-        {selectedOrder && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-              <CardHeader>
-                <CardTitle>Order Details - #{selectedOrder.id.slice(0, 8)}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <strong>Customer Email:</strong>
-                    <p>{selectedOrder.customer_email}</p>
-                  </div>
-                  <div>
-                    <strong>Status:</strong>
-                    <div className="mt-1">{getStatusBadge(selectedOrder.status)}</div>
-                  </div>
-                  <div>
-                    <strong>Order Date:</strong>
-                    <p>{new Date(selectedOrder.created_at).toLocaleString()}</p>
-                  </div>
-                  <div>
-                    <strong>Session ID:</strong>
-                    <p className="text-sm font-mono">{selectedOrder.session_id}</p>
-                  </div>
+              <div className="border-t pt-4">
+                <div className="flex justify-between mb-2">
+                  <span>Subtotal:</span>
+                  <span>AED {selectedOrder.subtotal.toFixed(2)}</span>
                 </div>
-
-                {selectedOrder.shipping_address && (
-                  <div>
-                    <strong>Shipping Address:</strong>
-                    <pre className="text-sm mt-1 p-2 bg-gray-50 rounded">
-                      {JSON.stringify(selectedOrder.shipping_address, null, 2)}
-                    </pre>
-                  </div>
-                )}
-
-                <div>
-                  <strong>Order Items:</strong>
-                  {selectedOrder.order_items?.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center p-2 border rounded mt-2">
-                      <span>{item.product_name} ({item.size})</span>
-                      <span>x{item.quantity} @ AED {item.unit_price.toFixed(2)}</span>
-                    </div>
-                  ))}
+                <div className="flex justify-between mb-2">
+                  <span>Delivery:</span>
+                  <span>AED {selectedOrder.delivery_cost.toFixed(2)}</span>
                 </div>
-
-                <div className="border-t pt-4">
-                  <div className="flex justify-between mb-2">
-                    <span>Subtotal:</span>
-                    <span>AED {selectedOrder.subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between mb-2">
-                    <span>Delivery:</span>
-                    <span>AED {selectedOrder.delivery_cost.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between font-bold text-lg">
-                    <span>Total:</span>
-                    <span>AED {selectedOrder.total_amount.toFixed(2)}</span>
-                  </div>
+                <div className="flex justify-between font-bold text-lg">
+                  <span>Total:</span>
+                  <span>AED {selectedOrder.total_amount.toFixed(2)}</span>
                 </div>
+              </div>
 
-                <div className="flex justify-end gap-2">
-                  <Button variant="outline" onClick={() => setSelectedOrder(null)}>
-                    Close
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-      </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setSelectedOrder(null)}>
+                  Close
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
@@ -489,7 +481,9 @@ const AdminSalesContent: React.FC = () => {
 const AdminSales: React.FC = () => {
   return (
     <AdminRoute>
-      <AdminSalesContent />
+      <AdminLayout>
+        <AdminSalesContent />
+      </AdminLayout>
     </AdminRoute>
   );
 };

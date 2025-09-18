@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Plus, Edit, Trash2, Upload, Image as ImageIcon, Package } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminRoute } from '@/components/admin/AdminRoute';
+import { AdminLayout } from '@/components/admin/AdminLayout';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -593,7 +594,9 @@ const AdminProductsContent: React.FC = () => {
 const AdminProducts: React.FC = () => {
   return (
     <AdminRoute>
-      <AdminProductsContent />
+      <AdminLayout>
+        <AdminProductsContent />
+      </AdminLayout>
     </AdminRoute>
   );
 };
