@@ -25,6 +25,7 @@ import { AdminLogin } from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminSales from "./pages/admin/AdminSales";
+import { AdminRedirectHandler } from "./components/admin/AdminRedirectHandler";
 
 const queryClient = new QueryClient();
 
@@ -46,16 +47,16 @@ const AppContent = () => {
     <>
       {!isAdminRoute && <Header />}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/features" element={<Features />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/" element={<AdminRedirectHandler><Home /></AdminRedirectHandler>} />
+        <Route path="/about" element={<AdminRedirectHandler><About /></AdminRedirectHandler>} />
+        <Route path="/products" element={<AdminRedirectHandler><Products /></AdminRedirectHandler>} />
+        <Route path="/features" element={<AdminRedirectHandler><Features /></AdminRedirectHandler>} />
+        <Route path="/contact" element={<AdminRedirectHandler><Contact /></AdminRedirectHandler>} />
+        <Route path="/profile" element={<AdminRedirectHandler><Profile /></AdminRedirectHandler>} />
+        <Route path="/settings" element={<AdminRedirectHandler><Settings /></AdminRedirectHandler>} />
+        <Route path="/cart" element={<AdminRedirectHandler><Cart /></AdminRedirectHandler>} />
+        <Route path="/checkout" element={<AdminRedirectHandler><Checkout /></AdminRedirectHandler>} />
+        <Route path="/payment-success" element={<AdminRedirectHandler><PaymentSuccess /></AdminRedirectHandler>} />
         
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
