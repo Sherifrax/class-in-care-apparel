@@ -136,29 +136,29 @@ const Products = () => {
       <AuroraCollection />
       
       {/* Filter Bar */}
-      <section className="py-8 bg-background border-b">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm" className="gap-2">
+      <section className="py-4 sm:py-6 lg:py-8 bg-background border-b">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              <Button variant="outline" size="sm" className="gap-2 w-full sm:w-auto">
                 <Filter className="w-4 h-4" />
                 Filters
               </Button>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                 <Button
                   variant={selectedCategory === "All Collections" ? "default" : "ghost"}
                   size="sm"
-                  className="text-xs"
+                  className="text-xs whitespace-nowrap"
                   onClick={() => setSelectedCategory("All Collections")}
                 >
-                  All Collections ({selectedCategory === "All Collections" ? filteredProducts.length : products.length})
+                  All ({selectedCategory === "All Collections" ? filteredProducts.length : products.length})
                 </Button>
                 {categoriesWithCounts.map((category) => (
                   <Button
                     key={category.id}
                     variant={selectedCategory === category.name ? "default" : "ghost"}
                     size="sm"
-                    className="text-xs"
+                    className="text-xs whitespace-nowrap"
                     onClick={() => setSelectedCategory(category.name)}
                   >
                     {category.name} ({selectedCategory === category.name ? filteredProducts.length : category.count})
@@ -166,8 +166,8 @@ const Products = () => {
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">View:</span>
+            <div className="flex items-center gap-2 sm:mt-0 mt-2">
+              <span className="text-sm text-muted-foreground hidden sm:inline">View:</span>
               <Button variant="ghost" size="sm">
                 <Grid className="w-4 h-4" />
               </Button>
@@ -180,20 +180,20 @@ const Products = () => {
       </section>
       
       {/* Products Grid */}
-      <section className="py-20 bg-gradient-to-b from-background to-soft-gray/20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
-              Shop the <span className="text-gradient bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AURA Collection</span>
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-background to-muted/20">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 sm:mb-16 animate-fade-in">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground mb-4 sm:mb-6">
+              Shop the <span className="text-gradient bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">AURA Collection</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
               Discover our complete range of premium medical uniforms designed for the modern healthcare professional.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
             {filteredProducts.map((product, index) => (
-              <Card key={product.id} className="p-6 shadow-lg hover:shadow-xl transition-all duration-300 group animate-scale-in relative overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
+              <Card key={product.id} className="p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 group animate-scale-in relative overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
                 {/* Badge */}
                 {product.badge && (
                   <Badge className="absolute top-4 left-4 z-10" variant={product.badge === "Best Seller" ? "default" : "secondary"}>
@@ -210,7 +210,7 @@ const Products = () => {
                   <Heart className="w-4 h-4" />
                 </Button>
 
-                  <div className="rounded-2xl h-64 mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
+                  <div className="rounded-xl sm:rounded-2xl h-48 sm:h-56 lg:h-64 mb-4 sm:mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
                   <img 
                     src={(product.images && product.images.length > 0) ? product.images[0] : product.image} 
                     alt={product.name}
@@ -344,29 +344,29 @@ const Products = () => {
       
       {/* Product Detail Dialog */}
       <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-full sm:max-w-2xl mx-4 sm:mx-auto max-h-[90vh] overflow-y-auto">
           {selectedProduct && (
             <>
               <DialogHeader>
-                <DialogTitle>{selectedProduct.name}</DialogTitle>
+                <DialogTitle className="text-lg sm:text-xl">{selectedProduct.name}</DialogTitle>
               </DialogHeader>
               
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid lg:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   {selectedProduct.images && selectedProduct.images.length > 1 ? (
                     <div className="space-y-2">
                       <img
                         src={selectedProduct.images[0]}
                         alt={selectedProduct.name}
-                        className="w-full h-64 object-cover rounded-lg"
+                        className="w-full h-48 sm:h-64 object-cover rounded-lg"
                       />
-                      <div className="flex gap-2 overflow-x-auto">
+                      <div className="flex gap-2 overflow-x-auto pb-2">
                         {selectedProduct.images.map((image, index) => (
                           <img
                             key={index}
                             src={image}
                             alt={`${selectedProduct.name} ${index + 1}`}
-                            className="w-16 h-16 object-cover rounded border-2 border-transparent hover:border-primary cursor-pointer flex-shrink-0"
+                            className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded border-2 border-transparent hover:border-primary cursor-pointer flex-shrink-0"
                             onClick={(e) => {
                               const mainImage = e.currentTarget.parentElement?.previousElementSibling as HTMLImageElement;
                               if (mainImage) mainImage.src = image;
@@ -379,19 +379,19 @@ const Products = () => {
                     <img
                       src={(selectedProduct.images && selectedProduct.images.length > 0) ? selectedProduct.images[0] : selectedProduct.image}
                       alt={selectedProduct.name}
-                      className="w-full h-64 object-cover rounded-lg"
+                      className="w-full h-48 sm:h-64 object-cover rounded-lg"
                     />
                   )}
                 </div>
                 
                 <div className="space-y-4">
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-2xl font-bold text-luxury-navy">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                      <span className="text-xl sm:text-2xl font-bold text-foreground">
                         {selectedProduct.price}
                       </span>
                       {selectedProduct.original_price && (
-                        <span className="text-lg text-muted-foreground line-through">
+                        <span className="text-base sm:text-lg text-muted-foreground line-through">
                           {selectedProduct.original_price}
                         </span>
                       )}
