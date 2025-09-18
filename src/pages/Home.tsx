@@ -51,18 +51,16 @@ const Home = () => {
       <Hero />
       
       {/* Stats Section */}
-      <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-r from-primary/5 to-accent/10">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+      <section className="py-16 bg-gradient-to-r from-medical-blue/5 to-medical-teal/5">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center animate-scale-in" style={{animationDelay: `${index * 0.1}s`}}>
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-primary-foreground mx-auto mb-3 sm:mb-4">
-                  <div className="w-4 h-4 sm:w-5 sm:h-5">
-                    {stat.icon}
-                  </div>
+                <div className="w-12 h-12 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center text-white mx-auto mb-4">
+                  {stat.icon}
                 </div>
-                <div className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground mb-1 sm:mb-2">{stat.number}</div>
-                <div className="text-xs sm:text-sm text-muted-foreground px-1">{stat.label}</div>
+                <div className="text-3xl md:text-4xl font-bold text-luxury-navy mb-2">{stat.number}</div>
+                <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -70,71 +68,71 @@ const Home = () => {
       </section>
       
       {/* Quick Overview Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-background to-muted/20">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12 sm:mb-16 animate-fade-in">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground mb-4 sm:mb-6">
-              Where <span className="text-gradient bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Class</span> meets Care
+      <section className="py-20 bg-gradient-to-b from-background to-soft-gray/20">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
+              Where <span className="text-gradient bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Class</span> meets Care
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Discover premium medical uniforms that don't compromise on style, comfort, or performance.
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
-            <div className="text-center group animate-scale-in sm:col-span-2 lg:col-span-1" style={{animationDelay: "0.1s"}}>
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-primary-foreground" />
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            <div className="text-center group animate-scale-in" style={{animationDelay: "0.1s"}}>
+              <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Sparkles className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">Premium Quality</h3>
-              <p className="text-sm sm:text-base text-muted-foreground px-2">Luxury-inspired materials engineered for healthcare professionals</p>
+              <h3 className="text-xl font-semibold text-luxury-navy mb-3">Premium Quality</h3>
+              <p className="text-muted-foreground">Luxury-inspired materials engineered for healthcare professionals</p>
             </div>
 
             <div className="text-center group animate-scale-in" style={{animationDelay: "0.2s"}}>
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Heart className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-primary-foreground" />
+              <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Heart className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">Comfort First</h3>
-              <p className="text-sm sm:text-base text-muted-foreground px-2">Designed for long shifts with breathable, flexible fabrics</p>
+              <h3 className="text-xl font-semibold text-luxury-navy mb-3">Comfort First</h3>
+              <p className="text-muted-foreground">Designed for long shifts with breathable, flexible fabrics</p>
             </div>
 
-            <div className="text-center group animate-scale-in sm:col-span-2 lg:col-span-1" style={{animationDelay: "0.3s"}}>
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Users className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-primary-foreground" />
+            <div className="text-center group animate-scale-in" style={{animationDelay: "0.3s"}}>
+              <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Users className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">Trusted by Professionals</h3>
-              <p className="text-sm sm:text-base text-muted-foreground px-2">Join thousands of healthcare workers who choose Aura</p>
+              <h3 className="text-xl font-semibold text-luxury-navy mb-3">Trusted by Professionals</h3>
+              <p className="text-muted-foreground">Join thousands of healthcare workers who choose Aura</p>
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center mb-12 sm:mb-20">
-            <div className="animate-slide-in-left order-2 lg:order-1">
-              <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6">Experience the AURA Collection</h3>
-              <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
+          <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
+            <div className="animate-slide-in-left">
+              <h3 className="text-3xl font-bold text-luxury-navy mb-6">Experience the AURA Collection</h3>
+              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                 Our flagship collection combines performance sportswear technology with clinical elegance. 
                 From sleek full-sleeve sets that project authority to lightweight options for maximum flexibility.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Link to="/products" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto group">
+              <div className="flex flex-wrap gap-4">
+                <Link to="/products">
+                  <Button size="lg" className="group">
                     Shop AURA Collection
                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Link to="/about" className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                <Link to="/about">
+                  <Button variant="outline" size="lg">
                     Learn More
                   </Button>
                 </Link>
               </div>
             </div>
-            <div className="animate-slide-in-right order-1 lg:order-2">
-              <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center animate-float">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-primary to-accent rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center animate-pulse-glow">
-                  <span className="text-2xl sm:text-3xl font-bold text-primary-foreground">A</span>
+            <div className="animate-slide-in-right">
+              <div className="bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-3xl p-8 text-center animate-float">
+                <div className="w-24 h-24 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto mb-6 flex items-center justify-center animate-pulse-glow">
+                  <span className="text-3xl font-bold text-white">A</span>
                 </div>
-                <h4 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">Premium Experience</h4>
-                <p className="text-sm sm:text-base text-muted-foreground">Elevate your professional wardrobe with uniforms that feel as good as they look.</p>
+                <h4 className="text-2xl font-bold text-luxury-navy mb-4">Premium Experience</h4>
+                <p className="text-muted-foreground">Elevate your professional wardrobe with uniforms that feel as good as they look.</p>
               </div>
             </div>
           </div>
