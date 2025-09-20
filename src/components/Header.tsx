@@ -63,18 +63,18 @@ const Header = () => {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group" onClick={closeMobileMenu}>
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <Link to="/" className="flex items-center space-x-3 group" onClick={closeMobileMenu}>
+              <div className="w-10 h-10 rounded-lg overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg">
                 <img 
                   src={auraLogo} 
                   alt="AURA - Where Presence Becomes Power" 
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="text-lg sm:text-xl font-bold text-primary">AURA</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">AURA</span>
             </Link>
             
             {/* Desktop Navigation */}
@@ -85,12 +85,12 @@ const Header = () => {
                   to={item.href}
                   className={`text-sm font-medium transition-colors relative group px-2 py-1 ${
                     isActive(item.href) 
-                      ? 'text-primary' 
-                      : 'text-foreground hover:text-primary'
+                      ? 'text-medical-blue' 
+                      : 'text-foreground hover:text-medical-blue'
                   }`}
                 >
                   {item.name}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
+                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-medical-blue transition-all duration-300 ${
                     isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
                   }`}></span>
                 </Link>
@@ -215,7 +215,7 @@ const Header = () => {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <span className="text-lg font-bold text-primary">
+                      <span className="text-lg font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">
                         AURA
                       </span>
                     </SheetTitle>
@@ -231,7 +231,7 @@ const Header = () => {
                           onClick={closeMobileMenu}
                           className={`flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors ${
                             isActive(item.href)
-                              ? 'bg-primary/10 text-primary border-l-4 border-primary'
+                              ? 'bg-medical-blue/10 text-medical-blue border-l-4 border-medical-blue'
                               : 'text-foreground hover:bg-accent hover:text-accent-foreground'
                           }`}
                         >

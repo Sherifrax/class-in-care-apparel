@@ -33,7 +33,7 @@ const FounderSection = () => {
     <section className="py-20 bg-gradient-to-b from-background to-soft-gray/10">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
             About Our Founder
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -58,7 +58,7 @@ const FounderSection = () => {
                   alt={image.alt}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             ))}
           </div>
@@ -67,17 +67,17 @@ const FounderSection = () => {
           <div className="animate-fade-in-right">
             <Card className="p-8 bg-white/80 backdrop-blur-sm border-0 shadow-2xl">
               <div className="mb-8">
-                <h3 className="text-3xl font-bold text-primary mb-4">
+                <h3 className="text-3xl font-bold text-luxury-navy mb-4">
                   Dr. Bayan Hares
                 </h3>
-                <p className="text-xl text-secondary-foreground font-semibold mb-6">
+                <p className="text-xl text-medical-blue font-semibold mb-6">
                   Founder & Chief Designer
                 </p>
                 
                 <div className="space-y-4 mb-8">
                   {achievements.map((achievement, index) => (
                     <div key={index} className="flex items-center text-muted-foreground">
-                      <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-primary-foreground mr-4 flex-shrink-0">
+                      <div className="w-10 h-10 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center text-white mr-4 flex-shrink-0">
                         {achievement.icon}
                       </div>
                       <span className="font-medium">{achievement.text}</span>
@@ -98,8 +98,8 @@ const FounderSection = () => {
                 </p>
               </div>
 
-              <div className="bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl p-6 mb-8">
-                <h4 className="font-semibold text-primary mb-3">The AURA Philosophy</h4>
+              <div className="bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-xl p-6 mb-8">
+                <h4 className="font-semibold text-luxury-navy mb-3">The AURA Philosophy</h4>
                 <p className="text-muted-foreground text-sm">
                   Combining the precision of medical practice with the elegance of high fashion to create uniforms that make healthcare professionals feel confident, comfortable, and professional.
                 </p>
