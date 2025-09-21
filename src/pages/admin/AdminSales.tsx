@@ -67,7 +67,42 @@ const AdminSalesContent: React.FC = () => {
 
   useEffect(() => {
     fetchOrders();
+    setupRealtimeSubscription();
   }, []);
+
+  const setupRealtimeSubscription = () => {
+    const channel = supabase
+      .channel('admin-sales-orders')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders',
+        },
+        (payload) => {
+          console.log('Order update in sales:', payload);
+          fetchOrders();
+          
+          if (payload.eventType === 'INSERT') {
+            toast({
+              title: "New Order!",
+              description: `New order received from ${payload.new.customer_email}`,
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            toast({
+              title: "Order Updated",
+              description: `Order ${payload.new.id.slice(0, 8)} status changed to ${payload.new.status}`,
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  };
 
   useEffect(() => {
     filterOrders();

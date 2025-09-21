@@ -16,6 +16,7 @@ import Products from "./pages/Products";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
 import Profile from "./pages/Profile";
+import MyOrders from "./pages/MyOrders";
 import Settings from "./pages/Settings";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
@@ -53,6 +54,7 @@ const AppContent = () => {
         <Route path="/features" element={<AdminRedirectHandler><Features /></AdminRedirectHandler>} />
         <Route path="/contact" element={<AdminRedirectHandler><Contact /></AdminRedirectHandler>} />
         <Route path="/profile" element={<AdminRedirectHandler><Profile /></AdminRedirectHandler>} />
+        <Route path="/my-orders" element={<AdminRedirectHandler><MyOrders /></AdminRedirectHandler>} />
         <Route path="/settings" element={<AdminRedirectHandler><Settings /></AdminRedirectHandler>} />
         <Route path="/cart" element={<AdminRedirectHandler><Cart /></AdminRedirectHandler>} />
         <Route path="/checkout" element={<AdminRedirectHandler><Checkout /></AdminRedirectHandler>} />

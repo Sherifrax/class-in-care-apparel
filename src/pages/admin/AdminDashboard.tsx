@@ -17,6 +17,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { AdminRoute } from '@/components/admin/AdminRoute';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import { AdminNotifications } from '@/components/admin/AdminNotifications';
 
 interface DashboardStats {
   totalOrders: number;
@@ -38,10 +40,41 @@ const AdminDashboardContent: React.FC = () => {
   });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchDashboardStats();
+    setupRealtimeSubscription();
   }, []);
+
+  const setupRealtimeSubscription = () => {
+    const channel = supabase
+      .channel('admin-orders')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders',
+        },
+        (payload) => {
+          console.log('New order update:', payload);
+          fetchDashboardStats();
+          
+          if (payload.eventType === 'INSERT') {
+            toast({
+              title: "New Order Received!",
+              description: `Order from ${payload.new.customer_email} - AED ${payload.new.total_amount}`,
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  };
 
   const fetchDashboardStats = async () => {
     try {
@@ -132,6 +165,7 @@ const AdminDashboardContent: React.FC = () => {
           <p className="text-muted-foreground">Monitor your business performance</p>
         </div>
         <div className="flex gap-3">
+          <AdminNotifications />
           <Button onClick={() => navigate('/admin/products')} variant="outline">
             <Package className="w-4 h-4 mr-2" />
             Manage Products

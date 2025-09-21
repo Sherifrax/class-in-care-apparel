@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag, ShoppingCart } from "lucide-react";
+import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag, ShoppingCart, Package } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -150,6 +150,12 @@ const Header = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
+                      <Link to="/my-orders" className="flex items-center">
+                        <Package className="mr-2 h-4 w-4" />
+                        <span>My Orders</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link to="/settings" className="flex items-center">
                         <Settings className="mr-2 h-4 w-4" />
                         <span>Settings</span>
@@ -269,6 +275,14 @@ const Header = () => {
                             >
                               <User className="mr-3 h-5 w-5" />
                               Profile
+                            </Link>
+                            <Link
+                              to="/my-orders"
+                              onClick={closeMobileMenu}
+                              className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                            >
+                              <Package className="mr-3 h-5 w-5" />
+                              My Orders
                             </Link>
                             <Link
                               to="/settings"
