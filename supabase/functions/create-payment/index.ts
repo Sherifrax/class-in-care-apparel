@@ -99,8 +99,6 @@ serve(async (req) => {
       // Configure essential payment method types for UAE market
       payment_method_types: [
         'card',        // Credit/debit cards (Visa, Mastercard, Amex)
-        'apple_pay',   // Apple Pay
-        'google_pay',  // Google Pay
         'link',        // Stripe Link (one-click checkout)
       ],
       
@@ -112,12 +110,6 @@ serve(async (req) => {
         card: {
           setup_future_usage: 'off_session',
           request_three_d_secure: 'automatic', // Enhanced security
-        },
-        apple_pay: {
-          setup_future_usage: 'off_session',
-        },
-        google_pay: {
-          setup_future_usage: 'off_session',
         },
       },
       
