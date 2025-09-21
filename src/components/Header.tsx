@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import * as React from "react";
 import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag, ShoppingCart, Package, Heart } from "lucide-react";
 import {
   DropdownMenu,
@@ -27,6 +28,13 @@ const Header = () => {
   const { getTotalItems } = useCart();
   const isMobile = useIsMobile();
   const cartItemCount = getTotalItems();
+  
+  // Add loading state to prevent layout shifts
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  React.useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -79,7 +87,7 @@ const Header = () => {
             </Link>
             
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
+            <nav className={`hidden lg:flex items-center space-x-8 ${!isLoaded ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}>
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -99,7 +107,7 @@ const Header = () => {
             </nav>
             
             {/* Desktop Authentication & CTA */}
-            <div className="hidden lg:flex items-center space-x-4">
+            <div className={`hidden lg:flex items-center space-x-4 ${!isLoaded ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}>
               <Link to="/products">
                 <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
                   <ShoppingBag className="h-4 w-4 mr-2" />
@@ -195,7 +203,7 @@ const Header = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="lg:hidden flex items-center space-x-2">
+            <div className={`lg:hidden flex items-center space-x-2 ${!isLoaded ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}>
               <Link to="/products">
                 <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
                   <ShoppingBag className="h-4 w-4" />
