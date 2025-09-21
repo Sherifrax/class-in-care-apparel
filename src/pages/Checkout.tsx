@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { CreditCard, Lock } from 'lucide-react';
+import { ShieldCheck, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { supabase } from '@/integrations/supabase/client';
@@ -38,8 +35,7 @@ const CheckoutContent = () => {
 
   const [loading, setLoading] = useState(false);
   
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleProceedToCheckout = async () => {
     setLoading(true);
 
     try {
@@ -79,7 +75,6 @@ const CheckoutContent = () => {
       }
     } catch (error: any) {
       console.error('Payment error:', error);
-      // Use toast for better UX
       toast({
         title: "Payment Failed",
         description: error.message || "An unexpected error occurred. Please try again.",
@@ -94,115 +89,51 @@ const CheckoutContent = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+          <h1 className="text-3xl font-bold mb-8">Secure Checkout</h1>
           
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Checkout Form */}
+            {/* Checkout Info */}
             <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Shipping Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+              {/* Security Notice */}
+              <Card className="border-green-200 bg-green-50">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 text-green-800">
+                    <ShieldCheck className="w-6 h-6" />
                     <div>
-                      <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" required />
-                    </div>
-                    <div>
-                      <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" required />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" required />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="address">Address</Label>
-                    <Input id="address" required />
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <Label htmlFor="city">City</Label>
-                      <Input id="city" required />
-                    </div>
-                    <div>
-                      <Label htmlFor="state">State</Label>
-                      <Input id="state" required />
-                    </div>
-                    <div>
-                      <Label htmlFor="zipCode">ZIP Code</Label>
-                      <Input id="zipCode" required />
+                      <h3 className="font-semibold">Secure Payment Processing</h3>
+                      <p className="text-sm text-green-700 mt-1">
+                        You'll be redirected to Stripe's secure checkout where you can enter your payment and shipping details safely.
+                      </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
+              {/* Proceed to Checkout Button */}
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CreditCard className="w-5 h-5" />
-                    Payment Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                      <Label htmlFor="cardNumber">Card Number</Label>
-                      <Input 
-                        id="cardNumber" 
-                        placeholder="1234 5678 9012 3456" 
-                        required 
-                      />
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="expiry">Expiry Date</Label>
-                        <Input 
-                          id="expiry" 
-                          placeholder="MM/YY" 
-                          required 
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="cvc">CVC</Label>
-                        <Input 
-                          id="cvc" 
-                          placeholder="123" 
-                          required 
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mt-4">
-                      <Lock className="w-4 h-4" />
-                      Your payment information is secure and encrypted
-                    </div>
-
-                    <Button 
-                      type="submit"
-                      className="w-full" 
-                      size="lg"
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          <CreditCard className="w-4 h-4 mr-2" />
-                          Complete Payment (AED {getTotalPrice().toFixed(2)})
-                        </>
-                      )}
-                    </Button>
-                  </form>
+                <CardContent className="p-6">
+                  <Button 
+                    onClick={handleProceedToCheckout}
+                    className="w-full" 
+                    size="lg"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Checking availability...
+                      </>
+                    ) : (
+                      <>
+                        Proceed to Secure Checkout
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </>
+                    )}
+                  </Button>
+                  
+                  <div className="text-center mt-4 text-sm text-muted-foreground">
+                    Total: <strong>AED {(getTotalPrice() + 25).toFixed(2)}</strong> (including AED 25.00 delivery)
+                  </div>
                 </CardContent>
               </Card>
               
