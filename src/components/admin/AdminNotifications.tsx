@@ -23,8 +23,10 @@ export const AdminNotifications: React.FC = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    setupRealtimeNotifications();
+    const cleanup = setupRealtimeNotifications();
     checkLowStock();
+    
+    return cleanup;
   }, []);
 
   const setupRealtimeNotifications = () => {
@@ -75,11 +77,15 @@ export const AdminNotifications: React.FC = () => {
 
   const checkLowStock = async () => {
     try {
-      const { data: lowStockProducts } = await supabase
+      const { data: lowStockProducts, error } = await supabase
         .from('products')
         .select('*')
-        .lte('stock_quantity', 'low_stock_threshold')
         .eq('track_stock', true);
+      
+      if (error) {
+        console.error('Error fetching products for stock check:', error);
+        return;
+      }
 
       lowStockProducts?.forEach(product => {
         if (product.stock_quantity <= product.low_stock_threshold) {
@@ -151,10 +157,10 @@ export const AdminNotifications: React.FC = () => {
   return (
     <div className="relative">
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         onClick={() => setIsOpen(!isOpen)}
-        className="relative"
+        className="relative h-9 w-9 p-0"
       >
         <Bell className="w-4 h-4" />
         {unreadCount > 0 && (

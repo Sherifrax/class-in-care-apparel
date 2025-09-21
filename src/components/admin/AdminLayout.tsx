@@ -16,12 +16,12 @@ import {
   Settings, 
   LogOut, 
   User,
-  Bell,
   Search
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { AdminNotifications } from '@/components/admin/AdminNotifications';
 import auraLogo from '@/assets/aura-logo.jpg';
 
 interface AdminLayoutProps {
@@ -135,12 +135,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <Search className="h-4 w-4" />
             </Button>
             
-            <Button variant="ghost" size="sm" className="h-9 w-9 p-0 relative">
-              <Bell className="h-4 w-4" />
-              <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">
-                3
-              </span>
-            </Button>
+            <AdminNotifications />
 
             {/* User Menu */}
             <DropdownMenu>
