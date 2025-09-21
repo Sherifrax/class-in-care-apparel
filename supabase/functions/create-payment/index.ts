@@ -90,11 +90,6 @@ serve(async (req) => {
       line_items: lineItems,
       mode: "payment",
       
-      // Enable comprehensive automatic payment methods
-      automatic_payment_methods: {
-        enabled: true,
-        allow_redirects: 'always', // Enable redirect-based payment methods
-      },
       
       // Configure essential payment method types for UAE market
       payment_method_types: [
@@ -102,8 +97,6 @@ serve(async (req) => {
         'link',        // Stripe Link (one-click checkout)
       ],
       
-      // Payment method configuration for enhanced UX
-      payment_method_configuration: undefined, // Use account default
       
       // Payment method options for better UX and security
       payment_method_options: {
