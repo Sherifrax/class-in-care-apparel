@@ -96,14 +96,12 @@ serve(async (req) => {
         allow_redirects: 'always', // Enable redirect-based payment methods
       },
       
-      // Configure specific payment method types for maximum coverage
+      // Configure essential payment method types for UAE market
       payment_method_types: [
-        'card',              // Credit/debit cards
-        'apple_pay',         // Apple Pay
-        'google_pay',        // Google Pay
-        'link',              // Stripe Link
-        'klarna',            // Klarna BNPL
-        'afterpay_clearpay', // Afterpay/Clearpay BNPL
+        'card',        // Credit/debit cards (Visa, Mastercard, Amex)
+        'apple_pay',   // Apple Pay
+        'google_pay',  // Google Pay
+        'link',        // Stripe Link (one-click checkout)
       ],
       
       // Payment method configuration for enhanced UX
@@ -120,12 +118,6 @@ serve(async (req) => {
         },
         google_pay: {
           setup_future_usage: 'off_session',
-        },
-        klarna: {
-          setup_future_usage: 'none',
-        },
-        afterpay_clearpay: {
-          setup_future_usage: 'none',
         },
       },
       
