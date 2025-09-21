@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag, ShoppingCart, Package } from "lucide-react";
+import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag, ShoppingCart, Package, Heart } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +32,7 @@ const Header = () => {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Products", href: "/products" },
+    { name: "Favorites", href: "/favorites" },
     { name: "Features", href: "/features" },
     { name: "Contact", href: "/contact" }
   ];
@@ -106,6 +107,12 @@ const Header = () => {
                 </Button>
               </Link>
               
+              <Link to="/favorites" className="relative">
+                <Button variant="ghost" size="sm" className="relative">
+                  <Heart className="h-4 w-4" />
+                </Button>
+              </Link>
+              
               {/* Cart Icon */}
               <Link to="/cart" className="relative">
                 <Button variant="ghost" size="sm" className="relative">
@@ -153,6 +160,12 @@ const Header = () => {
                       <Link to="/my-orders" className="flex items-center">
                         <Package className="mr-2 h-4 w-4" />
                         <span>My Orders</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/favorites" className="flex items-center">
+                        <Heart className="mr-2 h-4 w-4" />
+                        <span>Favorites</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>

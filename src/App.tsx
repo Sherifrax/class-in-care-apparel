@@ -7,12 +7,14 @@ import { useEffect, useState } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { Auth } from "@/components/auth/Auth";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Products from "./pages/Products";
+import Favorites from "./pages/Favorites";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
 import Profile from "./pages/Profile";
@@ -51,6 +53,7 @@ const AppContent = () => {
         <Route path="/" element={<AdminRedirectHandler><Home /></AdminRedirectHandler>} />
         <Route path="/about" element={<AdminRedirectHandler><About /></AdminRedirectHandler>} />
         <Route path="/products" element={<AdminRedirectHandler><Products /></AdminRedirectHandler>} />
+        <Route path="/favorites" element={<AdminRedirectHandler><Favorites /></AdminRedirectHandler>} />
         <Route path="/features" element={<AdminRedirectHandler><Features /></AdminRedirectHandler>} />
         <Route path="/contact" element={<AdminRedirectHandler><Contact /></AdminRedirectHandler>} />
         <Route path="/profile" element={<AdminRedirectHandler><Profile /></AdminRedirectHandler>} />
@@ -84,13 +87,15 @@ const App = () => (
     <AuthProvider>
       <AdminProvider>
         <CartProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <AppContent />
-            </BrowserRouter>
-          </TooltipProvider>
+          <FavoritesProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <AppContent />
+              </BrowserRouter>
+            </TooltipProvider>
+          </FavoritesProvider>
         </CartProvider>
       </AdminProvider>
     </AuthProvider>

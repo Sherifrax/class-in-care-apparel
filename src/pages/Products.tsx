@@ -12,6 +12,7 @@ import { Star, ShoppingCart, Heart, Eye, Filter, Grid, List, Plus, Minus } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCart } from '@/contexts/CartContext';
+import { useFavorites } from '@/contexts/FavoritesContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from "@/lib/utils";
 
@@ -47,6 +48,7 @@ const Products = () => {
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+  const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { toast } = useToast();
 
   // Fetch products from Supabase
@@ -127,6 +129,16 @@ const Products = () => {
     setSelectedProduct(null);
     setSelectedSize('');
     setQuantity(1);
+  };
+
+  const handleToggleFavorite = async (productId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering other click events
+    
+    if (isFavorite(productId)) {
+      await removeFromFavorites(productId);
+    } else {
+      await addToFavorites(productId);
+    }
   };
 
   const openProductDialog = (product: Product) => {
@@ -220,9 +232,13 @@ const Products = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 hover:bg-white"
+                  className={cn(
+                    "absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-all bg-white/90 hover:bg-white",
+                    isFavorite(product.id) && "opacity-100 text-red-500"
+                  )}
+                  onClick={(e) => handleToggleFavorite(product.id, e)}
                 >
-                  <Heart className="w-4 h-4" />
+                  <Heart className={cn("w-4 h-4", isFavorite(product.id) && "fill-current")} />
                 </Button>
 
                   <div className="rounded-2xl h-64 mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
