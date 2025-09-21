@@ -197,10 +197,10 @@ const AdminSalesContent: React.FC = () => {
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
-      const { error } = await supabase
-        .from('orders')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
-        .eq('id', orderId);
+      // Use service role key for admin operations
+      const { data, error } = await supabase.functions.invoke('update-order-status', {
+        body: { order_id: orderId, status: newStatus }
+      });
 
       if (error) throw error;
 

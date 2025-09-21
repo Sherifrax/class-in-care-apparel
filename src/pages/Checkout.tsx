@@ -59,7 +59,10 @@ const CheckoutContent = () => {
       const { data, error } = await supabase.functions.invoke('create-payment', {
         body: {
           currency: 'aed',
-          cart_items: items
+          cart_items: items.map(item => ({
+            ...item,
+            product_id: item.product_id || item.id
+          }))
         }
       });
 
