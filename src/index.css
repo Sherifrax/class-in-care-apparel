@@ -36,9 +36,9 @@ All colors MUST be HSL.
     --accent: 200 80% 85%;
     --accent-foreground: 215 45% 12%;
 
-    --medical-blue: 204 100% 45%;
-    --medical-blue-light: 204 100% 55%;
-    --medical-teal: 180 95% 50%;
+    --medical-blue: 45 100% 55%;
+    --medical-blue-light: 45 100% 65%;
+    --medical-teal: 45 95% 50%;
     --luxury-navy: 220 50% 15%;
     --luxury-gold: 45 100% 55%;
     --luxury-gold-light: 45 100% 65%;
