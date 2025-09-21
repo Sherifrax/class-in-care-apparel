@@ -23,6 +23,16 @@ serve(async (req) => {
     // Parse request body
     const { currency = 'aed', cart_items = [] } = await req.json();
 
+    // Basic logging to help debug cart mapping (no PII)
+    try {
+      console.log('[CREATE-PAYMENT] Received cart items:', cart_items?.map((it: any) => ({
+        product_id: it?.product_id || it?.product?.id || it?.id,
+        quantity: it?.quantity,
+        size: it?.size,
+        name: it?.product?.name || it?.name,
+      })));
+    } catch (_) {}
+
     // Retrieve authenticated user
     const authHeader = req.headers.get("Authorization");
     let user = null;
@@ -130,12 +140,12 @@ serve(async (req) => {
       metadata: {
         user_id: user?.id || 'guest',
         cart_items: JSON.stringify(cart_items.map((item: any) => ({
-          product_id: item.product.id || item.id,
-          name: item.product.name,
+          product_id: item.product_id || item.product?.id || item.id,
+          name: item.product?.name || item.name,
           size: item.size,
           quantity: item.quantity,
-          price: item.product.price,
-          unit_price: parseFloat(item.product.price.replace(/[^0-9.]/g, '')) || 0,
+          price: item.product?.price || item.price,
+          unit_price: parseFloat((item.product?.price || item.price || '').replace(/[^0-9.]/g, '')) || 0,
         }))),
         subtotal: subtotal.toString(),
         delivery_cost: deliveryCost.toString(),
