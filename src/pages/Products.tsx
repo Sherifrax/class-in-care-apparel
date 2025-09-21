@@ -335,9 +335,9 @@ const Products = () => {
                   
                   <div className="flex items-center justify-between pt-4 border-t">
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-luxury-navy">{product.price}</span>
+                      <span className="text-2xl font-bold text-luxury-navy">AED {product.price}</span>
                       {product.original_price && (
-                        <span className="text-lg text-muted-foreground line-through">{product.original_price}</span>
+                        <span className="text-lg text-muted-foreground line-through">AED {product.original_price}</span>
                       )}
                       <span className="text-sm text-muted-foreground">+ 25 AED shipping</span>
                     </div>
@@ -424,11 +424,11 @@ const Products = () => {
                   <div>
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-2xl font-bold text-luxury-navy">
-                        {selectedProduct.price}
+                        AED {selectedProduct.price}
                       </span>
                       {selectedProduct.original_price && (
                         <span className="text-lg text-muted-foreground line-through">
-                          {selectedProduct.original_price}
+                          AED {selectedProduct.original_price}
                         </span>
                       )}
                     </div>

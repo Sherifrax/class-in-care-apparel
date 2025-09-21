@@ -85,7 +85,7 @@ const Cart = () => {
                       <div className="flex-1">
                         <h3 className="font-semibold">{item.product.name}</h3>
                         <p className="text-sm text-muted-foreground">Size: {item.size}</p>
-                        <p className="font-medium text-primary">{item.product.price}</p>
+                        <p className="font-medium text-primary">AED {item.product.price}</p>
                       </div>
                       
                       <div className="flex items-center gap-2">

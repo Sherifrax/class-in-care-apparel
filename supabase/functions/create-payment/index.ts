@@ -49,44 +49,71 @@ serve(async (req) => {
 
     // Calculate total amount in cents (AED) including delivery
     const subtotal = cart_items.reduce((sum: number, item: any) => {
-      const price = parseFloat(item.product.price.replace(/[^0-9.]/g, ''));
+      const price = parseFloat(item.product.price.replace(/[^0-9.]/g, '')) || 0;
       return sum + (price * item.quantity);
     }, 0);
     
     const deliveryCost = 25; // AED 25 delivery cost
     const total = Math.round((subtotal + deliveryCost) * 100); // Convert to cents
 
-    // Create a one-time payment session with flexible payment methods
+    // Create line items for each product instead of bundling
+    const lineItems = cart_items.map((item: any) => ({
+      price_data: {
+        currency: currency.toLowerCase(),
+        product_data: {
+          name: item.product.name,
+          description: `Size: ${item.size}`,
+          images: [item.product.image],
+        },
+        unit_amount: Math.round(parseFloat(item.product.price.replace(/[^0-9.]/g, '')) * 100),
+      },
+      quantity: item.quantity,
+    }));
+
+    // Add delivery as a separate line item
+    lineItems.push({
+      price_data: {
+        currency: currency.toLowerCase(),
+        product_data: {
+          name: 'Delivery',
+          description: 'Standard delivery service',
+        },
+        unit_amount: Math.round(deliveryCost * 100),
+      },
+      quantity: 1,
+    });
+
+    // Create a one-time payment session with comprehensive payment methods
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user?.email,
-      line_items: [
-        {
-          price_data: {
-            currency: currency.toLowerCase(),
-            product_data: {
-            name: `Scrubs Order (${cart_items.length} items)`,
-            description: cart_items.map((item: any) => 
-              `${item.product.name} (${item.size}) x${item.quantity}`
-            ).join(', '),
-            },
-            unit_amount: total,
-          },
-          quantity: 1,
-        },
-      ],
+      line_items: lineItems,
       mode: "payment",
       
-      // Enable automatic payment methods based on location
+      // Enable comprehensive automatic payment methods
       automatic_payment_methods: {
         enabled: true,
-        allow_redirects: 'always', // Allow redirects for regional payment methods
+        allow_redirects: 'always', // Enable redirect-based payment methods
       },
       
-      // Payment method options for better UX
+      // Configure specific payment method types for maximum coverage
+      payment_method_types: [
+        'card',              // Credit/debit cards
+        'apple_pay',         // Apple Pay
+        'google_pay',        // Google Pay
+        'link',              // Stripe Link
+        'klarna',            // Klarna BNPL
+        'afterpay_clearpay', // Afterpay/Clearpay BNPL
+      ],
+      
+      // Payment method configuration for enhanced UX
+      payment_method_configuration: undefined, // Use account default
+      
+      // Payment method options for better UX and security
       payment_method_options: {
         card: {
           setup_future_usage: 'off_session',
+          request_three_d_secure: 'automatic', // Enhanced security
         },
         apple_pay: {
           setup_future_usage: 'off_session',
@@ -94,18 +121,35 @@ serve(async (req) => {
         google_pay: {
           setup_future_usage: 'off_session',
         },
+        klarna: {
+          setup_future_usage: 'none',
+        },
+        afterpay_clearpay: {
+          setup_future_usage: 'none',
+        },
       },
       
-      // Shipping address collection (optional)
+      // Enhanced address collection
       shipping_address_collection: {
-        allowed_countries: ['AE', 'SA', 'KW', 'QA', 'BH', 'OM', 'US', 'GB'],
+        allowed_countries: ['AE', 'SA', 'KW', 'QA', 'BH', 'OM', 'EG', 'JO', 'LB', 'US', 'GB', 'CA'],
       },
+      
+      // Enable billing address collection for fraud prevention
+      billing_address_collection: 'required',
+      
+      // Phone number collection for order updates
+      phone_number_collection: {
+        enabled: true,
+      },
+      
+      // Locale for better UX in Middle East
+      locale: 'auto', // Automatically detect user's locale
       
       // Success and cancel URLs
       success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get("origin")}/checkout?canceled=true`,
       
-      // Additional metadata for order processing
+      // Enhanced metadata for comprehensive order tracking
       metadata: {
         user_id: user?.id || 'guest',
         cart_items: JSON.stringify(cart_items.map((item: any) => ({
@@ -113,10 +157,42 @@ serve(async (req) => {
           name: item.product.name,
           size: item.size,
           quantity: item.quantity,
-          price: item.product.price
+          price: item.product.price,
+          unit_price: parseFloat(item.product.price.replace(/[^0-9.]/g, '')) || 0,
         }))),
         subtotal: subtotal.toString(),
         delivery_cost: deliveryCost.toString(),
+        total_amount: (subtotal + deliveryCost).toString(),
+        currency: currency.toUpperCase(),
+        order_type: 'ecommerce',
+        source: 'web_checkout',
+      },
+      
+      // Custom fields for additional information
+      custom_fields: [
+        {
+          key: 'delivery_instructions',
+          label: {
+            type: 'custom',
+            custom: 'Delivery Instructions (Optional)',
+          },
+          type: 'text',
+          optional: true,
+        },
+      ],
+      
+      // Allow promotion codes
+      allow_promotion_codes: true,
+      
+      // Invoice creation for record keeping
+      invoice_creation: {
+        enabled: true,
+        invoice_data: {
+          description: `Order from ${req.headers.get("origin")}`,
+          metadata: {
+            order_type: 'scrubs_purchase',
+          },
+        },
       },
     });
 

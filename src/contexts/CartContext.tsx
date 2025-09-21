@@ -227,7 +227,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const getTotalPrice = () => {
     return items.reduce((total, item) => {
-      const price = parseFloat(item.product.price.replace('$', ''));
+      // Parse price string, removing any non-numeric characters except decimal points
+      const price = parseFloat(item.product.price.replace(/[^0-9.]/g, '')) || 0;
       return total + (price * item.quantity);
     }, 0);
   };

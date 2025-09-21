@@ -10,10 +10,13 @@ import { CreditCard, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import PaymentMethodsInfo from '@/components/PaymentMethodsInfo';
 
 const CheckoutContent = () => {
   const { items, getTotalPrice } = useCart();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   if (items.length === 0) {
     return (
@@ -34,12 +37,29 @@ const CheckoutContent = () => {
   }
 
   const [loading, setLoading] = useState(false);
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      // Check stock availability before redirecting to payment
+      for (const item of items) {
+        const { data: product, error } = await supabase
+          .from('products')
+          .select('stock_quantity, track_stock, name')
+          .eq('id', item.product_id || item.id)
+          .single();
+
+        if (error) {
+          throw new Error(`Failed to check stock for ${item.product.name}`);
+        }
+
+        if (product?.track_stock && product.stock_quantity < item.quantity) {
+          throw new Error(`Insufficient stock for ${product.name}. Only ${product.stock_quantity} items available.`);
+        }
+      }
+
       const { data, error } = await supabase.functions.invoke('create-payment', {
         body: {
           currency: 'aed',
@@ -59,7 +79,12 @@ const CheckoutContent = () => {
       }
     } catch (error: any) {
       console.error('Payment error:', error);
-      alert(`Payment failed: ${error.message}`);
+      // Use toast for better UX
+      toast({
+        title: "Payment Failed",
+        description: error.message || "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -180,6 +205,8 @@ const CheckoutContent = () => {
                   </form>
                 </CardContent>
               </Card>
+              
+              <PaymentMethodsInfo />
             </div>
             
             {/* Order Summary */}
@@ -205,7 +232,7 @@ const CheckoutContent = () => {
                           </p>
                         </div>
                         <span className="font-medium">
-                          AED {(parseFloat(item.product.price.replace('$', '')) * item.quantity).toFixed(2)}
+                          AED {(parseFloat(item.product.price.replace(/[^0-9.]/g, '')) * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     ))}

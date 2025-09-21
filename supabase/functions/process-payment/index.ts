@@ -60,9 +60,31 @@ serve(async (req) => {
     // Parse cart items from metadata
     const cartItems = JSON.parse(session.metadata?.cart_items || '[]');
     
-    // Calculate amounts
+    // Validate stock availability before processing order
+    console.log('Validating stock for cart items:', cartItems);
+    for (const item of cartItems) {
+      const { data: stockCheck, error: stockError } = await supabaseAdmin
+        .rpc('check_stock_availability', {
+          p_product_id: item.product_id,
+          p_quantity: item.quantity
+        });
+      
+      if (stockError) {
+        console.error('Stock check error:', stockError);
+        throw new Error(`Stock validation failed for ${item.name}`);
+      }
+      
+      if (!stockCheck) {
+        console.error('Insufficient stock for item:', item);
+        throw new Error(`Insufficient stock for ${item.name}. Please update your cart.`);
+      }
+    }
+    console.log('Stock validation passed for all items');
+    
+    // Calculate amounts with proper price parsing
     const subtotal = cartItems.reduce((sum: number, item: any) => {
-      return sum + (parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.quantity);
+      const price = item.unit_price || parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
+      return sum + (price * item.quantity);
     }, 0);
     
     const deliveryCost = 25;
@@ -97,8 +119,9 @@ serve(async (req) => {
       throw orderError;
     }
 
-    // Create order items
+    // Create order items - this will trigger stock reduction
     for (const item of cartItems) {
+      const unitPrice = item.unit_price || parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
       const { error: itemError } = await supabaseAdmin
         .from('order_items')
         .insert({
@@ -107,7 +130,7 @@ serve(async (req) => {
           product_name: item.name,
           size: item.size,
           quantity: item.quantity,
-          unit_price: parseFloat(item.price.replace(/[^0-9.]/g, '')),
+          unit_price: unitPrice,
         });
 
       if (itemError) {

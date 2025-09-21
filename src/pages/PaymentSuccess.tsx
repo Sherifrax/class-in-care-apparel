@@ -54,7 +54,7 @@ const PaymentSuccess = () => {
         <CardContent className="text-center space-y-6">
           <div className="space-y-2">
             <p className="text-lg text-muted-foreground">
-              Thank you for your purchase! Your order has been confirmed.
+              Thank you for your purchase! Your order has been confirmed and is being processed.
             </p>
             
             {sessionId && (
