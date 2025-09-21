@@ -12,6 +12,7 @@ import { Star, ShoppingCart, Heart, Eye, Filter, Grid, List, Plus, Minus } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from "@/lib/utils";
 
 interface Product {
@@ -28,6 +29,9 @@ interface Product {
   features: string[];
   badge: string | null;
   sizes: string[];
+  stock_quantity: number;
+  low_stock_threshold: number;
+  track_stock: boolean;
 }
 
 interface Category {
@@ -43,6 +47,7 @@ const Products = () => {
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+  const { toast } = useToast();
 
   // Fetch products from Supabase
   const { data: products = [], isLoading: productsLoading } = useQuery({
@@ -107,6 +112,16 @@ const Products = () => {
 
   const handleAddToCart = async () => {
     if (!selectedProduct || !selectedSize) return;
+    
+    // Check stock availability
+    if (selectedProduct.track_stock && selectedProduct.stock_quantity < quantity) {
+      toast({
+        title: "Insufficient stock",
+        description: `Only ${selectedProduct.stock_quantity} items available`,
+        variant: "destructive",
+      });
+      return;
+    }
     
     await addToCart(selectedProduct.id, selectedSize, quantity);
     setSelectedProduct(null);
@@ -298,6 +313,26 @@ const Products = () => {
                     </div>
                   </div>
                   
+                  {/* Stock Status */}
+                  {product.track_stock && (
+                    <div className="mb-4">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        product.stock_quantity === 0 
+                          ? 'bg-red-100 text-red-800' 
+                          : product.stock_quantity <= product.low_stock_threshold
+                          ? 'bg-orange-100 text-orange-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {product.stock_quantity === 0 
+                          ? 'Out of Stock' 
+                          : product.stock_quantity <= product.low_stock_threshold
+                          ? `Only ${product.stock_quantity} left`
+                          : 'In Stock'
+                        }
+                      </span>
+                    </div>
+                  )}
+                  
                   <div className="flex items-center justify-between pt-4 border-t">
                     <div className="flex items-center gap-2">
                       <span className="text-2xl font-bold text-luxury-navy">{product.price}</span>
@@ -310,9 +345,10 @@ const Products = () => {
                       size="sm" 
                       className="gap-2"
                       onClick={() => openProductDialog(product)}
+                      disabled={product.track_stock && product.stock_quantity === 0}
                     >
                       <ShoppingCart className="w-4 h-4" />
-                      Add to Cart
+                      {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
                     </Button>
                   </div>
                 </div>
@@ -432,43 +468,80 @@ const Products = () => {
                     </Select>
                   </div>
 
-                  <div>
-                    <Label htmlFor="quantity">Quantity</Label>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        disabled={quantity <= 1}
-                      >
-                        <Minus className="w-4 h-4" />
-                      </Button>
-                      <Input 
-                        id="quantity"
-                        value={quantity}
-                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="w-20 text-center"
-                        type="number"
-                        min="1"
-                      />
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setQuantity(quantity + 1)}
-                      >
-                        <Plus className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
+                   <div>
+                     <Label htmlFor="quantity">Quantity</Label>
+                     <div className="flex items-center gap-2 mt-2">
+                       <Button
+                         variant="outline"
+                         size="icon"
+                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                         disabled={quantity <= 1}
+                       >
+                         <Minus className="w-4 h-4" />
+                       </Button>
+                       <Input 
+                         id="quantity"
+                         value={quantity}
+                         onChange={(e) => {
+                           const newQuantity = Math.max(1, parseInt(e.target.value) || 1);
+                           if (selectedProduct.track_stock) {
+                             setQuantity(Math.min(newQuantity, selectedProduct.stock_quantity));
+                           } else {
+                             setQuantity(newQuantity);
+                           }
+                         }}
+                         className="w-20 text-center"
+                         type="number"
+                         min="1"
+                         max={selectedProduct.track_stock ? selectedProduct.stock_quantity : undefined}
+                       />
+                       <Button
+                         variant="outline"
+                         size="icon"
+                         onClick={() => {
+                           if (selectedProduct.track_stock) {
+                             setQuantity(Math.min(quantity + 1, selectedProduct.stock_quantity));
+                           } else {
+                             setQuantity(quantity + 1);
+                           }
+                         }}
+                         disabled={selectedProduct.track_stock && quantity >= selectedProduct.stock_quantity}
+                       >
+                         <Plus className="w-4 h-4" />
+                       </Button>
+                     </div>
+                   </div>
 
-                  <Button 
-                    className="w-full" 
-                    onClick={handleAddToCart}
-                    disabled={!selectedSize}
-                  >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Add to Cart ({quantity} item{quantity !== 1 ? 's' : ''})
-                  </Button>
+                   {selectedProduct.track_stock && (
+                     <div className="mb-2">
+                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                         selectedProduct.stock_quantity === 0 
+                           ? 'bg-red-100 text-red-800' 
+                           : selectedProduct.stock_quantity <= selectedProduct.low_stock_threshold
+                           ? 'bg-orange-100 text-orange-800'
+                           : 'bg-green-100 text-green-800'
+                       }`}>
+                         {selectedProduct.stock_quantity === 0 
+                           ? 'Out of Stock' 
+                           : selectedProduct.stock_quantity <= selectedProduct.low_stock_threshold
+                           ? `Only ${selectedProduct.stock_quantity} left`
+                           : `${selectedProduct.stock_quantity} available`
+                         }
+                       </span>
+                     </div>
+                   )}
+
+                   <Button 
+                     className="w-full" 
+                     onClick={handleAddToCart}
+                     disabled={!selectedSize || (selectedProduct.track_stock && (selectedProduct.stock_quantity === 0 || quantity > selectedProduct.stock_quantity))}
+                   >
+                     <ShoppingCart className="w-4 h-4 mr-2" />
+                     {selectedProduct.track_stock && selectedProduct.stock_quantity === 0 
+                       ? 'Out of Stock' 
+                       : `Add to Cart (${quantity} item${quantity !== 1 ? 's' : ''})`
+                     }
+                   </Button>
 
                   {selectedProduct.features.length > 0 && (
                     <div>

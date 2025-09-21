@@ -28,6 +28,9 @@ interface Product {
   images?: string[];
   rating: number;
   reviews: number;
+  stock_quantity: number;
+  low_stock_threshold: number;
+  track_stock: boolean;
 }
 
 const AdminProductsContent: React.FC = () => {
@@ -50,7 +53,10 @@ const AdminProductsContent: React.FC = () => {
     badge: '',
     images: [] as File[],
     rating: 0,
-    reviews: 0
+    reviews: 0,
+    stock_quantity: 0,
+    low_stock_threshold: 5,
+    track_stock: true
   });
 
   const [imagesToRemove, setImagesToRemove] = useState<string[]>([]);
@@ -145,7 +151,10 @@ const AdminProductsContent: React.FC = () => {
         image_url: imageUrls[0] || '', // Keep compatibility - use first image
         image: imageUrls[0] || '', // Keep compatibility - use first image
         rating: Number(formData.rating),
-        reviews: Number(formData.reviews)
+        reviews: Number(formData.reviews),
+        stock_quantity: Number(formData.stock_quantity),
+        low_stock_threshold: Number(formData.low_stock_threshold),
+        track_stock: formData.track_stock
       };
 
       if (editingProduct) {
@@ -202,7 +211,10 @@ const AdminProductsContent: React.FC = () => {
       badge: product.badge || '',
       images: [],
       rating: product.rating,
-      reviews: product.reviews
+      reviews: product.reviews,
+      stock_quantity: product.stock_quantity,
+      low_stock_threshold: product.low_stock_threshold,
+      track_stock: product.track_stock
     });
     setIsDialogOpen(true);
   };
@@ -246,7 +258,10 @@ const AdminProductsContent: React.FC = () => {
       badge: '',
       images: [],
       rating: 0,
-      reviews: 0
+      reviews: 0,
+      stock_quantity: 0,
+      low_stock_threshold: 5,
+      track_stock: true
     });
     setEditingProduct(null);
     setImagesToRemove([]);
@@ -419,6 +434,48 @@ const AdminProductsContent: React.FC = () => {
                   </div>
                 </div>
 
+                <div className="border-t pt-4 mt-4">
+                  <h4 className="font-medium mb-4 flex items-center gap-2">
+                    <Package className="w-4 h-4" />
+                    Stock Management
+                  </h4>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <Label htmlFor="stock_quantity">Stock Quantity</Label>
+                      <Input
+                        id="stock_quantity"
+                        type="number"
+                        min="0"
+                        value={formData.stock_quantity}
+                        onChange={(e) => setFormData({...formData, stock_quantity: parseInt(e.target.value) || 0})}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="low_stock_threshold">Low Stock Alert</Label>
+                      <Input
+                        id="low_stock_threshold"
+                        type="number"
+                        min="0"
+                        value={formData.low_stock_threshold}
+                        onChange={(e) => setFormData({...formData, low_stock_threshold: parseInt(e.target.value) || 5})}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="track_stock"
+                      checked={formData.track_stock}
+                      onChange={(e) => setFormData({...formData, track_stock: e.target.checked})}
+                      className="rounded"
+                    />
+                    <Label htmlFor="track_stock">Track inventory for this product</Label>
+                  </div>
+                </div>
+
                 <div>
                   <Label htmlFor="images">Product Images</Label>
                   <Input
@@ -557,6 +614,24 @@ const AdminProductsContent: React.FC = () => {
                   <div>Sizes: {product.sizes.join(', ')}</div>
                   <div>Colors: {product.colors.join(', ')}</div>
                   <div>Rating: {product.rating}/5 ({product.reviews} reviews)</div>
+                  {product.track_stock && (
+                    <div className="mt-2">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        product.stock_quantity === 0 
+                          ? 'bg-red-100 text-red-800' 
+                          : product.stock_quantity <= product.low_stock_threshold
+                          ? 'bg-orange-100 text-orange-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {product.stock_quantity === 0 
+                          ? 'Out of Stock' 
+                          : product.stock_quantity <= product.low_stock_threshold
+                          ? `Low Stock: ${product.stock_quantity}`
+                          : `In Stock: ${product.stock_quantity}`
+                        }
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={() => handleEdit(product)}>

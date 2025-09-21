@@ -88,13 +88,40 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
+      // Check stock availability before adding to cart
+      const { data: product, error: productError } = await supabase
+        .from('products')
+        .select('stock_quantity, track_stock, name')
+        .eq('id', productId)
+        .single();
+
+      if (productError) throw productError;
+
+      if (product?.track_stock && product.stock_quantity < quantity) {
+        toast({
+          title: "Insufficient stock",
+          description: `Only ${product.stock_quantity} items available for ${product.name}`,
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Check if item already exists
       const existingItem = items.find(
         item => item.product_id === productId && item.size === size
       );
 
       if (existingItem) {
-        await updateQuantity(existingItem.id, existingItem.quantity + quantity);
+        const newQuantity = existingItem.quantity + quantity;
+        if (product?.track_stock && product.stock_quantity < newQuantity) {
+          toast({
+            title: "Insufficient stock",
+            description: `Only ${product.stock_quantity} items available for ${product.name}`,
+            variant: "destructive",
+          });
+          return;
+        }
+        await updateQuantity(existingItem.id, newQuantity);
       } else {
         const { error } = await supabase
           .from('cart_items')

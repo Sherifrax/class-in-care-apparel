@@ -181,12 +181,15 @@ export type Database = {
           image: string
           image_url: string | null
           images: string[] | null
+          low_stock_threshold: number
           name: string
           original_price: string | null
           price: string
           rating: number
           reviews: number
           sizes: string[]
+          stock_quantity: number
+          track_stock: boolean
           updated_at: string
         }
         Insert: {
@@ -200,12 +203,15 @@ export type Database = {
           image: string
           image_url?: string | null
           images?: string[] | null
+          low_stock_threshold?: number
           name: string
           original_price?: string | null
           price: string
           rating?: number
           reviews?: number
           sizes?: string[]
+          stock_quantity?: number
+          track_stock?: boolean
           updated_at?: string
         }
         Update: {
@@ -219,12 +225,15 @@ export type Database = {
           image?: string
           image_url?: string | null
           images?: string[] | null
+          low_stock_threshold?: number
           name?: string
           original_price?: string | null
           price?: string
           rating?: number
           reviews?: number
           sizes?: string[]
+          stock_quantity?: number
+          track_stock?: boolean
           updated_at?: string
         }
         Relationships: [
@@ -302,6 +311,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_stock_availability: {
+        Args: { p_product_id: string; p_quantity: number }
+        Returns: boolean
+      }
       is_admin: {
         Args: { user_id?: string }
         Returns: boolean
