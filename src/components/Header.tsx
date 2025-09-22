@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag, ShoppingCart, Package, Heart } from "lucide-react";
+import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag, ShoppingCart, Package, Heart, Search, Bell, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +24,7 @@ const Header = () => {
   const [showAuth, setShowAuth] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { user, signOut } = useAuth();
   const { getTotalItems } = useCart();
   const isMobile = useIsMobile();
@@ -34,13 +35,29 @@ const Header = () => {
     setIsClient(true);
   }, []);
 
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Clean, organized navigation structure - no duplicates
   const navigation = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Products", href: "/products" },
-    { name: "Favorites", href: "/favorites" },
-    { name: "Features", href: "/features" },
-    { name: "Contact", href: "/contact" }
+    { name: "Home", href: "/", icon: null },
+    { name: "Products", href: "/products", icon: Package },
+    { name: "About", href: "/about", icon: null },
+    { name: "Contact", href: "/contact", icon: null }
+  ];
+
+  // Secondary navigation for user actions
+  const userActions = [
+    { name: "Favorites", href: "/favorites", icon: Heart },
+    { name: "My Orders", href: "/my-orders", icon: Package },
+    { name: "Settings", href: "/settings", icon: Settings }
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -70,60 +87,85 @@ const Header = () => {
   // Render a static version during SSR and initial hydration
   if (!isClient) {
     return (
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
+      <header 
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        style={{ 
+          background: 'radial-gradient(ellipse at top, hsl(var(--medical-blue) / 0.1) 0%, hsl(var(--medical-blue) / 0.05) 100%)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderBottom: '1px solid hsl(var(--medical-blue) / 0.2)',
+          boxShadow: '0 4px 20px -2px hsl(var(--medical-blue) / 0.1)'
+        }}
+      >
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group">
-              <div className="w-10 h-10 rounded-lg overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <Link to="/" className="flex items-center space-x-4 group">
+              <div className="w-12 h-12 rounded-xl overflow-hidden group-hover:scale-110 transition-all duration-300 shadow-lg ring-2 ring-medical-blue/30 group-hover:ring-medical-blue/50">
                 <img 
                   src={auraLogo} 
                   alt="AURA - Where Presence Becomes Power" 
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">AURA</span>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-blue-light bg-clip-text text-transparent">AURA</span>
+                <div className="text-xs text-medical-blue/80 font-medium">MEDICAL • APPAREL • EXCELLENCE</div>
+              </div>
             </Link>
             
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
+            {/* Desktop Navigation - Centered */}
+            <div className="hidden lg:flex items-center justify-center flex-1">
+              <nav className="flex items-center space-x-8">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className="text-sm font-medium transition-colors relative group px-2 py-1 text-foreground hover:text-medical-blue"
+                    className={`text-sm font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg ${
+                      isActive(item.href) 
+                        ? 'text-medical-blue bg-medical-blue/15 border border-medical-blue/30 shadow-sm' 
+                        : 'text-foreground hover:text-medical-blue hover:bg-medical-blue/5 border border-transparent hover:border-medical-blue/20'
+                    }`}
                 >
                   {item.name}
-                  <span className="absolute -bottom-1 left-0 h-0.5 bg-medical-blue transition-all duration-300 w-0 group-hover:w-full"></span>
+                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-medical-blue transition-all duration-300 ${
+                      isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></span>
                 </Link>
               ))}
             </nav>
+            </div>
             
-            {/* Desktop Authentication & CTA */}
-            <div className="hidden lg:flex items-center space-x-4">
+            {/* Desktop Actions */}
+            <div className="hidden lg:flex items-center space-x-3">
               <Link to="/products">
-                <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
+                <Button 
+                  size="sm" 
+                  className="bg-gradient-to-r from-medical-blue to-medical-blue-light hover:from-medical-blue hover:to-medical-blue-light text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 border-0"
+                >
                   <ShoppingBag className="h-4 w-4 mr-2" />
                   Shop Now
                 </Button>
               </Link>
               
-              <Link to="/favorites" className="relative">
-                <Button variant="ghost" size="sm" className="relative">
-                  <Heart className="h-4 w-4" />
-                </Button>
-              </Link>
-              
               <Link to="/cart" className="relative">
-                <Button variant="ghost" size="sm" className="relative">
-                  <ShoppingCart className="h-4 w-4" />
+                <Button variant="ghost" size="sm" className="relative p-2 hover:bg-medical-blue/10 border border-medical-blue/20 hover:border-medical-blue/40">
+                  <ShoppingCart className="h-5 w-5" />
+                  {cartItemCount > 0 && (
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -top-1 -right-1 h-5 w-5 text-xs p-0 flex items-center justify-center animate-pulse"
+                    >
+                      {cartItemCount}
+                    </Badge>
+                  )}
                 </Button>
               </Link>
               
               <Button
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5"
               >
                 <LogIn className="h-4 w-4" />
                 Sign In
@@ -132,19 +174,26 @@ const Header = () => {
 
             {/* Mobile Menu Button */}
             <div className="lg:hidden flex items-center space-x-2">
-              <Link to="/products">
-                <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
-                  <ShoppingBag className="h-4 w-4" />
-                </Button>
-              </Link>
-              
               <Link to="/cart" className="relative">
                 <Button variant="ghost" size="sm" className="relative p-2">
                   <ShoppingCart className="h-5 w-5" />
+                  {cartItemCount > 0 && (
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -top-1 -right-1 h-4 w-4 text-xs p-0 flex items-center justify-center"
+                    >
+                      {cartItemCount}
+                    </Badge>
+                  )}
                 </Button>
               </Link>
               
-              <Button variant="ghost" size="sm" className="p-2">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="p-2"
+                onClick={() => setMobileMenuOpen(true)}
+              >
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Open menu</span>
               </Button>
@@ -158,82 +207,79 @@ const Header = () => {
   return (
     <>
       <header 
-        className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border"
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          // Fallback for production
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          background: isScrolled 
+            ? 'radial-gradient(ellipse at top, hsl(var(--medical-blue) / 0.15) 0%, hsl(var(--medical-blue) / 0.08) 100%)'
+            : 'radial-gradient(ellipse at top, hsl(var(--medical-blue) / 0.1) 0%, hsl(var(--medical-blue) / 0.05) 100%)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
-          borderBottom: '1px solid hsl(var(--border))',
-          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+          borderBottom: isScrolled 
+            ? '1px solid hsl(var(--medical-blue) / 0.3)'
+            : '1px solid hsl(var(--medical-blue) / 0.2)',
+          boxShadow: isScrolled 
+            ? '0 8px 32px -4px hsl(var(--medical-blue) / 0.15)'
+            : '0 4px 20px -2px hsl(var(--medical-blue) / 0.1)'
         }}
       >
-        <div className="container mx-auto px-4 sm:px-6 py-4">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group" onClick={closeMobileMenu}>
-              <div className="w-10 h-10 rounded-lg overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <Link to="/" className="flex items-center space-x-4 group" onClick={closeMobileMenu}>
+              <div className="w-12 h-12 rounded-xl overflow-hidden group-hover:scale-110 transition-all duration-300 shadow-lg ring-2 ring-medical-blue/30 group-hover:ring-medical-blue/50">
                 <img 
                   src={auraLogo} 
                   alt="AURA - Where Presence Becomes Power" 
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">AURA</span>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-blue-light bg-clip-text text-transparent">AURA</span>
+                <div className="text-xs text-medical-blue/80 font-medium">MEDICAL • APPAREL • EXCELLENCE</div>
+              </div>
             </Link>
             
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
+            {/* Desktop Navigation - Centered */}
+            <div className="hidden lg:flex items-center justify-center flex-1">
+              <nav className="flex items-center space-x-8">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`text-sm font-medium transition-colors relative group px-2 py-1 ${
+                    className={`text-sm font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg ${
                     isActive(item.href) 
-                      ? 'text-medical-blue' 
-                      : 'text-foreground hover:text-medical-blue'
+                        ? 'text-medical-blue bg-medical-blue/15 border border-medical-blue/30 shadow-sm' 
+                        : 'text-foreground hover:text-medical-blue hover:bg-medical-blue/5 border border-transparent hover:border-medical-blue/20'
                   }`}
-                  style={{
-                    // Fallback colors for production
-                    color: isActive(item.href) ? 'hsl(var(--medical-blue))' : 'hsl(var(--foreground))',
-                  }}
                 >
                   {item.name}
-                  <span 
-                    className={`absolute -bottom-1 left-0 h-0.5 bg-medical-blue transition-all duration-300 ${
+                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-medical-blue transition-all duration-300 ${
                       isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
-                    }`}
-                    style={{
-                      backgroundColor: 'hsl(var(--medical-blue))'
-                    }}
-                  ></span>
+                    }`}></span>
                 </Link>
               ))}
             </nav>
+            </div>
             
-            {/* Desktop Authentication & CTA */}
-            <div className="hidden lg:flex items-center space-x-4">
+            {/* Desktop Actions */}
+            <div className="hidden lg:flex items-center space-x-3">
               <Link to="/products">
-                <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
+                <Button 
+                  size="sm" 
+                  className="bg-gradient-to-r from-medical-blue to-medical-blue-light hover:from-medical-blue hover:to-medical-blue-light text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 border-0"
+                >
                   <ShoppingBag className="h-4 w-4 mr-2" />
                   Shop Now
                 </Button>
               </Link>
               
-              <Link to="/favorites" className="relative">
-                <Button variant="ghost" size="sm" className="relative">
-                  <Heart className="h-4 w-4" />
-                </Button>
-              </Link>
-              
-              {/* Cart Icon */}
               <Link to="/cart" className="relative">
-                <Button variant="ghost" size="sm" className="relative">
-                  <ShoppingCart className="h-4 w-4" />
+                <Button variant="ghost" size="sm" className="relative p-2 hover:bg-medical-blue/10 border border-medical-blue/20 hover:border-medical-blue/40">
+                  <ShoppingCart className="h-5 w-5" />
                   {cartItemCount > 0 && (
                     <Badge 
                       variant="destructive" 
-                      className="absolute -top-1 -right-1 h-5 w-5 text-xs p-0 flex items-center justify-center"
+                      className="absolute -top-1 -right-1 h-5 w-5 text-xs p-0 flex items-center justify-center animate-pulse"
                     >
                       {cartItemCount}
                     </Badge>
@@ -244,10 +290,10 @@ const Header = () => {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                      <Avatar className="h-8 w-8">
+                    <Button variant="ghost" className="relative h-9 w-9 rounded-full hover:bg-medical-blue/10 border border-medical-blue/20 hover:border-medical-blue/40">
+                      <Avatar className="h-8 w-8 ring-2 ring-medical-blue/20">
                         <AvatarImage src={user.user_metadata?.avatar_url} />
-                        <AvatarFallback className="text-xs">
+                        <AvatarFallback className="text-xs bg-medical-blue/10 text-medical-blue">
                           {user.user_metadata?.full_name ? getInitials(user.user_metadata.full_name) : 'U'}
                         </AvatarFallback>
                       </Avatar>
@@ -263,30 +309,14 @@ const Header = () => {
                       </div>
                     </div>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link to="/profile" className="flex items-center">
-                        <User className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
+                    {userActions.map((action) => (
+                      <DropdownMenuItem key={action.name} asChild>
+                        <Link to={action.href} className="flex items-center">
+                          <action.icon className="mr-2 h-4 w-4" />
+                          <span>{action.name}</span>
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/my-orders" className="flex items-center">
-                        <Package className="mr-2 h-4 w-4" />
-                        <span>My Orders</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/favorites" className="flex items-center">
-                        <Heart className="mr-2 h-4 w-4" />
-                        <span>Favorites</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/settings" className="flex items-center">
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>Settings</span>
-                      </Link>
-                    </DropdownMenuItem>
+                    ))}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleSignOut}>
                       <LogOut className="mr-2 h-4 w-4" />
@@ -299,7 +329,7 @@ const Header = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowAuth(true)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5"
                 >
                   <LogIn className="h-4 w-4" />
                   Sign In
@@ -309,13 +339,6 @@ const Header = () => {
 
             {/* Mobile Menu Button */}
             <div className="lg:hidden flex items-center space-x-2">
-              <Link to="/products">
-                <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
-                  <ShoppingBag className="h-4 w-4" />
-                </Button>
-              </Link>
-              
-              {/* Mobile Cart Icon */}
               <Link to="/cart" className="relative">
                 <Button variant="ghost" size="sm" className="relative p-2">
                   <ShoppingCart className="h-5 w-5" />
@@ -330,73 +353,59 @@ const Header = () => {
                 </Button>
               </Link>
               
-              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger asChild>
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     className="p-2"
-                    style={{
-                      // Fallback for production
-                      color: 'hsl(var(--foreground))',
-                    }}
+                onClick={() => setMobileMenuOpen(true)}
                   >
                     <Menu className="h-6 w-6" />
                     <span className="sr-only">Open menu</span>
                   </Button>
-                </SheetTrigger>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Menu */}
+      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetContent 
                   side="right" 
-                  className="w-[300px] sm:w-[400px]"
-                  style={{
-                    // Fallback for production
-                    backgroundColor: 'hsl(var(--background))',
-                    borderLeft: '1px solid hsl(var(--border))',
-                  }}
+          className="w-[300px] sm:w-[400px] bg-background/95 backdrop-blur-md border-l border-medical-blue/20"
                 >
                   <SheetHeader>
-                    <SheetTitle className="flex items-center space-x-3">
-                      <div className="w-8 h-8 rounded-lg overflow-hidden">
+            <SheetTitle className="flex items-center space-x-4">
+              <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-medical-blue/30">
                         <img 
                           src={auraLogo} 
                           alt="AURA" 
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <span 
-                        className="text-lg font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent"
-                        style={{
-                          // Fallback for production
-                          background: 'linear-gradient(135deg, hsl(var(--luxury-gold)) 0%, hsl(var(--luxury-gold-light)) 100%)',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
-                        }}
-                      >
+              <div className="flex flex-col">
+                <span className="text-xl font-bold bg-gradient-to-r from-medical-blue to-medical-blue-light bg-clip-text text-transparent">
                         AURA
                       </span>
+                <div className="text-xs text-medical-blue/80 font-medium">MEDICAL • APPAREL • EXCELLENCE</div>
+              </div>
                     </SheetTitle>
                   </SheetHeader>
                   
                   <div className="mt-6 space-y-6">
                     {/* Mobile Navigation Links */}
-                    <nav className="space-y-2">
+            <nav className="space-y-3">
                       {navigation.map((item) => (
                         <Link
                           key={item.name}
                           to={item.href}
                           onClick={closeMobileMenu}
-                          className={`flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors ${
+                  className={`flex items-center px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
                             isActive(item.href)
-                              ? 'bg-medical-blue/10 text-medical-blue border-l-4 border-medical-blue'
-                              : 'text-foreground hover:bg-accent hover:text-accent-foreground'
-                          }`}
-                          style={{
-                            // Fallback colors for production
-                            color: isActive(item.href) ? 'hsl(var(--medical-blue))' : 'hsl(var(--foreground))',
-                            backgroundColor: isActive(item.href) ? 'hsl(var(--medical-blue) / 0.1)' : 'transparent',
-                            borderLeft: isActive(item.href) ? '4px solid hsl(var(--medical-blue))' : 'none',
-                          }}
-                        >
+                      ? 'bg-medical-blue/15 text-medical-blue border border-medical-blue/30 shadow-sm'
+                      : 'text-foreground hover:bg-medical-blue/5 hover:text-medical-blue border border-transparent hover:border-medical-blue/20'
+                  }`}
+                >
+                  {item.icon && <item.icon className="mr-3 h-5 w-5" />}
                           {item.name}
                         </Link>
                       ))}
@@ -404,53 +413,40 @@ const Header = () => {
 
                     <Separator />
 
-                    {/* Mobile Authentication */}
+            {/* Mobile User Actions */}
                     <div className="space-y-4">
                       {user ? (
                         <div className="space-y-4">
                           {/* User Info */}
-                          <div className="flex items-center space-x-3 p-3 rounded-lg bg-accent/50">
-                            <Avatar className="h-10 w-10">
+                  <div className="flex items-center space-x-3 p-4 rounded-lg bg-medical-blue/5 border border-medical-blue/20 shadow-sm">
+                    <Avatar className="h-12 w-12 ring-2 ring-medical-blue/30">
                               <AvatarImage src={user.user_metadata?.avatar_url} />
-                              <AvatarFallback>
+                      <AvatarFallback className="bg-medical-blue/10 text-medical-blue font-semibold">
                                 {user.user_metadata?.full_name ? getInitials(user.user_metadata.full_name) : 'U'}
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium truncate">{user.user_metadata?.full_name || 'User'}</p>
-                              <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+                      <p className="font-semibold truncate text-foreground">{user.user_metadata?.full_name || 'User'}</p>
+                      <p className="text-sm text-medical-blue/80 truncate">{user.email}</p>
                             </div>
                           </div>
 
                           {/* User Actions */}
                           <div className="space-y-2">
+                    {userActions.map((action) => (
                             <Link
-                              to="/profile"
+                        key={action.name}
+                        to={action.href}
                               onClick={closeMobileMenu}
-                              className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                        className="flex items-center px-4 py-3 rounded-lg text-base font-medium text-foreground hover:bg-medical-blue/5 hover:text-medical-blue transition-all duration-200 border border-transparent hover:border-medical-blue/20"
                             >
-                              <User className="mr-3 h-5 w-5" />
-                              Profile
+                        <action.icon className="mr-3 h-5 w-5" />
+                        {action.name}
                             </Link>
-                            <Link
-                              to="/my-orders"
-                              onClick={closeMobileMenu}
-                              className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                            >
-                              <Package className="mr-3 h-5 w-5" />
-                              My Orders
-                            </Link>
-                            <Link
-                              to="/settings"
-                              onClick={closeMobileMenu}
-                              className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                            >
-                              <Settings className="mr-3 h-5 w-5" />
-                              Settings
-                            </Link>
+                    ))}
                             <button
                               onClick={handleSignOut}
-                              className="flex items-center w-full px-3 py-3 rounded-lg text-base font-medium text-destructive hover:bg-destructive/10 transition-colors"
+                      className="flex items-center w-full px-4 py-3 rounded-lg text-base font-medium text-destructive hover:bg-destructive/10 transition-all duration-200 border border-transparent hover:border-destructive/20"
                             >
                               <LogOut className="mr-3 h-5 w-5" />
                               Sign out
@@ -464,9 +460,9 @@ const Header = () => {
                               setShowAuth(true);
                               closeMobileMenu();
                             }}
-                            className="w-full flex items-center justify-center gap-2"
+                    className="w-full bg-gradient-to-r from-medical-blue to-medical-blue-light hover:from-medical-blue hover:to-medical-blue-light text-white shadow-lg hover:shadow-xl transition-all duration-200"
                           >
-                            <LogIn className="h-4 w-4" />
+                    <LogIn className="h-4 w-4 mr-2" />
                             Sign In
                           </Button>
                           <Button
@@ -475,7 +471,7 @@ const Header = () => {
                               setShowAuth(true);
                               closeMobileMenu();
                             }}
-                            className="w-full"
+                    className="w-full border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5 transition-all duration-200"
                           >
                             Create Account
                           </Button>
@@ -485,12 +481,12 @@ const Header = () => {
 
                     <Separator />
 
-                    {/* Additional Mobile Actions */}
+            {/* Mobile Quick Actions */}
                     <div className="space-y-2">
                       <Link
                         to="/products"
                         onClick={closeMobileMenu}
-                        className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                className="flex items-center px-4 py-3 rounded-lg text-base font-medium text-foreground hover:bg-medical-blue/5 hover:text-medical-blue transition-all duration-200 border border-transparent hover:border-medical-blue/20"
                       >
                         <ShoppingBag className="mr-3 h-5 w-5" />
                         Shop Now
@@ -498,14 +494,14 @@ const Header = () => {
                       <Link
                         to="/cart"
                         onClick={closeMobileMenu}
-                        className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                className="flex items-center px-4 py-3 rounded-lg text-base font-medium text-foreground hover:bg-medical-blue/5 hover:text-medical-blue transition-all duration-200 border border-transparent hover:border-medical-blue/20"
                       >
                         <ShoppingCart className="mr-3 h-5 w-5" />
                         Cart
                         {cartItemCount > 0 && (
                           <Badge 
                             variant="destructive" 
-                            className="ml-auto h-5 w-5 text-xs p-0 flex items-center justify-center"
+                    className="ml-auto h-5 w-5 text-xs p-0 flex items-center justify-center animate-pulse"
                           >
                             {cartItemCount}
                           </Badge>
@@ -515,10 +511,6 @@ const Header = () => {
                   </div>
                 </SheetContent>
               </Sheet>
-            </div>
-          </div>
-        </div>
-      </header>
 
       <Auth 
         isOpen={showAuth} 

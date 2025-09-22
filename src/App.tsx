@@ -49,30 +49,32 @@ const AppContent = () => {
   return (
     <>
       {!isAdminRoute && <Header />}
-      <Routes>
-        <Route path="/" element={<AdminRedirectHandler><Home /></AdminRedirectHandler>} />
-        <Route path="/about" element={<AdminRedirectHandler><About /></AdminRedirectHandler>} />
-        <Route path="/products" element={<AdminRedirectHandler><Products /></AdminRedirectHandler>} />
-        <Route path="/favorites" element={<AdminRedirectHandler><Favorites /></AdminRedirectHandler>} />
-        <Route path="/features" element={<AdminRedirectHandler><Features /></AdminRedirectHandler>} />
-        <Route path="/contact" element={<AdminRedirectHandler><Contact /></AdminRedirectHandler>} />
-        <Route path="/profile" element={<AdminRedirectHandler><Profile /></AdminRedirectHandler>} />
-        <Route path="/my-orders" element={<AdminRedirectHandler><MyOrders /></AdminRedirectHandler>} />
-        <Route path="/settings" element={<AdminRedirectHandler><Settings /></AdminRedirectHandler>} />
-        <Route path="/cart" element={<AdminRedirectHandler><Cart /></AdminRedirectHandler>} />
-        <Route path="/checkout" element={<AdminRedirectHandler><Checkout /></AdminRedirectHandler>} />
-        <Route path="/payment-success" element={<AdminRedirectHandler><PaymentSuccess /></AdminRedirectHandler>} />
-        
-        {/* Admin Routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/products" element={<AdminProducts />} />
-        <Route path="/admin/sales" element={<AdminSales />} />
-        
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      {!isAdminRoute && <Footer />}
+      <div className={!isAdminRoute ? "pt-24" : ""}>
+        <Routes>
+          <Route path="/" element={<AdminRedirectHandler><Home /></AdminRedirectHandler>} />
+          <Route path="/about" element={<AdminRedirectHandler><About /></AdminRedirectHandler>} />
+          <Route path="/products" element={<AdminRedirectHandler><Products /></AdminRedirectHandler>} />
+          <Route path="/favorites" element={<AdminRedirectHandler><Favorites /></AdminRedirectHandler>} />
+          <Route path="/features" element={<AdminRedirectHandler><Features /></AdminRedirectHandler>} />
+          <Route path="/contact" element={<AdminRedirectHandler><Contact /></AdminRedirectHandler>} />
+          <Route path="/profile" element={<AdminRedirectHandler><Profile /></AdminRedirectHandler>} />
+          <Route path="/my-orders" element={<AdminRedirectHandler><MyOrders /></AdminRedirectHandler>} />
+          <Route path="/settings" element={<AdminRedirectHandler><Settings /></AdminRedirectHandler>} />
+          <Route path="/cart" element={<AdminRedirectHandler><Cart /></AdminRedirectHandler>} />
+          <Route path="/checkout" element={<AdminRedirectHandler><Checkout /></AdminRedirectHandler>} />
+          <Route path="/payment-success" element={<AdminRedirectHandler><PaymentSuccess /></AdminRedirectHandler>} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/sales" element={<AdminSales />} />
+          
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        {!isAdminRoute && <Footer />}
+      </div>
       
       <Auth 
         isOpen={showAuth} 
