@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LogIn, User, LogOut, Settings, Menu, X, ShoppingBag, ShoppingCart, Package, Heart } from "lucide-react";
 import {
   DropdownMenu,
@@ -23,10 +23,16 @@ const Header = () => {
   const location = useLocation();
   const [showAuth, setShowAuth] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const { user, signOut } = useAuth();
   const { getTotalItems } = useCart();
   const isMobile = useIsMobile();
   const cartItemCount = getTotalItems();
+
+  // Only run on client side
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -61,9 +67,107 @@ const Header = () => {
     setMobileMenuOpen(false);
   };
 
+  // Render a static version during SSR and initial hydration
+  if (!isClient) {
+    return (
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="w-10 h-10 rounded-lg overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <img 
+                  src={auraLogo} 
+                  alt="AURA - Where Presence Becomes Power" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">AURA</span>
+            </Link>
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-8">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-sm font-medium transition-colors relative group px-2 py-1 text-foreground hover:text-medical-blue"
+                >
+                  {item.name}
+                  <span className="absolute -bottom-1 left-0 h-0.5 bg-medical-blue transition-all duration-300 w-0 group-hover:w-full"></span>
+                </Link>
+              ))}
+            </nav>
+            
+            {/* Desktop Authentication & CTA */}
+            <div className="hidden lg:flex items-center space-x-4">
+              <Link to="/products">
+                <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
+                  <ShoppingBag className="h-4 w-4 mr-2" />
+                  Shop Now
+                </Button>
+              </Link>
+              
+              <Link to="/favorites" className="relative">
+                <Button variant="ghost" size="sm" className="relative">
+                  <Heart className="h-4 w-4" />
+                </Button>
+              </Link>
+              
+              <Link to="/cart" className="relative">
+                <Button variant="ghost" size="sm" className="relative">
+                  <ShoppingCart className="h-4 w-4" />
+                </Button>
+              </Link>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <LogIn className="h-4 w-4" />
+                Sign In
+              </Button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden flex items-center space-x-2">
+              <Link to="/products">
+                <Button variant="default" size="sm" className="hover:scale-105 transition-transform">
+                  <ShoppingBag className="h-4 w-4" />
+                </Button>
+              </Link>
+              
+              <Link to="/cart" className="relative">
+                <Button variant="ghost" size="sm" className="relative p-2">
+                  <ShoppingCart className="h-5 w-5" />
+                </Button>
+              </Link>
+              
+              <Button variant="ghost" size="sm" className="p-2">
+                <Menu className="h-6 w-6" />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
+      <header 
+        className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border"
+        style={{
+          // Fallback for production
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderBottom: '1px solid hsl(var(--border))',
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+        }}
+      >
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -89,11 +193,20 @@ const Header = () => {
                       ? 'text-medical-blue' 
                       : 'text-foreground hover:text-medical-blue'
                   }`}
+                  style={{
+                    // Fallback colors for production
+                    color: isActive(item.href) ? 'hsl(var(--medical-blue))' : 'hsl(var(--foreground))',
+                  }}
                 >
                   {item.name}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-medical-blue transition-all duration-300 ${
-                    isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}></span>
+                  <span 
+                    className={`absolute -bottom-1 left-0 h-0.5 bg-medical-blue transition-all duration-300 ${
+                      isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}
+                    style={{
+                      backgroundColor: 'hsl(var(--medical-blue))'
+                    }}
+                  ></span>
                 </Link>
               ))}
             </nav>
@@ -219,12 +332,28 @@ const Header = () => {
               
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm" className="p-2">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="p-2"
+                    style={{
+                      // Fallback for production
+                      color: 'hsl(var(--foreground))',
+                    }}
+                  >
                     <Menu className="h-6 w-6" />
                     <span className="sr-only">Open menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetContent 
+                  side="right" 
+                  className="w-[300px] sm:w-[400px]"
+                  style={{
+                    // Fallback for production
+                    backgroundColor: 'hsl(var(--background))',
+                    borderLeft: '1px solid hsl(var(--border))',
+                  }}
+                >
                   <SheetHeader>
                     <SheetTitle className="flex items-center space-x-3">
                       <div className="w-8 h-8 rounded-lg overflow-hidden">
@@ -234,7 +363,15 @@ const Header = () => {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <span className="text-lg font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent">
+                      <span 
+                        className="text-lg font-bold bg-gradient-to-r from-luxury-gold to-luxury-gold-light bg-clip-text text-transparent"
+                        style={{
+                          // Fallback for production
+                          background: 'linear-gradient(135deg, hsl(var(--luxury-gold)) 0%, hsl(var(--luxury-gold-light)) 100%)',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                        }}
+                      >
                         AURA
                       </span>
                     </SheetTitle>
@@ -253,6 +390,12 @@ const Header = () => {
                               ? 'bg-medical-blue/10 text-medical-blue border-l-4 border-medical-blue'
                               : 'text-foreground hover:bg-accent hover:text-accent-foreground'
                           }`}
+                          style={{
+                            // Fallback colors for production
+                            color: isActive(item.href) ? 'hsl(var(--medical-blue))' : 'hsl(var(--foreground))',
+                            backgroundColor: isActive(item.href) ? 'hsl(var(--medical-blue) / 0.1)' : 'transparent',
+                            borderLeft: isActive(item.href) ? '4px solid hsl(var(--medical-blue))' : 'none',
+                          }}
                         >
                           {item.name}
                         </Link>
