@@ -157,14 +157,33 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
+    // Use verified domain or fallback to resend.dev for testing
+    const fromAddress = Deno.env.get("VERIFIED_EMAIL_FROM") || "AURA Medical Scrubs <noreply@yourdomain.com>";
+    
     const emailResponse = await resend.emails.send({
-      from: "AURA Medical Scrubs <orders@resend.dev>",
+      from: fromAddress,
       to: [orderData.customer_email],
       subject: `✅ Order Confirmation #${orderNumber} - ${orderData.currency} ${orderData.total_amount.toFixed(2)}`,
       html: emailHtml,
     });
 
     console.log("Customer receipt email sent successfully:", emailResponse);
+
+    // Check for domain verification error
+    if (emailResponse.error && emailResponse.error.message?.includes("verify a domain")) {
+      console.warn("Domain verification required. Please verify your domain at https://resend.com/domains");
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Email delivery requires domain verification. Please verify your domain at https://resend.com/domains and set VERIFIED_EMAIL_FROM environment variable.",
+        domain_verification_required: true 
+      }), {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
+      });
+    }
 
     return new Response(JSON.stringify({ success: true, email_id: emailResponse.data?.id }), {
       status: 200,
