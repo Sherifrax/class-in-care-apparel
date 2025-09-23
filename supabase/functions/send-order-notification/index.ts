@@ -125,12 +125,15 @@ const handler = async (req: Request): Promise<Response> => {
     // Use verified domain or fallback to resend.dev for testing
     const fromAddress = Deno.env.get("VERIFIED_EMAIL_FROM") || "AURA Medical Scrubs <onboarding@resend.dev>";
     
-    // Use test email override if set, otherwise use admin notification email
-    const recipientEmail = Deno.env.get("TEST_EMAIL_OVERRIDE") || Deno.env.get("ADMIN_NOTIFICATION_EMAIL");
+    // Admin notifications should always go to admin email (not affected by test override)
+    const adminEmail = Deno.env.get("ADMIN_NOTIFICATION_EMAIL");
+    if (!adminEmail) {
+      throw new Error("ADMIN_NOTIFICATION_EMAIL environment variable is not set");
+    }
     
     const emailResponse = await resend.emails.send({
       from: fromAddress,
-      to: [recipientEmail],
+      to: [adminEmail],
       subject: `🛍️ New Order #${orderData.order_id.slice(-8)} - ${orderData.currency} ${orderData.total_amount.toFixed(2)}`,
       html: emailHtml,
     });
