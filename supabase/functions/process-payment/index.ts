@@ -141,7 +141,7 @@ serve(async (req) => {
 
     console.log('Order processed successfully:', order.id);
 
-    // Send admin notification email
+    // Send emails (admin notification and customer receipt)
     try {
       const emailData = {
         order_id: order.id,
@@ -161,7 +161,8 @@ serve(async (req) => {
         created_at: order.created_at,
       };
 
-      const emailResponse = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-order-notification`, {
+      // Send admin notification email
+      const adminEmailResponse = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-order-notification`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${Deno.env.get("SUPABASE_ANON_KEY")}`,
@@ -170,13 +171,29 @@ serve(async (req) => {
         body: JSON.stringify(emailData),
       });
 
-      if (!emailResponse.ok) {
-        console.error('Failed to send admin notification email:', await emailResponse.text());
+      if (!adminEmailResponse.ok) {
+        console.error('Failed to send admin notification email:', await adminEmailResponse.text());
       } else {
         console.log('Admin notification email sent successfully');
       }
+
+      // Send customer receipt email
+      const customerEmailResponse = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-customer-receipt`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${Deno.env.get("SUPABASE_ANON_KEY")}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailData),
+      });
+
+      if (!customerEmailResponse.ok) {
+        console.error('Failed to send customer receipt email:', await customerEmailResponse.text());
+      } else {
+        console.log('Customer receipt email sent successfully');
+      }
     } catch (emailError) {
-      console.error('Error sending admin notification email:', emailError);
+      console.error('Error sending emails:', emailError);
       // Don't fail the order if email fails
     }
 

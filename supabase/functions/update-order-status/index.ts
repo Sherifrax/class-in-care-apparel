@@ -42,6 +42,47 @@ serve(async (req) => {
 
     console.log('Order status updated successfully:', data);
 
+    // Send customer update email if status changed meaningfully
+    const meaningfulStatuses = ['processing', 'shipped', 'delivered', 'cancelled'];
+    if (meaningfulStatuses.includes(status) && data.customer_email) {
+      try {
+        // Fetch order items for the email
+        const { data: orderItems } = await supabaseAdmin
+          .from('order_items')
+          .select('*')
+          .eq('order_id', order_id);
+
+        const orderUpdateData = {
+          order_id: data.id,
+          customer_email: data.customer_email,
+          customer_name: null, // Will be resolved from email
+          status: status,
+          order_items: orderItems || [],
+          total_amount: data.total_amount,
+          currency: data.currency || 'AED',
+          created_at: data.created_at,
+        };
+
+        const updateEmailResponse = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-order-update`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${Deno.env.get("SUPABASE_ANON_KEY")}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(orderUpdateData),
+        });
+
+        if (!updateEmailResponse.ok) {
+          console.error('Failed to send customer update email:', await updateEmailResponse.text());
+        } else {
+          console.log('Customer update email sent successfully');
+        }
+      } catch (emailError) {
+        console.error('Error sending customer update email:', emailError);
+        // Don't fail the update if email fails
+      }
+    }
+
     return new Response(JSON.stringify({ 
       success: true,
       order: data 
