@@ -247,21 +247,37 @@ const Products = () => {
       {/* Products Grid */}
       <section className="py-20 bg-gradient-to-b from-background to-soft-gray/20">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
+          <div className="text-center mb-20 animate-fade-in">
+            <div className="inline-block p-3 rounded-2xl bg-gradient-to-r from-medical-blue/10 to-medical-teal/10 mb-6">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-r from-medical-blue to-medical-teal flex items-center justify-center">
+                <ShoppingCart className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h2 className="text-5xl md:text-6xl font-bold text-luxury-navy mb-8 leading-tight">
               Shop the <span className="text-gradient bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AURA Collection</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Discover our complete range of premium medical uniforms designed for the modern healthcare professional.
+            <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              Experience the perfect blend of comfort, style, and functionality with our premium medical uniforms. 
+              <span className="block mt-2 font-medium text-luxury-navy">Trusted by over 10,000+ healthcare professionals worldwide.</span>
             </p>
+            <div className="flex items-center justify-center gap-8 mt-8 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                <span>Free Shipping on Orders Above 500 AED</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                <span>30-Day Money Back Guarantee</span>
+              </div>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {filteredProducts.map((product, index) => (
-              <Card key={product.id} className="p-6 shadow-lg hover:shadow-xl transition-all duration-300 group animate-scale-in relative overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
+              <Card key={product.id} className="p-0 shadow-2xl hover:shadow-3xl transition-all duration-500 group animate-scale-in relative overflow-hidden bg-gradient-to-br from-white/90 to-white/60 backdrop-blur-sm border-white/20 hover:border-medical-blue/30 hover:scale-[1.02] transform" style={{animationDelay: `${index * 0.1}s`}}>
                 {/* Badge */}
                 {product.badge && (
-                  <Badge className="absolute top-4 left-4 z-10" variant={product.badge === "Best Seller" ? "default" : "secondary"}>
+                  <Badge className="absolute top-6 left-6 z-10 bg-gradient-to-r from-medical-blue to-medical-teal text-white shadow-lg" variant={product.badge === "Best Seller" ? "default" : "secondary"}>
                     {product.badge}
                   </Badge>
                 )}
@@ -271,45 +287,47 @@ const Products = () => {
                   variant="ghost"
                   size="sm"
                   className={cn(
-                    "absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-all bg-white/90 hover:bg-white",
-                    isFavorite(product.id) && "opacity-100 text-red-500"
+                    "absolute top-6 right-6 z-10 opacity-0 group-hover:opacity-100 transition-all bg-white/95 hover:bg-white shadow-lg rounded-full w-10 h-10 p-0",
+                    isFavorite(product.id) && "opacity-100 text-red-500 bg-red-50/90"
                   )}
                   onClick={(e) => handleToggleFavorite(product.id, e)}
                 >
-                  <Heart className={cn("w-4 h-4", isFavorite(product.id) && "fill-current")} />
+                  <Heart className={cn("w-5 h-5", isFavorite(product.id) && "fill-current")} />
                 </Button>
 
-                  <div className="rounded-2xl h-64 mb-6 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
-                  <img 
-                    src={(product.images && product.images.length > 0) ? product.images[0] : product.image} 
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                  {product.images && product.images.length > 1 && (
-                    <Badge className="absolute top-4 left-4 bg-black/70 text-white">
-                      +{product.images.length - 1} more
-                    </Badge>
-                  )}
-                  
-                  {/* Quick View Overlay */}
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center">
-                    <Button 
-                      variant="secondary" 
-                      size="sm" 
-                      className="gap-2"
-                      onClick={() => openProductDialog(product)}
-                    >
-                      <Eye className="w-4 h-4" />
-                      Quick View
-                    </Button>
+                <div className="relative overflow-hidden">
+                  <div className="h-80 mb-0 overflow-hidden group-hover:scale-110 transition-transform duration-500 relative">
+                    <img 
+                      src={(product.images && product.images.length > 0) ? product.images[0] : product.image} 
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                    {product.images && product.images.length > 1 && (
+                      <Badge className="absolute top-4 left-4 bg-gradient-to-r from-black/80 to-black/60 text-white shadow-lg">
+                        +{product.images.length - 1} more
+                      </Badge>
+                    )}
+                    
+                    {/* Quick View Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-6">
+                      <Button 
+                        variant="secondary" 
+                        size="lg" 
+                        className="bg-white/95 hover:bg-white text-luxury-navy gap-2 shadow-xl rounded-full px-6 py-3 font-semibold backdrop-blur-sm border border-white/20"
+                        onClick={() => openProductDialog(product)}
+                      >
+                        <Eye className="w-5 h-5" />
+                        Quick View
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="p-6 space-y-5">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="text-xl font-semibold text-luxury-navy">{product.name}</h3>
-                      <p className="text-muted-foreground text-sm mt-1">{product.description}</p>
+                      <h3 className="text-xl font-bold text-luxury-navy mb-2 leading-tight">{product.name}</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{product.description}</p>
                     </div>
                   </div>
                   
@@ -387,17 +405,19 @@ const Products = () => {
                     </div>
                   )}
                   
-                  <div className="flex items-center justify-between pt-4 border-t">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-luxury-navy">AED {product.price}</span>
-                      {product.original_price && (
-                        <span className="text-lg text-muted-foreground line-through">AED {product.original_price}</span>
-                      )}
-                      <span className="text-sm text-muted-foreground">+ 25 AED shipping</span>
+                  <div className="flex items-center justify-between pt-6 border-t border-medical-blue/10">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-3">
+                        <span className="text-3xl font-bold text-luxury-navy">AED {product.price}</span>
+                        {product.original_price && (
+                          <span className="text-lg text-muted-foreground line-through">AED {product.original_price}</span>
+                        )}
+                      </div>
+                      <span className="text-xs text-muted-foreground">+ Free shipping on orders above 500 AED</span>
                     </div>
                     <Button 
-                      size="sm" 
-                      className="gap-2"
+                      size="lg" 
+                      className="gap-2 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue/90 hover:to-medical-teal/90 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl px-6 py-3"
                       onClick={() => openProductDialog(product)}
                       disabled={product.track_stock && product.stock_quantity === 0}
                     >

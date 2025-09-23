@@ -27,6 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -56,16 +57,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
       
-      if (event === 'SIGNED_IN') {
+      // Only show toast for actual sign-in events, not initial session restore
+      if (event === 'SIGNED_IN' && initialLoadComplete) {
         toast({
           title: "Welcome!",
           description: "You have been signed in successfully.",
         });
-      } else if (event === 'SIGNED_OUT') {
+      } else if (event === 'SIGNED_OUT' && initialLoadComplete) {
         toast({
           title: "Goodbye!",
           description: "You have been signed out successfully.",
         });
+      }
+      
+      // Mark initial load as complete after first auth state change
+      if (!initialLoadComplete) {
+        setInitialLoadComplete(true);
       }
     });
 
