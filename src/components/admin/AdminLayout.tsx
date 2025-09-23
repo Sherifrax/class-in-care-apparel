@@ -163,13 +163,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/profile" className="flex items-center gap-2">
+                  <Link to="/admin/profile" className="flex items-center gap-2">
                     <User className="h-4 w-4" />
                     Profile
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/settings" className="flex items-center gap-2">
+                  <Link to="/admin/settings" className="flex items-center gap-2">
                     <Settings className="h-4 w-4" />
                     Settings
                   </Link>
