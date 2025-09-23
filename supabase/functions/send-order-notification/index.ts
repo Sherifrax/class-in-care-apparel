@@ -123,11 +123,14 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     // Use verified domain or fallback to resend.dev for testing
-    const fromAddress = Deno.env.get("VERIFIED_EMAIL_FROM") || "AURA Medical Scrubs <noreply@yourdomain.com>";
+    const fromAddress = Deno.env.get("VERIFIED_EMAIL_FROM") || "AURA Medical Scrubs <onboarding@resend.dev>";
+    
+    // Use test email override if set, otherwise use admin notification email
+    const recipientEmail = Deno.env.get("TEST_EMAIL_OVERRIDE") || Deno.env.get("ADMIN_NOTIFICATION_EMAIL");
     
     const emailResponse = await resend.emails.send({
       from: fromAddress,
-      to: [Deno.env.get("ADMIN_NOTIFICATION_EMAIL")],
+      to: [recipientEmail],
       subject: `🛍️ New Order #${orderData.order_id.slice(-8)} - ${orderData.currency} ${orderData.total_amount.toFixed(2)}`,
       html: emailHtml,
     });
