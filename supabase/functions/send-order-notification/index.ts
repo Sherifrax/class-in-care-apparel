@@ -124,7 +124,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "AURA Medical Scrubs <orders@resend.dev>",
-      to: ["amrodew@gmail.com"],
+      to: ["omarmaher929@gmail.com"],
       subject: `🛍️ New Order #${orderData.order_id.slice(-8)} - ${orderData.currency} ${orderData.total_amount.toFixed(2)}`,
       html: emailHtml,
     });
