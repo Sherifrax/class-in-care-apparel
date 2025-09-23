@@ -126,9 +126,15 @@ const handler = async (req: Request): Promise<Response> => {
     const fromAddress = Deno.env.get("VERIFIED_EMAIL_FROM") || "AURA Medical Scrubs <onboarding@resend.dev>";
     
     // Admin notifications should always go to admin email (not affected by test override)
-    const adminEmail = Deno.env.get("ADMIN_NOTIFICATION_EMAIL");
+    const adminEmail = Deno.env.get("ADMIN_NOTIFICATION_EMAIL")?.trim();
     if (!adminEmail) {
       throw new Error("ADMIN_NOTIFICATION_EMAIL environment variable is not set");
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(adminEmail)) {
+      throw new Error(`Invalid admin email format: ${adminEmail}`);
     }
     
     const emailResponse = await resend.emails.send({
