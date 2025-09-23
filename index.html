@@ -26,29 +26,37 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Vapi Widget -->
+    <!-- Enhanced Chatbot Styles -->
+    <link rel="stylesheet" href="/src/styles/chatbot.css">
+    
+    <!-- Enhanced Vapi Widget -->
     <vapi-widget
       public-key="b2c0d644-eb09-4312-a92f-c8f4749811e5"
       assistant-id="b44de7d7-3e8c-483d-bc27-9237b0b05e3a"
       mode="chat"
-      theme="dark"
-      base-bg-color="#000000"
-      accent-color="#14B8A6"
-      cta-button-color="#000000"
-      cta-button-text-color="#ffffff"
+      theme="light"
+      base-bg-color="hsl(var(--background))"
+      accent-color="hsl(var(--primary))"
+      cta-button-color="hsl(var(--primary))"
+      cta-button-text-color="white"
       border-radius="large"
-      size="full"
+      size="medium"
       position="bottom-right"
       title="Dr. Bayan - Aura Support"
-      start-button-text="Start Chat"
+      subtitle="Your AI Assistant for Premium Medical Uniforms"
+      start-button-text="💬 Start Chat"
       end-button-text="End Chat"
-      chat-first-message="Hi there! This is Dr. Bayan from Aura Medical Uniforms customer support. How can I assist you today?"
-      chat-placeholder="Ask about Aura uniforms..."
+      chat-first-message="Hello! I'm Dr. Bayan, your AI assistant from Aura Medical Uniforms. I'm here to help you find the perfect premium scrubs, answer sizing questions, assist with orders, and provide expert guidance on our luxury medical apparel collection. How may I assist you today? ✨"
+      chat-placeholder="Ask me about Aura uniforms, sizing, orders..."
       voice-show-transcript="true"
       consent-required="true"
-      consent-title="Terms and conditions"
-      consent-content="By clicking 'Agree,' and each time I interact with this AI agent, I consent to the recording, storage, and sharing of my communications with third-party service providers, and as otherwise described in our Terms of Service."
-      consent-storage-key="vapi_widget_consent"
+      consent-title="Privacy & Terms Agreement"
+      consent-content="By proceeding, you consent to the recording, processing, and storage of our conversation to provide you with personalized assistance. Your data is handled securely according to our Privacy Policy and Terms of Service. Click 'I Agree' to continue."
+      consent-storage-key="aura_vapi_consent_v2"
+      consent-button-text="I Agree"
+      show-minimize-button="true"
+      draggable="false"
+      resizable="false"
     ></vapi-widget>
     
     <script src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/embed/widget.umd.js" async type="text/javascript"></script>
