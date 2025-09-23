@@ -57,8 +57,19 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const handleSignOut = async () => {
     try {
+      // Clear local storage and sign out
+      localStorage.clear();
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      
+      if (error) {
+        // If there's an error but it's just a session not found, still navigate away
+        if (error.message.includes('session_not_found') || error.message.includes('Session not found')) {
+          console.log('Session already expired, navigating to login');
+          navigate('/admin/login');
+          return;
+        }
+        throw error;
+      }
       
       toast({
         title: "Signed out successfully",
@@ -68,11 +79,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       navigate('/admin/login');
     } catch (error: any) {
       console.error('Error signing out:', error);
-      toast({
-        title: "Error",
-        description: "Failed to sign out. Please try again.",
-        variant: "destructive",
-      });
+      // Even if there's an error, try to navigate away
+      navigate('/admin/login');
     }
   };
 

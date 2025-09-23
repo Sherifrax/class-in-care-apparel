@@ -29,6 +29,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminSales from "./pages/admin/AdminSales";
 import { AdminRedirectHandler } from "./components/admin/AdminRedirectHandler";
+import AdminProfile from "./components/admin/AdminProfile";
+import AdminSettings from "./components/admin/AdminSettings";
 
 const queryClient = new QueryClient();
 
@@ -69,8 +71,8 @@ const AppContent = () => {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/products" element={<AdminProducts />} />
           <Route path="/admin/sales" element={<AdminSales />} />
-          <Route path="/admin/profile" element={<Profile />} />
-          <Route path="/admin/settings" element={<Settings />} />
+          <Route path="/admin/profile" element={<AdminProfile />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
