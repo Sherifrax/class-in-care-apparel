@@ -122,8 +122,11 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
+    // Use verified domain or fallback to resend.dev for testing
+    const fromAddress = Deno.env.get("VERIFIED_EMAIL_FROM") || "AURA Medical Scrubs <noreply@yourdomain.com>";
+    
     const emailResponse = await resend.emails.send({
-      from: `AURA Medical Scrubs <${Deno.env.get("VERIFIED_EMAIL_FROM")}>`,
+      from: fromAddress,
       to: [Deno.env.get("ADMIN_NOTIFICATION_EMAIL")],
       subject: `🛍️ New Order #${orderData.order_id.slice(-8)} - ${orderData.currency} ${orderData.total_amount.toFixed(2)}`,
       html: emailHtml,
