@@ -56,12 +56,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
       
-      if (event === 'SIGNED_IN') {
-        toast({
-          title: "Welcome!",
-          description: "You have been signed in successfully.",
-        });
-      } else if (event === 'SIGNED_OUT') {
+      // Only show sign out message, as sign in messages will be handled by the sign in functions
+      if (event === 'SIGNED_OUT') {
         toast({
           title: "Goodbye!",
           description: "You have been signed out successfully.",
@@ -114,6 +110,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       throw error;
     }
+
+    // Show success message only for actual sign in actions
+    toast({
+      title: "Welcome!",
+      description: "You have been signed in successfully.",
+    });
   };
 
   const signOut = async () => {
