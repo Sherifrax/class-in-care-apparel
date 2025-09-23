@@ -141,6 +141,45 @@ serve(async (req) => {
 
     console.log('Order processed successfully:', order.id);
 
+    // Send admin notification email
+    try {
+      const emailData = {
+        order_id: order.id,
+        customer_email: session.customer_email || session.customer_details?.email || 'Guest',
+        customer_name: session.customer_details?.name,
+        shipping_address: order.shipping_address,
+        order_items: cartItems.map((item: any) => ({
+          product_name: item.name,
+          size: item.size,
+          quantity: item.quantity,
+          unit_price: item.unit_price || parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0,
+        })),
+        subtotal: subtotal,
+        delivery_cost: deliveryCost,
+        total_amount: totalAmount,
+        currency: 'AED',
+        created_at: order.created_at,
+      };
+
+      const emailResponse = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-order-notification`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${Deno.env.get("SUPABASE_ANON_KEY")}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailData),
+      });
+
+      if (!emailResponse.ok) {
+        console.error('Failed to send admin notification email:', await emailResponse.text());
+      } else {
+        console.log('Admin notification email sent successfully');
+      }
+    } catch (emailError) {
+      console.error('Error sending admin notification email:', emailError);
+      // Don't fail the order if email fails
+    }
+
     return new Response(JSON.stringify({ 
       success: true,
       order_id: order.id,
