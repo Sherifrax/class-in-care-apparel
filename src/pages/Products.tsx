@@ -162,45 +162,64 @@ const Products = () => {
     <div className="min-h-screen pt-20">
       <AuroraCollection />
       
-      {/* Filter Bar */}
-      <section className="py-8 bg-background border-b">
+      {/* Enhanced Filter Bar */}
+      <section className="py-6 bg-gradient-to-r from-white/80 to-medical-blue/5 backdrop-blur-sm border-b border-medical-blue/10 sticky top-20 z-40">
         <div className="container mx-auto px-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm" className="gap-2">
-                <Filter className="w-4 h-4" />
-                Filters
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 lg:gap-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1">
+              <Button variant="outline" size="sm" className="gap-2 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/10 transition-all duration-200">
+                <Filter className="w-4 h-4 text-medical-blue" />
+                <span className="font-medium">Filters</span>
               </Button>
-              <div className="flex gap-2">
+              
+              {/* Responsive Category Pills */}
+              <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto no-scrollbar">
                 <Button
                   variant={selectedCategory === "All Collections" ? "default" : "ghost"}
                   size="sm"
-                  className="text-xs"
+                  className={cn(
+                    "text-xs font-medium whitespace-nowrap transition-all duration-200 rounded-full px-4",
+                    selectedCategory === "All Collections" 
+                      ? "bg-gradient-to-r from-medical-blue to-medical-teal text-white shadow-md hover:shadow-lg" 
+                      : "hover:bg-medical-blue/10 hover:text-medical-blue border-medical-blue/20"
+                  )}
                   onClick={() => setSelectedCategory("All Collections")}
                 >
-                  All Collections ({selectedCategory === "All Collections" ? filteredProducts.length : products.length})
+                  All Collections <Badge variant="secondary" className="ml-2 text-xs">
+                    {selectedCategory === "All Collections" ? filteredProducts.length : products.length}
+                  </Badge>
                 </Button>
                 {categoriesWithCounts.map((category) => (
                   <Button
                     key={category.id}
                     variant={selectedCategory === category.name ? "default" : "ghost"}
                     size="sm"
-                    className="text-xs"
+                    className={cn(
+                      "text-xs font-medium whitespace-nowrap transition-all duration-200 rounded-full px-4",
+                      selectedCategory === category.name 
+                        ? "bg-gradient-to-r from-medical-blue to-medical-teal text-white shadow-md hover:shadow-lg" 
+                        : "hover:bg-medical-blue/10 hover:text-medical-blue border-medical-blue/20"
+                    )}
                     onClick={() => setSelectedCategory(category.name)}
                   >
-                    {category.name} ({selectedCategory === category.name ? filteredProducts.length : category.count})
+                    {category.name} <Badge variant="secondary" className="ml-2 text-xs">
+                      {selectedCategory === category.name ? filteredProducts.length : category.count}
+                    </Badge>
                   </Button>
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">View:</span>
-              <Button variant="ghost" size="sm">
-                <Grid className="w-4 h-4" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <List className="w-4 h-4" />
-              </Button>
+            
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground font-medium">View:</span>
+              <div className="flex items-center gap-1 p-1 bg-white/60 rounded-lg border border-medical-blue/20">
+                <Button variant="ghost" size="sm" className="p-2 hover:bg-medical-blue/10 rounded-md">
+                  <Grid className="w-4 h-4 text-medical-blue" />
+                </Button>
+                <Button variant="ghost" size="sm" className="p-2 hover:bg-medical-blue/10 rounded-md">
+                  <List className="w-4 h-4 text-medical-blue" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>

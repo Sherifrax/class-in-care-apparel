@@ -48,6 +48,11 @@ const AppContent = () => {
     }
   }, [location]);
 
+  // Scroll to top when navigating to new routes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location.pathname]);
+
   return (
     <>
       {!isAdminRoute && <Header />}

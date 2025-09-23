@@ -57,34 +57,41 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
-        <CardDescription className="text-center">
-          Join AURA and discover premium medical apparel
+    <Card className="w-full max-w-md mx-auto glass border-white/20 shadow-luxury backdrop-blur-xl bg-gradient-to-b from-white/90 to-white/80 animate-scale-in">
+      <CardHeader className="space-y-3 text-center">
+        <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-medical-teal to-medical-blue p-4 shadow-glow">
+          <div className="w-full h-full rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white to-white/80"></div>
+          </div>
+        </div>
+        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-medical-teal to-medical-blue bg-clip-text text-transparent">
+          Join AURA
+        </CardTitle>
+        <CardDescription className="text-base text-muted-foreground">
+          Create your account and discover premium medical apparel
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6 p-8">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               control={form.control}
               name="fullName"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-sm font-semibold text-luxury-navy">Full Name</FormLabel>
                   <FormControl>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <div className="relative group">
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-medical-teal/60 group-focus-within:text-medical-teal transition-colors" />
                       <Input
                         {...field}
                         placeholder="Enter your full name"
-                        className="pl-9"
+                        className="pl-12 h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60"
                         disabled={loading}
                       />
                     </div>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-destructive text-sm" />
                 </FormItem>
               )}
             />
@@ -93,21 +100,21 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-sm font-semibold text-luxury-navy">Email Address</FormLabel>
                   <FormControl>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <div className="relative group">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-medical-teal/60 group-focus-within:text-medical-teal transition-colors" />
                       <Input
                         {...field}
                         type="email"
-                        placeholder="Enter your email"
-                        className="pl-9"
+                        placeholder="Enter your email address"
+                        className="pl-12 h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60"
                         disabled={loading}
                       />
                     </div>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-sm text-destructive" />
                 </FormItem>
               )}
             />
@@ -116,35 +123,35 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-sm font-semibold text-luxury-navy">Password</FormLabel>
                   <FormControl>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <div className="relative group">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-medical-teal/60 group-focus-within:text-medical-teal transition-colors" />
                       <Input
                         {...field}
                         type={showPassword ? 'text' : 'password'}
-                        placeholder="Create a password"
-                        className="pl-9 pr-9"
+                        placeholder="Create a secure password"
+                        className="pl-12 pr-12 h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60"
                         disabled={loading}
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-1 top-1 h-8 w-8"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-medical-teal/10 rounded-lg transition-colors"
                         onClick={() => setShowPassword(!showPassword)}
                         disabled={loading}
                       >
                         {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
+                          <EyeOff className="h-4 w-4 text-medical-teal/70" />
                         ) : (
-                          <Eye className="h-4 w-4" />
+                          <Eye className="h-4 w-4 text-medical-teal/70" />
                         )}
                       </Button>
                     </div>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-sm text-destructive" />
                 </FormItem>
               )}
             />
@@ -153,51 +160,64 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
               control={form.control}
               name="confirmPassword"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-sm font-semibold text-luxury-navy">Confirm Password</FormLabel>
                   <FormControl>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <div className="relative group">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-medical-teal/60 group-focus-within:text-medical-teal transition-colors" />
                       <Input
                         {...field}
                         type={showConfirmPassword ? 'text' : 'password'}
                         placeholder="Confirm your password"
-                        className="pl-9 pr-9"
+                        className="pl-12 pr-12 h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60"
                         disabled={loading}
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-1 top-1 h-8 w-8"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-medical-teal/10 rounded-lg transition-colors"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                         disabled={loading}
                       >
                         {showConfirmPassword ? (
-                          <EyeOff className="h-4 w-4" />
+                          <EyeOff className="h-4 w-4 text-medical-teal/70" />
                         ) : (
-                          <Eye className="h-4 w-4" />
+                          <Eye className="h-4 w-4 text-medical-teal/70" />
                         )}
                       </Button>
                     </div>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-sm text-destructive" />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating account...' : 'Create Account'}
-            </Button>
+            <div className="pt-2">
+              <Button 
+                type="submit" 
+                className="w-full h-12 bg-gradient-to-r from-medical-teal to-medical-blue hover:from-medical-teal-light hover:to-medical-blue-light text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100" 
+                disabled={loading}
+              >
+                {loading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                    Creating account...
+                  </div>
+                ) : (
+                  'Create Account'
+                )}
+              </Button>
+            </div>
           </form>
         </Form>
 
-        <div className="relative">
+        <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <Separator className="w-full" />
+            <Separator className="w-full bg-medical-teal/20" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
+            <span className="bg-white px-4 text-muted-foreground font-medium">
               Already have an account?
             </span>
           </div>
@@ -205,7 +225,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
 
         <Button
           variant="outline"
-          className="w-full"
+          className="w-full h-12 border-2 border-medical-teal/30 hover:border-medical-teal hover:bg-medical-teal/5 text-medical-teal font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02]"
           onClick={onToggleMode}
           disabled={loading}
         >
