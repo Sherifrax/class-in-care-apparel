@@ -172,8 +172,8 @@ const Products = () => {
                 <span className="font-medium">Filters</span>
               </Button>
               
-              {/* Responsive Category Pills */}
-              <div className="flex flex-wrap gap-2 max-w-full overflow-x-auto no-scrollbar">
+              {/* Desktop Category Pills */}
+              <div className="hidden md:flex flex-wrap gap-2 max-w-full overflow-x-auto no-scrollbar">
                 <Button
                   variant={selectedCategory === "All Collections" ? "default" : "ghost"}
                   size="sm"
@@ -207,6 +207,25 @@ const Products = () => {
                     </Badge>
                   </Button>
                 ))}
+              </div>
+
+              {/* Mobile Category Dropdown */}
+              <div className="md:hidden w-full">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-full border-medical-blue/30 hover:border-medical-blue">
+                    <SelectValue placeholder="Select Category" />
+                  </SelectTrigger>
+                  <SelectContent className="z-50 bg-white/95 backdrop-blur-md border-medical-blue/20">
+                    <SelectItem value="All Collections">
+                      All Collections ({products.length})
+                    </SelectItem>
+                    {categoriesWithCounts.map((category) => (
+                      <SelectItem key={category.id} value={category.name}>
+                        {category.name} ({category.count})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             

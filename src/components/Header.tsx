@@ -369,148 +369,148 @@ const Header = () => {
 
       {/* Mobile Menu */}
       <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetContent 
-                  side="right" 
-          className="w-[300px] sm:w-[400px] bg-background/95 backdrop-blur-md border-l border-medical-blue/20"
-                >
-                  <SheetHeader>
+        <SheetContent 
+          side="right" 
+          className="w-[300px] sm:w-[400px] bg-background/95 backdrop-blur-md border-l border-medical-blue/20 flex flex-col max-h-screen overflow-hidden"
+        >
+          <SheetHeader className="flex-shrink-0">
             <SheetTitle className="flex items-center space-x-4">
               <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-medical-blue/30">
-                        <img 
-                          src={auraLogo} 
-                          alt="AURA" 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
+                <img 
+                  src={auraLogo} 
+                  alt="AURA" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold bg-gradient-to-r from-medical-blue to-medical-blue-light bg-clip-text text-transparent">
-                        AURA
-                      </span>
+                  AURA
+                </span>
                 <div className="text-xs text-medical-blue/80 font-medium">MEDICAL • APPAREL • EXCELLENCE</div>
               </div>
-                    </SheetTitle>
-                  </SheetHeader>
-                  
-                  <div className="mt-6 space-y-6">
-                    {/* Mobile Navigation Links */}
+            </SheetTitle>
+          </SheetHeader>
+          
+          <div className="flex-1 overflow-y-auto mt-6 space-y-6 pb-6">
+            {/* Mobile Navigation Links */}
             <nav className="space-y-3">
-                      {navigation.map((item) => (
-                        <Link
-                          key={item.name}
-                          to={item.href}
-                          onClick={closeMobileMenu}
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  onClick={closeMobileMenu}
                   className={`flex items-center px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
-                            isActive(item.href)
+                    isActive(item.href)
                       ? 'bg-medical-blue/15 text-medical-blue border border-medical-blue/30 shadow-sm'
                       : 'text-foreground hover:bg-medical-blue/5 hover:text-medical-blue border border-transparent hover:border-medical-blue/20'
                   }`}
                 >
                   {item.icon && <item.icon className="mr-3 h-5 w-5" />}
-                          {item.name}
-                        </Link>
-                      ))}
-                    </nav>
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
 
-                    <Separator />
+            <Separator />
 
             {/* Mobile User Actions */}
-                    <div className="space-y-4">
-                      {user ? (
-                        <div className="space-y-4">
-                          {/* User Info */}
+            <div className="space-y-4">
+              {user ? (
+                <div className="space-y-4">
+                  {/* User Info */}
                   <div className="flex items-center space-x-3 p-4 rounded-lg bg-medical-blue/5 border border-medical-blue/20 shadow-sm">
                     <Avatar className="h-12 w-12 ring-2 ring-medical-blue/30">
-                              <AvatarImage src={user.user_metadata?.avatar_url} />
+                      <AvatarImage src={user.user_metadata?.avatar_url} />
                       <AvatarFallback className="bg-medical-blue/10 text-medical-blue font-semibold">
-                                {user.user_metadata?.full_name ? getInitials(user.user_metadata.full_name) : 'U'}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 min-w-0">
+                        {user.user_metadata?.full_name ? getInitials(user.user_metadata.full_name) : 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
                       <p className="font-semibold truncate text-foreground">{user.user_metadata?.full_name || 'User'}</p>
                       <p className="text-sm text-medical-blue/80 truncate">{user.email}</p>
-                            </div>
-                          </div>
-
-                          {/* User Actions */}
-                          <div className="space-y-2">
-                    {userActions.map((action) => (
-                            <Link
-                        key={action.name}
-                        to={action.href}
-                              onClick={closeMobileMenu}
-                        className="flex items-center px-4 py-3 rounded-lg text-base font-medium text-foreground hover:bg-medical-blue/5 hover:text-medical-blue transition-all duration-200 border border-transparent hover:border-medical-blue/20"
-                            >
-                        <action.icon className="mr-3 h-5 w-5" />
-                        {action.name}
-                            </Link>
-                    ))}
-                            <button
-                              onClick={handleSignOut}
-                      className="flex items-center w-full px-4 py-3 rounded-lg text-base font-medium text-destructive hover:bg-destructive/10 transition-all duration-200 border border-transparent hover:border-destructive/20"
-                            >
-                              <LogOut className="mr-3 h-5 w-5" />
-                              Sign out
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          <Button
-                            onClick={() => {
-                              setShowAuth(true);
-                              closeMobileMenu();
-                            }}
-                    className="w-full bg-gradient-to-r from-medical-blue to-medical-blue-light hover:from-medical-blue hover:to-medical-blue-light text-white shadow-lg hover:shadow-xl transition-all duration-200"
-                          >
-                    <LogIn className="h-4 w-4 mr-2" />
-                            Sign In
-                          </Button>
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              setShowAuth(true);
-                              closeMobileMenu();
-                            }}
-                    className="w-full border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5 transition-all duration-200"
-                          >
-                            Create Account
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-
-                    <Separator />
-
-            {/* Mobile Quick Actions */}
-                    <div className="space-y-2">
-                      <Link
-                        to="/products"
-                        onClick={closeMobileMenu}
-                className="flex items-center px-4 py-3 rounded-lg text-base font-medium text-foreground hover:bg-medical-blue/5 hover:text-medical-blue transition-all duration-200 border border-transparent hover:border-medical-blue/20"
-                      >
-                        <ShoppingBag className="mr-3 h-5 w-5" />
-                        Shop Now
-                      </Link>
-                      <Link
-                        to="/cart"
-                        onClick={closeMobileMenu}
-                className="flex items-center px-4 py-3 rounded-lg text-base font-medium text-foreground hover:bg-medical-blue/5 hover:text-medical-blue transition-all duration-200 border border-transparent hover:border-medical-blue/20"
-                      >
-                        <ShoppingCart className="mr-3 h-5 w-5" />
-                        Cart
-                        {cartItemCount > 0 && (
-                          <Badge 
-                            variant="destructive" 
-                    className="ml-auto h-5 w-5 text-xs p-0 flex items-center justify-center animate-pulse"
-                          >
-                            {cartItemCount}
-                          </Badge>
-                        )}
-                      </Link>
                     </div>
                   </div>
-                </SheetContent>
-              </Sheet>
+
+                  {/* User Actions */}
+                  <div className="space-y-2">
+                    {userActions.map((action) => (
+                      <Link
+                        key={action.name}
+                        to={action.href}
+                        onClick={closeMobileMenu}
+                        className="flex items-center px-4 py-3 rounded-lg text-base font-medium text-foreground hover:bg-medical-blue/5 hover:text-medical-blue transition-all duration-200 border border-transparent hover:border-medical-blue/20"
+                      >
+                        <action.icon className="mr-3 h-5 w-5" />
+                        {action.name}
+                      </Link>
+                    ))}
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center w-full px-4 py-3 rounded-lg text-base font-medium text-destructive hover:bg-destructive/10 transition-all duration-200 border border-transparent hover:border-destructive/20"
+                    >
+                      <LogOut className="mr-3 h-5 w-5" />
+                      Sign out
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <Button
+                    onClick={() => {
+                      setShowAuth(true);
+                      closeMobileMenu();
+                    }}
+                    className="w-full bg-gradient-to-r from-medical-blue to-medical-blue-light hover:from-medical-blue hover:to-medical-blue-light text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                  >
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Sign In
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowAuth(true);
+                      closeMobileMenu();
+                    }}
+                    className="w-full border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5 transition-all duration-200"
+                  >
+                    Create Account
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            <Separator />
+
+            {/* Mobile Quick Actions */}
+            <div className="space-y-2">
+              <Link
+                to="/products"
+                onClick={closeMobileMenu}
+                className="flex items-center px-4 py-3 rounded-lg text-base font-medium text-foreground hover:bg-medical-blue/5 hover:text-medical-blue transition-all duration-200 border border-transparent hover:border-medical-blue/20"
+              >
+                <ShoppingBag className="mr-3 h-5 w-5" />
+                Shop Now
+              </Link>
+              <Link
+                to="/cart"
+                onClick={closeMobileMenu}
+                className="flex items-center px-4 py-3 rounded-lg text-base font-medium text-foreground hover:bg-medical-blue/5 hover:text-medical-blue transition-all duration-200 border border-transparent hover:border-medical-blue/20"
+              >
+                <ShoppingCart className="mr-3 h-5 w-5" />
+                Cart
+                {cartItemCount > 0 && (
+                  <Badge 
+                    variant="destructive" 
+                    className="ml-auto h-5 w-5 text-xs p-0 flex items-center justify-center animate-pulse"
+                  >
+                    {cartItemCount}
+                  </Badge>
+                )}
+              </Link>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
 
       <Auth 
         isOpen={showAuth} 
