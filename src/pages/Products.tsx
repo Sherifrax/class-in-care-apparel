@@ -43,7 +43,7 @@ interface Category {
 }
 
 const Products = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>('All Collections');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
@@ -88,8 +88,8 @@ const Products = () => {
 
   // Apply all filters
   const filteredProducts = products.filter(product => {
-    // Category filter
-    if (selectedCategory !== null) {
+    // Category filter - "All Collections" shows all products
+    if (selectedCategory !== null && selectedCategory !== 'All Collections') {
       const productCategory = product.product_categories?.name || null;
       if (productCategory !== selectedCategory) return false;
     }
@@ -128,14 +128,13 @@ const Products = () => {
     return true;
   });
 
-  // Calculate category counts dynamically including "All Collections"
-  const allCategories = [
-    { id: 'all', name: 'All Collections', count: products.length, active: true },
-    ...categories.map(category => ({
-      ...category,
-      count: products.filter(p => p.product_categories?.name === category.name).length
-    }))
-  ];
+  // Use categories from database with dynamic counts
+  const allCategories = categories.map(category => ({
+    ...category,
+    count: category.name === 'All Collections' 
+      ? products.length 
+      : products.filter(p => p.product_categories?.name === category.name).length
+  }));
 
   // Get unique filter options from products
   const filterOptions = [
@@ -165,7 +164,7 @@ const Products = () => {
       features: [],
       priceRange: null,
     });
-    setSelectedCategory(null);
+    setSelectedCategory('All Collections');
   };
 
   // Toggle filter option
@@ -186,7 +185,7 @@ const Products = () => {
   };
 
   // Check if any filters are active
-  const hasActiveFilters = selectedCategory !== null || 
+  const hasActiveFilters = (selectedCategory !== null && selectedCategory !== 'All Collections') || 
     selectedFilters.sizes.length > 0 || 
     selectedFilters.colors.length > 0 || 
     selectedFilters.features.length > 0 || 
@@ -262,7 +261,7 @@ const Products = () => {
                 <span className="font-medium">Filters</span>
                 {hasActiveFilters && (
                   <Badge variant="secondary" className="text-xs">
-                    {[selectedFilters.sizes.length, selectedFilters.colors.length, selectedFilters.features.length, selectedFilters.priceRange ? 1 : 0, selectedCategory ? 1 : 0].reduce((a, b) => a + b, 0)}
+                    {[selectedFilters.sizes.length, selectedFilters.colors.length, selectedFilters.features.length, selectedFilters.priceRange ? 1 : 0, (selectedCategory && selectedCategory !== 'All Collections') ? 1 : 0].reduce((a, b) => a + b, 0)}
                   </Badge>
                 )}
               </Button>
@@ -284,15 +283,15 @@ const Products = () => {
                 {allCategories.map((category) => (
                   <Button
                     key={category.id}
-                    variant={selectedCategory === (category.id === 'all' ? null : category.name) ? "default" : "ghost"}
+                    variant={selectedCategory === category.name ? "default" : "ghost"}
                     size="sm"
                     className={cn(
                       "text-xs font-medium whitespace-nowrap transition-all duration-200 rounded-full px-3 py-1.5",
-                      selectedCategory === (category.id === 'all' ? null : category.name)
+                      selectedCategory === category.name
                         ? "bg-gradient-to-r from-medical-blue to-medical-teal text-white shadow-sm hover:shadow-md" 
                         : "hover:bg-medical-blue/10 hover:text-medical-blue border-medical-blue/20"
                     )}
-                    onClick={() => setSelectedCategory(category.id === 'all' ? null : category.name)}
+                    onClick={() => setSelectedCategory(category.name)}
                   >
                     {category.name} <Badge variant="secondary" className="ml-1.5 text-xs px-1.5 py-0.5">
                       {category.count}
@@ -303,13 +302,13 @@ const Products = () => {
 
               {/* Mobile Category Dropdown */}
               <div className="md:hidden w-full">
-                <Select value={selectedCategory || "all"} onValueChange={(value) => setSelectedCategory(value === "all" ? null : value)}>
+                <Select value={selectedCategory || "All Collections"} onValueChange={(value) => setSelectedCategory(value)}>
                   <SelectTrigger className="w-full border-medical-blue/30 hover:border-medical-blue text-sm">
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-white/95 backdrop-blur-md border-medical-blue/20">
                     {allCategories.map((category) => (
-                      <SelectItem key={category.id} value={category.id === 'all' ? 'all' : category.name}>
+                      <SelectItem key={category.id} value={category.name}>
                         {category.name} ({category.count})
                       </SelectItem>
                     ))}
