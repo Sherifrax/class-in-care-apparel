@@ -4,9 +4,62 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Phone, Mail, Clock, MessageCircle, Users, Calendar, Award, Headphones, Globe2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { MapPin, Phone, Mail, Clock, MessageCircle, Users, Calendar, Award, Headphones, Globe2, Loader2 } from "lucide-react";
+
+const contactFormSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
+  lastName: z.string().trim().min(1, "Last name is required").max(50, "Last name must be less than 50 characters"),
+  email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
+  phone: z.string().trim().optional(),
+  interest: z.string().min(1, "Please select an interest category"),
+  message: z.string().trim().min(10, "Message must be at least 10 characters").max(1000, "Message must be less than 1000 characters"),
+  subscribeToUpdates: z.boolean().default(false),
+});
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
 
 const Contact = () => {
+  const { toast } = useToast();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+  });
+
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      const { data: result, error } = await supabase.functions.invoke('send-contact-form', {
+        body: data,
+      });
+
+      if (error) throw error;
+
+      if (result?.success) {
+        toast({
+          title: "Message sent successfully!",
+          description: "We'll get back to you within 4 hours during business hours.",
+        });
+        reset();
+      } else {
+        throw new Error(result?.error || "Failed to send message");
+      }
+    } catch (error: any) {
+      console.error('Error sending contact form:', error);
+      toast({
+        title: "Failed to send message",
+        description: "Please try again or contact us directly at auramedicaluniforms@hotmail.com",
+        variant: "destructive",
+      });
+    }
+  };
   const supportTeam = [
     {
       name: "Dr. Bayan",
@@ -222,51 +275,99 @@ const Contact = () => {
             {/* Contact Form */}
             <Card className="p-8 animate-slide-in-left">
               <h3 className="text-2xl font-bold text-luxury-navy mb-6">Get Personalized Help</h3>
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-luxury-navy mb-2">First Name *</label>
-                    <Input placeholder="Your first name" />
+                    <Input 
+                      placeholder="Your first name" 
+                      {...register("firstName")}
+                      className={errors.firstName ? "border-destructive" : ""}
+                    />
+                    {errors.firstName && (
+                      <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-luxury-navy mb-2">Last Name *</label>
-                    <Input placeholder="Your last name" />
+                    <Input 
+                      placeholder="Your last name" 
+                      {...register("lastName")}
+                      className={errors.lastName ? "border-destructive" : ""}
+                    />
+                    {errors.lastName && (
+                      <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>
+                    )}
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-luxury-navy mb-2">Email *</label>
-                  <Input type="email" placeholder="your.email@example.com" />
+                  <Input 
+                    type="email" 
+                    placeholder="your.email@example.com" 
+                    {...register("email")}
+                    className={errors.email ? "border-destructive" : ""}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-luxury-navy mb-2">Phone (Optional)</label>
-                  <Input type="tel" placeholder="+1 (555) 123-4567" />
+                  <Input 
+                    type="tel" 
+                    placeholder="+1 (555) 123-4567" 
+                    {...register("phone")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-luxury-navy mb-2">I'm interested in:</label>
-                  <select className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-medical-blue">
-                    <option>General Information</option>
-                    <option>Product Questions</option>
-                    <option>Sizing Help</option>
-                    <option>Bulk Orders</option>
-                    <option>Custom Solutions</option>
-                    <option>Partnership Opportunities</option>
+                  <label className="block text-sm font-medium text-luxury-navy mb-2">I'm interested in: *</label>
+                  <select 
+                    {...register("interest")}
+                    className={`w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-medical-blue ${errors.interest ? "border-destructive" : ""}`}
+                  >
+                    <option value="">Select an option</option>
+                    <option value="General Information">General Information</option>
+                    <option value="Product Questions">Product Questions</option>
+                    <option value="Sizing Help">Sizing Help</option>
+                    <option value="Bulk Orders">Bulk Orders</option>
+                    <option value="Custom Solutions">Custom Solutions</option>
+                    <option value="Partnership Opportunities">Partnership Opportunities</option>
                   </select>
+                  {errors.interest && (
+                    <p className="text-sm text-destructive mt-1">{errors.interest.message}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-luxury-navy mb-2">Message *</label>
                   <Textarea 
                     placeholder="Tell us about your needs, questions, or feedback..." 
-                    className="min-h-[120px]"
+                    className={`min-h-[120px] ${errors.message ? "border-destructive" : ""}`}
+                    {...register("message")}
                   />
+                  {errors.message && (
+                    <p className="text-sm text-destructive mt-1">{errors.message.message}</p>
+                  )}
                 </div>
                 <div className="flex items-start gap-3">
-                  <input type="checkbox" className="mt-1" />
+                  <input 
+                    type="checkbox" 
+                    className="mt-1" 
+                    {...register("subscribeToUpdates")}
+                  />
                   <label className="text-sm text-muted-foreground">
                     I'd like to receive updates about new products and exclusive offers from Aura Medical Uniforms.
                   </label>
                 </div>
-                <Button size="lg" className="w-full">
-                  Send Message
+                <Button size="lg" className="w-full" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Sending Message...
+                    </>
+                  ) : (
+                    "Send Message"
+                  )}
                 </Button>
               </form>
             </Card>
