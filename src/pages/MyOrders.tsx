@@ -13,7 +13,8 @@ import {
   XCircle,
   Eye,
   RefreshCw,
-  ArrowLeft
+  ArrowLeft,
+  DollarSign
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -207,58 +208,66 @@ const MyOrdersContent: React.FC = () => {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <Card key={order.id} className={`glass ${getStatusColor(order.status)} border-2 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01] overflow-hidden`}>
-                <CardContent className="p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                    <div className="flex-1 space-y-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 bg-white/60 rounded-xl shadow-sm">
-                            <Package className="w-6 h-6 text-medical-blue" />
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-xl text-luxury-navy">Order #{order.id.slice(0, 8)}</h3>
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                              <div className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
-                                {new Date(order.created_at).toLocaleDateString()}
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Package className="w-4 h-4" />
-                                {order.order_items?.length || 0} items
+              <Card key={order.id} className={`glass ${getStatusColor(order.status)} border-2 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01] overflow-hidden rounded-2xl backdrop-blur-xl`}>
+                <CardContent className="p-8 lg:p-6">
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                      <div className="flex-1 space-y-6">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="p-4 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-2xl shadow-soft border border-medical-blue/20">
+                              <Package className="w-7 h-7 text-medical-blue" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-2xl lg:text-xl text-luxury-navy">Order #{order.id.slice(0, 8)}</h3>
+                              <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="w-4 h-4" />
+                                  {new Date(order.created_at).toLocaleDateString()}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Package className="w-4 h-4" />
+                                  {order.order_items?.length || 0} item{order.order_items?.length !== 1 ? 's' : ''}
+                                </div>
                               </div>
                             </div>
                           </div>
+                          <div className="flex-shrink-0">
+                            {getStatusBadge(order.status)}
+                          </div>
                         </div>
-                        {getStatusBadge(order.status)}
-                      </div>
                       
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="bg-white/40 rounded-xl p-4">
-                          <div className="text-sm text-muted-foreground mb-1">Total Amount</div>
-                          <div className="font-bold text-2xl bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div className="lg:col-span-1 bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
+                          <div className="text-sm font-medium text-muted-foreground mb-2">Total Amount</div>
+                          <div className="font-bold text-3xl lg:text-2xl bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
                             AED {order.total_amount.toFixed(2)}
                           </div>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            Subtotal: AED {order.subtotal.toFixed(2)} + Delivery: AED {order.delivery_cost.toFixed(2)}
+                          <div className="text-xs text-muted-foreground mt-2 space-y-1">
+                            <div>Subtotal: AED {order.subtotal.toFixed(2)}</div>
+                            <div>Delivery: AED {order.delivery_cost.toFixed(2)}</div>
                           </div>
                         </div>
                         
                         {order.order_items && order.order_items.length > 0 && (
-                          <div className="bg-white/40 rounded-xl p-4">
-                            <div className="text-sm text-muted-foreground mb-2">Items:</div>
-                            <div className="space-y-1 max-h-20 overflow-y-auto">
-                              {order.order_items.slice(0, 2).map((item) => (
-                                <div key={item.id} className="text-sm">
-                                  <span className="font-medium">{item.product_name}</span>
-                                  <span className="text-muted-foreground ml-2">
-                                    (Size: {item.size}, Qty: {item.quantity})
-                                  </span>
+                          <div className="lg:col-span-2 bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
+                            <div className="text-sm font-medium text-muted-foreground mb-3">Order Items:</div>
+                            <div className="space-y-2 max-h-24 overflow-y-auto">
+                              {order.order_items.slice(0, 3).map((item) => (
+                                <div key={item.id} className="text-sm flex justify-between items-center">
+                                  <div>
+                                    <span className="font-medium text-luxury-navy">{item.product_name}</span>
+                                    <span className="text-muted-foreground ml-2 text-xs">
+                                      Size: {item.size}
+                                    </span>
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    Qty: {item.quantity}
+                                  </div>
                                 </div>
                               ))}
-                              {order.order_items.length > 2 && (
-                                <div className="text-xs text-muted-foreground">
-                                  +{order.order_items.length - 2} more items
+                              {order.order_items.length > 3 && (
+                                <div className="text-xs text-medical-blue font-medium">
+                                  +{order.order_items.length - 3} more items
                                 </div>
                               )}
                             </div>
@@ -267,12 +276,14 @@ const MyOrdersContent: React.FC = () => {
                       </div>
 
                       {order.shipping_address && (
-                        <div className="bg-white/40 rounded-xl p-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <MapPin className="w-4 h-4 text-medical-blue" />
-                            <span className="font-medium text-sm text-luxury-navy">Shipping Address:</span>
+                        <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="p-2 bg-medical-teal/10 rounded-lg">
+                              <MapPin className="w-4 h-4 text-medical-teal" />
+                            </div>
+                            <span className="font-semibold text-sm text-luxury-navy">Shipping Address</span>
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-sm text-muted-foreground leading-relaxed">
                             {order.shipping_address.line1}
                             {order.shipping_address.line2 && `, ${order.shipping_address.line2}`}
                             <br />
@@ -284,16 +295,16 @@ const MyOrdersContent: React.FC = () => {
                       )}
                     </div>
                     
-                    <div className="flex flex-col gap-3 lg:w-auto w-full">
+                    <div className="flex flex-col gap-3 lg:w-48">
                       <Button
                         onClick={() => setSelectedOrder(order)}
                         size="sm"
-                        className="bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] text-sm px-4 py-2 h-9 lg:h-10"
+                        className="bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] text-sm px-6 py-2.5 h-10 w-full lg:w-auto rounded-xl font-medium"
                       >
                         <Eye className="w-4 h-4 mr-2" />
                         View Details
                       </Button>
-                      <div className="text-xs text-muted-foreground text-center">
+                      <div className="text-xs text-muted-foreground text-center lg:text-right">
                         Updated: {new Date(order.updated_at).toLocaleDateString()}
                       </div>
                     </div>
@@ -304,83 +315,154 @@ const MyOrdersContent: React.FC = () => {
           </div>
         )}
 
-        {/* Order Details Modal */}
+        {/* Enhanced Order Details Modal */}
         {selectedOrder && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto glass border-medical-blue/20 shadow-luxury backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90 animate-scale-in">
-              <CardHeader className="sticky top-0 bg-white/90 backdrop-blur-sm z-10 border-b border-medical-blue/20">
-                <CardTitle className="flex items-center justify-between text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
-                  Order Details - #{selectedOrder.id.slice(0, 8)}
+            <Card className="w-full max-w-5xl max-h-[90vh] overflow-y-auto glass border-2 border-medical-blue/30 shadow-luxury backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90 animate-scale-in rounded-3xl">
+              <CardHeader className="sticky top-0 bg-gradient-to-r from-white/95 to-white/90 backdrop-blur-sm z-10 border-b border-medical-blue/20 rounded-t-3xl">
+                <CardTitle className="flex items-center justify-between text-3xl lg:text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-2xl">
+                      <Package className="w-6 h-6 text-medical-blue" />
+                    </div>
+                    <div>
+                      <div>Order Details - #{selectedOrder.id.slice(0, 8)}</div>
+                      <div className="text-sm font-normal text-muted-foreground mt-1">
+                        Placed on {new Date(selectedOrder.created_at).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
                   {getStatusBadge(selectedOrder.status)}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg text-luxury-navy">Order Information</h4>
-                    <div className="space-y-2 text-sm bg-medical-blue/5 p-4 rounded-xl">
-                      <p><strong>Order ID:</strong> {selectedOrder.id}</p>
-                      <p><strong>Session ID:</strong> {selectedOrder.session_id}</p>
-                      <p><strong>Date:</strong> {new Date(selectedOrder.created_at).toLocaleString()}</p>
-                      <p><strong>Last Updated:</strong> {new Date(selectedOrder.updated_at).toLocaleString()}</p>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg text-luxury-navy">Pricing</h4>
-                    <div className="space-y-2 text-sm bg-green-50 p-4 rounded-xl">
-                      <p><strong>Subtotal:</strong> AED {selectedOrder.subtotal.toFixed(2)}</p>
-                      <p><strong>Delivery:</strong> AED {selectedOrder.delivery_cost.toFixed(2)}</p>
-                      <div className="border-t pt-2 mt-2">
-                        <p className="text-lg font-bold text-luxury-navy">
-                          <strong>Total:</strong> AED {selectedOrder.total_amount.toFixed(2)}
-                        </p>
+              <CardContent className="p-8 space-y-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <Card className="glass border-medical-blue/20 bg-gradient-to-br from-white/80 to-medical-blue/5 shadow-soft rounded-2xl">
+                    <CardContent className="p-6 space-y-4">
+                      <h4 className="font-semibold text-xl text-luxury-navy flex items-center gap-2">
+                        <div className="p-2 bg-medical-blue/10 rounded-lg">
+                          <Calendar className="w-4 h-4 text-medical-blue" />
+                        </div>
+                        Order Information
+                      </h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between py-2 border-b border-medical-blue/10">
+                          <span className="font-medium text-muted-foreground">Order ID:</span>
+                          <span className="font-mono text-xs bg-medical-blue/5 px-2 py-1 rounded">{selectedOrder.id}</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-medical-blue/10">
+                          <span className="font-medium text-muted-foreground">Session ID:</span>
+                          <span className="font-mono text-xs bg-medical-blue/5 px-2 py-1 rounded">{selectedOrder.session_id}</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-medical-blue/10">
+                          <span className="font-medium text-muted-foreground">Order Date:</span>
+                          <span>{new Date(selectedOrder.created_at).toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between py-2">
+                          <span className="font-medium text-muted-foreground">Last Updated:</span>
+                          <span>{new Date(selectedOrder.updated_at).toLocaleString()}</span>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="glass border-green-200 bg-gradient-to-br from-white/80 to-green-50 shadow-soft rounded-2xl">
+                    <CardContent className="p-6 space-y-4">
+                      <h4 className="font-semibold text-xl text-green-700 flex items-center gap-2">
+                        <div className="p-2 bg-green-100 rounded-lg">
+                          <DollarSign className="w-4 h-4 text-green-600" />
+                        </div>
+                        Pricing Details
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 text-sm">
+                          <span className="font-medium text-muted-foreground">Subtotal:</span>
+                          <span className="text-lg font-semibold">AED {selectedOrder.subtotal.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 text-sm">
+                          <span className="font-medium text-muted-foreground">Delivery Fee:</span>
+                          <span className="text-lg font-semibold">AED {selectedOrder.delivery_cost.toFixed(2)}</span>
+                        </div>
+                        <div className="border-t border-green-200 pt-4 mt-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-lg font-bold text-green-700">Total Amount:</span>
+                            <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
+                              AED {selectedOrder.total_amount.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
 
                 {selectedOrder.shipping_address && (
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">
-                      <MapPin className="w-5 h-5 text-medical-blue" />
-                      Shipping Address
-                    </h4>
-                    <div className="p-4 bg-medical-teal/5 rounded-xl text-sm">
-                      {selectedOrder.shipping_address.line1}
-                      {selectedOrder.shipping_address.line2 && <>, {selectedOrder.shipping_address.line2}</>}
-                      <br />
-                      {selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.state} {selectedOrder.shipping_address.postal_code}
-                      <br />
-                      {selectedOrder.shipping_address.country}
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-lg text-luxury-navy">Order Items</h4>
-                  <div className="space-y-3">
-                    {selectedOrder.order_items?.map((item) => (
-                      <div key={item.id} className="flex justify-between items-center p-4 bg-white/50 rounded-xl border border-medical-blue/10">
-                        <div>
-                          <div className="font-medium text-luxury-navy">{item.product_name}</div>
-                          <div className="text-sm text-muted-foreground">Size: {item.size}</div>
+                  <Card className="glass border-medical-teal/20 bg-gradient-to-br from-white/80 to-medical-teal/5 shadow-soft rounded-2xl">
+                    <CardContent className="p-6 space-y-4">
+                      <h4 className="font-semibold text-xl text-luxury-navy flex items-center gap-2">
+                        <div className="p-2 bg-medical-teal/10 rounded-lg">
+                          <MapPin className="w-5 h-5 text-medical-teal" />
                         </div>
-                        <div className="text-right">
-                          <div className="font-medium">x{item.quantity}</div>
-                          <div className="text-sm text-muted-foreground">AED {item.unit_price.toFixed(2)} each</div>
+                        Shipping Address
+                      </h4>
+                      <div className="p-4 bg-white/50 rounded-xl text-sm leading-relaxed border border-medical-teal/10">
+                        <div className="font-medium text-luxury-navy">
+                          {selectedOrder.shipping_address.line1}
+                          {selectedOrder.shipping_address.line2 && <>, {selectedOrder.shipping_address.line2}</>}
+                        </div>
+                        <div className="text-muted-foreground mt-1">
+                          {selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.state} {selectedOrder.shipping_address.postal_code}
+                        </div>
+                        <div className="text-muted-foreground">
+                          {selectedOrder.shipping_address.country}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
+                    </CardContent>
+                  </Card>
+                )}
 
-                <div className="flex justify-end gap-3 pt-6 border-t border-medical-blue/20">
+                <Card className="glass border-purple-200 bg-gradient-to-br from-white/80 to-purple-50 shadow-soft rounded-2xl">
+                  <CardContent className="p-6 space-y-4">
+                    <h4 className="font-semibold text-xl text-purple-700 flex items-center gap-2">
+                      <div className="p-2 bg-purple-100 rounded-lg">
+                        <ShoppingBag className="w-5 h-5 text-purple-600" />
+                      </div>
+                      Order Items ({selectedOrder.order_items?.length || 0})
+                    </h4>
+                    <div className="space-y-3">
+                      {selectedOrder.order_items?.map((item, index) => (
+                        <div key={item.id} className="flex justify-between items-center p-5 bg-white/60 rounded-2xl border border-purple-100 shadow-sm hover:shadow-md transition-all duration-200">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center">
+                              <span className="font-bold text-purple-600">{index + 1}</span>
+                            </div>
+                            <div>
+                              <div className="font-semibold text-luxury-navy text-lg">{item.product_name}</div>
+                              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                                <span>Size: <span className="font-medium">{item.size}</span></span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-lg font-bold text-purple-700">x{item.quantity}</div>
+                            <div className="text-sm text-muted-foreground">AED {item.unit_price.toFixed(2)} each</div>
+                            <div className="text-xs font-medium text-purple-600 mt-1">
+                              Total: AED {(item.unit_price * item.quantity).toFixed(2)}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="flex justify-end gap-4 pt-8 border-t-2 border-medical-blue/20">
                   <Button 
                     variant="outline" 
                     onClick={() => setSelectedOrder(null)}
-                    className="border-2 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5 rounded-xl"
+                    className="border-2 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5 rounded-xl text-base px-8 py-3 font-medium shadow-soft hover:shadow-medium transition-all duration-300"
                   >
-                    Close
+                    Close Details
                   </Button>
                 </div>
               </CardContent>
