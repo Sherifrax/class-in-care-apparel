@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-
 const CTA = () => {
-  return (
-    <section className="py-20 bg-gradient-to-br from-luxury-navy via-medical-blue to-medical-teal text-white">
+  return <section className="py-20 bg-gradient-to-br from-luxury-navy via-medical-blue to-medical-teal text-white">
       <div className="container mx-auto px-6 text-center">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
@@ -18,7 +16,7 @@ const CTA = () => {
             <Button size="lg" variant="secondary" className="bg-white text-luxury-navy hover:bg-white/90 px-8 py-3 text-lg">
               Shop AURA Collection
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-luxury-navy px-8 py-3 text-lg">
+            <Button size="lg" variant="outline" className="border-white hover:bg-white hover:text-luxury-navy px-8 py-3 text-lg text-zinc-950">
               Request Size Guide
             </Button>
           </div>
@@ -39,8 +37,6 @@ const CTA = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default CTA;
