@@ -351,10 +351,6 @@ const MyOrdersContent: React.FC = () => {
                           <span className="font-mono text-xs bg-medical-blue/5 px-2 py-1 rounded">{selectedOrder.id}</span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-medical-blue/10">
-                          <span className="font-medium text-muted-foreground">Session ID:</span>
-                          <span className="font-mono text-xs bg-medical-blue/5 px-2 py-1 rounded">{selectedOrder.session_id}</span>
-                        </div>
-                        <div className="flex justify-between py-2 border-b border-medical-blue/10">
                           <span className="font-medium text-muted-foreground">Order Date:</span>
                           <span>{new Date(selectedOrder.created_at).toLocaleString()}</span>
                         </div>
