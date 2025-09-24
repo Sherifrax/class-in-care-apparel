@@ -10,7 +10,6 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Clock, MessageCircle, Users, Calendar, Award, Headphones, Globe2, Loader2 } from "lucide-react";
-
 const contactFormSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
   lastName: z.string().trim().min(1, "Last name is required").max(50, "Last name must be less than 50 characters"),
@@ -18,34 +17,37 @@ const contactFormSchema = z.object({
   phone: z.string().trim().optional(),
   interest: z.string().min(1, "Please select an interest category"),
   message: z.string().trim().min(10, "Message must be at least 10 characters").max(1000, "Message must be less than 1000 characters"),
-  subscribeToUpdates: z.boolean().default(false),
+  subscribeToUpdates: z.boolean().default(false)
 });
-
 type ContactFormData = z.infer<typeof contactFormSchema>;
-
 const Contact = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: {
+      errors,
+      isSubmitting
+    }
   } = useForm<ContactFormData>({
-    resolver: zodResolver(contactFormSchema),
+    resolver: zodResolver(contactFormSchema)
   });
-
   const onSubmit = async (data: ContactFormData) => {
     try {
-      const { data: result, error } = await supabase.functions.invoke('send-contact-form', {
-        body: data,
+      const {
+        data: result,
+        error
+      } = await supabase.functions.invoke('send-contact-form', {
+        body: data
       });
-
       if (error) throw error;
-
       if (result?.success) {
         toast({
           title: "Message sent successfully!",
-          description: "We'll get back to you within 4 hours during business hours.",
+          description: "We'll get back to you within 4 hours during business hours."
         });
         reset();
       } else {
@@ -56,115 +58,111 @@ const Contact = () => {
       toast({
         title: "Failed to send message",
         description: "Please try again or contact us directly at auramedicaluniforms@hotmail.com",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-  const supportTeam = [
-    {
-      name: "Dr. Bayan",
-      role: "Founder & Product Expert",
-      specialty: "Product design and medical insights",
-      availability: "Available for consultations",
-      image: "DB"
-    },
-    {
-      name: "Lisa Chen",
-      role: "Senior Customer Success",
-      specialty: "Orders, sizing, and general support",
-      availability: "Mon-Fri 8AM-8PM EST",
-      image: "LC"
-    },
-    {
-      name: "Marcus Torres",
-      role: "Technical Specialist", 
-      specialty: "Fabric technology and care instructions",
-      availability: "Mon-Fri 9AM-6PM EST",
-      image: "MT"
-    },
-    {
-      name: "Sarah Johnson",
-      role: "Bulk Orders Coordinator",
-      specialty: "Healthcare facility partnerships",
-      availability: "Mon-Fri 9AM-5PM EST", 
-      image: "SJ"
-    }
-  ];
-
-  const responseStats = [
-    { metric: "< 2 min", label: "Average Chat Response", icon: <MessageCircle className="w-5 h-5" /> },
-    { metric: "< 4 hours", label: "Email Response Time", icon: <Mail className="w-5 h-5" /> },
-    { metric: "99.8%", label: "Customer Satisfaction", icon: <Award className="w-5 h-5" /> },
-    { metric: "24/7", label: "AI Support Available", icon: <Clock className="w-5 h-5" /> }
-  ];
-
-  const contactMethods = [
-    {
-      icon: <MessageCircle className="w-6 h-6" />,
-      title: "Live Chat",
-      subtitle: "Available 24/7",
-      description: "Get instant help from Dr. Bayan, our AI customer support specialist, available around the clock.",
-      action: "Start Chat Now",
-      highlight: true
-    },
-    {
-      icon: <Phone className="w-6 h-6" />,
-      title: "Phone Support", 
-      subtitle: "Mon-Fri, 9 AM - 6 PM EST",
-      description: "Speak directly with our product specialists and sizing experts.",
-      action: "Call 1-800-AURA-MED",
-      highlight: false
-    },
-    {
-      icon: <Mail className="w-6 h-6" />,
-      title: "Email Support",
-      subtitle: "Response within 4 hours",
-      description: "For detailed inquiries, sizing questions, or order support.",
-      action: "Email auramedicaluniforms@hotmail.com",
-      highlight: false
-    },
-    {
-      icon: <Users className="w-6 h-6" />,
-      title: "Bulk Orders",
-      subtitle: "Special pricing available",
-      description: "Outfitting your entire team? Contact our bulk sales team for special pricing and customization options.",
-      action: "Request Quote", 
-      highlight: false
-    },
-    {
-      icon: <Calendar className="w-6 h-6" />,
-      title: "Video Consultation",
-      subtitle: "15-30 min sessions",
-      description: "Schedule a personalized video call with our product experts for sizing guidance and recommendations.",
-      action: "Book Consultation",
-      highlight: false
-    },
-    {
-      icon: <Globe2 className="w-6 h-6" />,
-      title: "International Support",
-      subtitle: "Global shipping available", 
-      description: "Serving healthcare professionals worldwide with localized support in multiple languages.",
-      action: "View Global Options",
-      highlight: false
-    }
-  ];
-  return (
-    <div className="min-h-screen pt-20">
+  const supportTeam = [{
+    name: "Dr. Bayan",
+    role: "Founder & Product Expert",
+    specialty: "Product design and medical insights",
+    availability: "Available for consultations",
+    image: "DB"
+  }, {
+    name: "Lisa Chen",
+    role: "Senior Customer Success",
+    specialty: "Orders, sizing, and general support",
+    availability: "Mon-Fri 8AM-8PM EST",
+    image: "LC"
+  }, {
+    name: "Marcus Torres",
+    role: "Technical Specialist",
+    specialty: "Fabric technology and care instructions",
+    availability: "Mon-Fri 9AM-6PM EST",
+    image: "MT"
+  }, {
+    name: "Sarah Johnson",
+    role: "Bulk Orders Coordinator",
+    specialty: "Healthcare facility partnerships",
+    availability: "Mon-Fri 9AM-5PM EST",
+    image: "SJ"
+  }];
+  const responseStats = [{
+    metric: "< 2 min",
+    label: "Average Chat Response",
+    icon: <MessageCircle className="w-5 h-5" />
+  }, {
+    metric: "< 4 hours",
+    label: "Email Response Time",
+    icon: <Mail className="w-5 h-5" />
+  }, {
+    metric: "99.8%",
+    label: "Customer Satisfaction",
+    icon: <Award className="w-5 h-5" />
+  }, {
+    metric: "24/7",
+    label: "AI Support Available",
+    icon: <Clock className="w-5 h-5" />
+  }];
+  const contactMethods = [{
+    icon: <MessageCircle className="w-6 h-6" />,
+    title: "Live Chat",
+    subtitle: "Available 24/7",
+    description: "Get instant help from Dr. Bayan, our AI customer support specialist, available around the clock.",
+    action: "Start Chat Now",
+    highlight: true
+  }, {
+    icon: <Phone className="w-6 h-6" />,
+    title: "Phone Support",
+    subtitle: "Mon-Fri, 9 AM - 6 PM EST",
+    description: "Speak directly with our product specialists and sizing experts.",
+    action: "Call 1-800-AURA-MED",
+    highlight: false
+  }, {
+    icon: <Mail className="w-6 h-6" />,
+    title: "Email Support",
+    subtitle: "Response within 4 hours",
+    description: "For detailed inquiries, sizing questions, or order support.",
+    action: "Email auramedicaluniforms@hotmail.com",
+    highlight: false
+  }, {
+    icon: <Users className="w-6 h-6" />,
+    title: "Bulk Orders",
+    subtitle: "Special pricing available",
+    description: "Outfitting your entire team? Contact our bulk sales team for special pricing and customization options.",
+    action: "Request Quote",
+    highlight: false
+  }, {
+    icon: <Calendar className="w-6 h-6" />,
+    title: "Video Consultation",
+    subtitle: "15-30 min sessions",
+    description: "Schedule a personalized video call with our product experts for sizing guidance and recommendations.",
+    action: "Book Consultation",
+    highlight: false
+  }, {
+    icon: <Globe2 className="w-6 h-6" />,
+    title: "International Support",
+    subtitle: "Global shipping available",
+    description: "Serving healthcare professionals worldwide with localized support in multiple languages.",
+    action: "View Global Options",
+    highlight: false
+  }];
+  return <div className="min-h-screen pt-20">
       <CTA />
       
       {/* Response Time Stats */}
       <section className="py-12 bg-gradient-to-r from-medical-blue/5 to-medical-teal/5">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {responseStats.map((stat, index) => (
-              <div key={index} className="text-center animate-scale-in" style={{animationDelay: `${index * 0.1}s`}}>
+            {responseStats.map((stat, index) => <div key={index} className="text-center animate-scale-in" style={{
+            animationDelay: `${index * 0.1}s`
+          }}>
                 <div className="w-12 h-12 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center text-white mx-auto mb-3">
                   {stat.icon}
                 </div>
                 <div className="text-2xl md:text-3xl font-bold text-luxury-navy mb-1">{stat.metric}</div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -182,13 +180,12 @@ const Contact = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {contactMethods.map((method, index) => (
-              <Card key={index} className={`p-6 hover:shadow-xl transition-all duration-300 animate-scale-in ${method.highlight ? 'ring-2 ring-medical-blue/20 bg-gradient-to-br from-medical-blue/5 to-medical-teal/5' : ''}`} style={{animationDelay: `${index * 0.1}s`}}>
-                {method.highlight && (
-                  <Badge className="absolute -top-2 left-4 bg-gradient-to-r from-medical-blue to-medical-teal">
+            {contactMethods.map((method, index) => <Card key={index} className={`p-6 hover:shadow-xl transition-all duration-300 animate-scale-in ${method.highlight ? 'ring-2 ring-medical-blue/20 bg-gradient-to-br from-medical-blue/5 to-medical-teal/5' : ''}`} style={{
+            animationDelay: `${index * 0.1}s`
+          }}>
+                {method.highlight && <Badge className="absolute -top-2 left-4 bg-gradient-to-r from-medical-blue to-medical-teal">
                     Most Popular
-                  </Badge>
-                )}
+                  </Badge>}
                 <div className="flex items-center gap-4 mb-4">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center ${method.highlight ? 'bg-gradient-to-br from-medical-blue to-medical-teal text-white' : 'bg-medical-blue/10 text-medical-blue'}`}>
                     {method.icon}
@@ -199,15 +196,10 @@ const Contact = () => {
                   </div>
                 </div>
                 <p className="text-muted-foreground mb-6 leading-relaxed">{method.description}</p>
-                <Button 
-                  variant={method.highlight ? "default" : "outline"} 
-                  className="w-full"
-                  size="sm"
-                >
+                <Button variant={method.highlight ? "default" : "outline"} className="w-full" size="sm">
                   {method.action}
                 </Button>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -225,8 +217,9 @@ const Contact = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {supportTeam.map((member, index) => (
-              <Card key={index} className="p-6 text-center hover:shadow-xl transition-all duration-300 group animate-scale-in" style={{animationDelay: `${index * 0.1}s`}}>
+            {supportTeam.map((member, index) => <Card key={index} className="p-6 text-center hover:shadow-xl transition-all duration-300 group animate-scale-in" style={{
+            animationDelay: `${index * 0.1}s`
+          }}>
                 <div className="w-20 h-20 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <span className="text-2xl font-bold text-white">{member.image}</span>
                 </div>
@@ -236,8 +229,7 @@ const Contact = () => {
                 <Badge variant="outline" className="text-xs">
                   {member.availability}
                 </Badge>
-              </Card>
-            ))}
+              </Card>)}
           </div>
 
           <div className="text-center animate-fade-in-up">
@@ -279,53 +271,27 @@ const Contact = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-luxury-navy mb-2">First Name *</label>
-                    <Input 
-                      placeholder="Your first name" 
-                      {...register("firstName")}
-                      className={errors.firstName ? "border-destructive" : ""}
-                    />
-                    {errors.firstName && (
-                      <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>
-                    )}
+                    <Input placeholder="Your first name" {...register("firstName")} className={errors.firstName ? "border-destructive" : ""} />
+                    {errors.firstName && <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-luxury-navy mb-2">Last Name *</label>
-                    <Input 
-                      placeholder="Your last name" 
-                      {...register("lastName")}
-                      className={errors.lastName ? "border-destructive" : ""}
-                    />
-                    {errors.lastName && (
-                      <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>
-                    )}
+                    <Input placeholder="Your last name" {...register("lastName")} className={errors.lastName ? "border-destructive" : ""} />
+                    {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>}
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-luxury-navy mb-2">Email *</label>
-                  <Input 
-                    type="email" 
-                    placeholder="your.email@example.com" 
-                    {...register("email")}
-                    className={errors.email ? "border-destructive" : ""}
-                  />
-                  {errors.email && (
-                    <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
-                  )}
+                  <Input type="email" placeholder="your.email@example.com" {...register("email")} className={errors.email ? "border-destructive" : ""} />
+                  {errors.email && <p className="text-sm text-destructive mt-1">{errors.email.message}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-luxury-navy mb-2">Phone (Optional)</label>
-                  <Input 
-                    type="tel" 
-                    placeholder="+1 (555) 123-4567" 
-                    {...register("phone")}
-                  />
+                  <Input type="tel" placeholder="+1 (555) 123-4567" {...register("phone")} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-luxury-navy mb-2">I'm interested in: *</label>
-                  <select 
-                    {...register("interest")}
-                    className={`w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-medical-blue ${errors.interest ? "border-destructive" : ""}`}
-                  >
+                  <select {...register("interest")} className={`w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-medical-blue ${errors.interest ? "border-destructive" : ""}`}>
                     <option value="">Select an option</option>
                     <option value="General Information">General Information</option>
                     <option value="Product Questions">Product Questions</option>
@@ -334,40 +300,24 @@ const Contact = () => {
                     <option value="Custom Solutions">Custom Solutions</option>
                     <option value="Partnership Opportunities">Partnership Opportunities</option>
                   </select>
-                  {errors.interest && (
-                    <p className="text-sm text-destructive mt-1">{errors.interest.message}</p>
-                  )}
+                  {errors.interest && <p className="text-sm text-destructive mt-1">{errors.interest.message}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-luxury-navy mb-2">Message *</label>
-                  <Textarea 
-                    placeholder="Tell us about your needs, questions, or feedback..." 
-                    className={`min-h-[120px] ${errors.message ? "border-destructive" : ""}`}
-                    {...register("message")}
-                  />
-                  {errors.message && (
-                    <p className="text-sm text-destructive mt-1">{errors.message.message}</p>
-                  )}
+                  <Textarea placeholder="Tell us about your needs, questions, or feedback..." className={`min-h-[120px] ${errors.message ? "border-destructive" : ""}`} {...register("message")} />
+                  {errors.message && <p className="text-sm text-destructive mt-1">{errors.message.message}</p>}
                 </div>
                 <div className="flex items-start gap-3">
-                  <input 
-                    type="checkbox" 
-                    className="mt-1" 
-                    {...register("subscribeToUpdates")}
-                  />
+                  <input type="checkbox" className="mt-1" {...register("subscribeToUpdates")} />
                   <label className="text-sm text-muted-foreground">
                     I'd like to receive updates about new products and exclusive offers from Aura Medical Uniforms.
                   </label>
                 </div>
                 <Button size="lg" className="w-full" type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>
+                  {isSubmitting ? <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       Sending Message...
-                    </>
-                  ) : (
-                    "Send Message"
-                  )}
+                    </> : "Send Message"}
                 </Button>
               </form>
             </Card>
@@ -416,22 +366,7 @@ const Contact = () => {
                 </div>
               </Card>
 
-              <Card className="p-6">
-                <h4 className="text-xl font-semibold text-luxury-navy mb-4">Emergency Contact</h4>
-                <p className="text-muted-foreground mb-4 text-sm">
-                  For urgent order issues or time-sensitive inquiries outside business hours:
-                </p>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-4 h-4 text-medical-blue" />
-                    <span className="text-sm">Emergency Hotline: 1-800-AURA-911</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Mail className="w-4 h-4 text-medical-blue" />
-                    <span className="text-sm">auramedicaluniforms@hotmail.com</span>
-                  </div>
-                </div>
-              </Card>
+              
             </div>
           </div>
         </div>
@@ -504,8 +439,6 @@ const Contact = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
