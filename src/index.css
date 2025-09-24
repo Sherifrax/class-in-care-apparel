@@ -69,14 +69,6 @@
   --gradient-luxury: linear-gradient(135deg, hsl(var(--luxury-navy)) 0%, hsl(var(--medical-blue-dark)) 100%);
   --gradient-soft: linear-gradient(135deg, hsl(var(--soft-gray)) 0%, hsl(var(--background)) 100%);
   --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-  --gradient-mesh: 
-    radial-gradient(at 27% 37%, hsl(var(--medical-blue) / 0.3) 0px, transparent 50%),
-    radial-gradient(at 97% 21%, hsl(var(--medical-teal) / 0.2) 0px, transparent 50%),
-    radial-gradient(at 52% 99%, hsl(var(--luxury-navy) / 0.1) 0px, transparent 50%),
-    radial-gradient(at 10% 29%, hsl(var(--medical-blue-light) / 0.2) 0px, transparent 50%),
-    radial-gradient(at 97% 96%, hsl(var(--medical-teal-light) / 0.15) 0px, transparent 50%),
-    radial-gradient(at 33% 50%, hsl(var(--luxury-gold) / 0.1) 0px, transparent 50%),
-    radial-gradient(at 79% 53%, hsl(var(--medical-blue) / 0.15) 0px, transparent 50%);
 
   /* Premium Shadows */
   --shadow-soft: 0 2px 20px -4px hsl(var(--medical-blue) / 0.1);
@@ -86,11 +78,8 @@
   --shadow-glow: 0 0 40px hsl(var(--medical-blue) / 0.4);
   --shadow-card: 0 4px 24px -6px hsl(var(--medical-blue) / 0.12);
 
-  /* 3D Effects */
-  --transform-3d: perspective(1000px);
-  --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Smooth Transitions */
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
@@ -140,16 +129,6 @@
   --sidebar-accent-foreground: 0 0% 98%;
   --sidebar-border: 240 3.7% 15.9%;
   --sidebar-ring: 217.2 91.2% 59.8%;
-
-  /* Dark gradients */
-  --gradient-mesh: 
-    radial-gradient(at 27% 37%, hsl(var(--medical-blue) / 0.4) 0px, transparent 50%),
-    radial-gradient(at 97% 21%, hsl(var(--medical-teal) / 0.3) 0px, transparent 50%),
-    radial-gradient(at 52% 99%, hsl(var(--luxury-navy) / 0.2) 0px, transparent 50%),
-    radial-gradient(at 10% 29%, hsl(var(--medical-blue-light) / 0.3) 0px, transparent 50%),
-    radial-gradient(at 97% 96%, hsl(var(--medical-teal-light) / 0.2) 0px, transparent 50%),
-    radial-gradient(at 33% 50%, hsl(var(--luxury-gold) / 0.15) 0px, transparent 50%),
-    radial-gradient(at 79% 53%, hsl(var(--medical-blue) / 0.2) 0px, transparent 50%);
 }
 
 @layer utilities {
@@ -203,43 +182,9 @@
     box-shadow: var(--shadow-card);
   }
 
-  /* 3D Transforms */
-  .transform-3d {
-    transform-style: preserve-3d;
-    perspective: var(--transform-3d);
-  }
-
-  .rotate-x-12 {
-    transform: rotateX(12deg);
-  }
-
-  .rotate-y-12 {
-    transform: rotateY(12deg);
-  }
-
-  .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-luxury;
-  }
-
-  .hover-glow {
-    @apply transition-all duration-300 hover:shadow-glow;
-  }
-
-  .hover-3d {
-    @apply transform-3d transition-all duration-500 hover:rotate-x-12 hover:scale-105;
-  }
-
   /* Smooth Transitions */
   .transition-smooth {
     transition: var(--transition-smooth);
-  }
-
-  .transition-bounce {
-    transition: var(--transition-bounce);
-  }
-
-  .transition-spring {
-    transition: var(--transition-spring);
   }
 
   /* Gradient Text */
@@ -260,40 +205,9 @@
     background: var(--gradient-glass);
   }
 
-  /* Animated Elements */
-  .floating {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-  }
-
-  .pulse-glow {
-    animation: pulse-glow 3s ease-in-out infinite;
-  }
-
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / 0.3); }
-    50% { box-shadow: 0 0 40px hsl(var(--primary) / 0.6); }
-  }
-
-  .gradient-shift {
-    background: linear-gradient(-45deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--medical-teal)), hsl(var(--luxury-navy)));
-    background-size: 400% 400%;
-    animation: gradient-shift 15s ease infinite;
-  }
-
-  @keyframes gradient-shift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
   /* Interactive Elements */
   .interactive-card {
-    @apply transform-3d transition-all duration-300 hover:scale-105 hover:-translate-y-2 hover:shadow-luxury cursor-pointer;
+    @apply transition-all duration-300 hover:scale-105 hover:-translate-y-2 hover:shadow-luxury cursor-pointer;
   }
 
   .magnetic-hover {
@@ -344,6 +258,79 @@
     @apply font-light tracking-wide leading-loose;
   }
 
+  /* Clean Futuristic Title Styling - Simple & Elegant */
+  .futuristic-title-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .futuristic-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--medical-blue)) 0%,
+      hsl(var(--medical-teal)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.5px;
+    transition: var(--transition-smooth);
+  }
+  
+  .futuristic-title:hover {
+    filter: drop-shadow(0 0 8px hsl(var(--medical-blue) / 0.4));
+  }
+  
+  .futuristic-subtitle {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: hsl(var(--medical-blue));
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-top: -2px;
+    font-family: 'Courier New', monospace;
+    transition: var(--transition-smooth);
+  }
+  
+  .futuristic-subtitle:hover {
+    opacity: 1;
+    color: hsl(var(--medical-teal));
+  }
+
+  /* Z-Index Management - Critical for fixing navbar issues */
+  vapi-widget {
+    z-index: 40 !important;
+  }
+  
+  /* Ensure navigation stays above VAPI widget */
+  .navigation-container {
+    z-index: 50 !important;
+  }
+
+  /* Mobile-specific Vapi widget positioning */
+  @media (max-width: 768px) {
+    vapi-widget {
+      bottom: 80px !important;
+      right: 20px !important;
+    }
+  }
+
+  /* Smooth scrolling for better UX */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Enhanced focus states for accessibility */
+  .focus-visible:focus-visible {
+    outline: 2px solid hsl(var(--medical-blue));
+    outline-offset: 2px;
+  }
+
   /* Critical Fixes for Flex and Grid Layouts */
   .flex { display: flex !important; }
   .inline-flex { display: inline-flex !important; }
@@ -355,18 +342,16 @@
   .hidden { display: none !important; }
 
   /* Force responsive display */
-  @screen md {
+  @media (min-width: 768px) {
     .md\\:flex { display: flex !important; }
     .md\\:grid { display: grid !important; }
     .md\\:hidden { display: none !important; }
-    .md\\:block { display: block !important; }
   }
   
-  @screen lg {
+  @media (min-width: 1024px) {
     .lg\\:flex { display: flex !important; }
     .lg\\:grid { display: grid !important; }
     .lg\\:hidden { display: none !important; }
-    .lg\\:block { display: block !important; }
   }
 
   /* Force grid columns */
@@ -375,13 +360,13 @@
   .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
   .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
 
-  @screen md {
+  @media (min-width: 768px) {
     .md\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
     .md\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
     .md\\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
   }
   
-  @screen lg {
+  @media (min-width: 1024px) {
     .lg\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
     .lg\\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
   }
