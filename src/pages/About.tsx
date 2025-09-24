@@ -4,70 +4,71 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { ArrowRight, Award, Globe, Leaf, Shield, Calendar, MapPin, Target, Lightbulb, Factory, Users2 } from "lucide-react";
-
 const AboutPage = () => {
-  const timeline = [
-    { year: "2019", title: "The Vision", description: "Dr. Bayan identifies the gap in luxury medical apparel during her residency" },
-    { year: "2020", title: "First Prototype", description: "Development of the first AURA uniform with advanced fabric technology" },
-    { year: "2021", title: "Clinical Testing", description: "6-month pilot program with healthcare professionals across 5 hospitals" },
-    { year: "2022", title: "Official Launch", description: "Aura Medical Uniforms launches with the AURA Collection" },
-    { year: "2023", title: "Global Expansion", description: "Serving healthcare professionals in 25+ countries" },
-    { year: "2024", title: "Innovation Awards", description: "Recognition for excellence in healthcare apparel design" }
-  ];
-
-  const locations = [
-    { city: "New York", role: "Global Headquarters", employees: "120+" },
-    { city: "Los Angeles", role: "Design Studio", employees: "45+" },
-    { city: "Toronto", role: "Manufacturing Hub", employees: "200+" },
-    { city: "London", role: "European Operations", employees: "80+" }
-  ];
-
-  const culture = [
-    { icon: <Target className="w-8 h-8" />, title: "Purpose-Driven", description: "Every decision centers around improving healthcare professionals' lives" },
-    { icon: <Lightbulb className="w-8 h-8" />, title: "Innovation First", description: "Constantly pushing boundaries in fabric technology and design" },
-    { icon: <Users2 className="w-8 h-8" />, title: "Collaborative", description: "Working closely with healthcare workers to understand their needs" },
-    { icon: <Leaf className="w-8 h-8" />, title: "Sustainable", description: "Committed to environmental responsibility in all operations" }
-  ];
-
-  return (
-    <div className="min-h-screen pt-20">
+  const timeline = [{
+    year: "2019",
+    title: "The Vision",
+    description: "Dr. Bayan identifies the gap in luxury medical apparel during her residency"
+  }, {
+    year: "2020",
+    title: "First Prototype",
+    description: "Development of the first AURA uniform with advanced fabric technology"
+  }, {
+    year: "2021",
+    title: "Clinical Testing",
+    description: "6-month pilot program with healthcare professionals across 5 hospitals"
+  }, {
+    year: "2022",
+    title: "Official Launch",
+    description: "Aura Medical Uniforms launches with the AURA Collection"
+  }, {
+    year: "2023",
+    title: "Global Expansion",
+    description: "Serving healthcare professionals in 25+ countries"
+  }, {
+    year: "2024",
+    title: "Innovation Awards",
+    description: "Recognition for excellence in healthcare apparel design"
+  }];
+  const locations = [{
+    city: "New York",
+    role: "Global Headquarters",
+    employees: "120+"
+  }, {
+    city: "Los Angeles",
+    role: "Design Studio",
+    employees: "45+"
+  }, {
+    city: "Toronto",
+    role: "Manufacturing Hub",
+    employees: "200+"
+  }, {
+    city: "London",
+    role: "European Operations",
+    employees: "80+"
+  }];
+  const culture = [{
+    icon: <Target className="w-8 h-8" />,
+    title: "Purpose-Driven",
+    description: "Every decision centers around improving healthcare professionals' lives"
+  }, {
+    icon: <Lightbulb className="w-8 h-8" />,
+    title: "Innovation First",
+    description: "Constantly pushing boundaries in fabric technology and design"
+  }, {
+    icon: <Users2 className="w-8 h-8" />,
+    title: "Collaborative",
+    description: "Working closely with healthcare workers to understand their needs"
+  }, {
+    icon: <Leaf className="w-8 h-8" />,
+    title: "Sustainable",
+    description: "Committed to environmental responsibility in all operations"
+  }];
+  return <div className="min-h-screen pt-20">
       <About />
       
       {/* Company Timeline */}
-      <section className="py-20 bg-gradient-to-b from-background to-soft-gray/10">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
-              Our Journey
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              From a vision in a hospital break room to revolutionizing medical apparel worldwide.
-            </p>
-          </div>
-
-          <div className="relative max-w-4xl mx-auto">
-            <div className="absolute left-4 md:left-1/2 md:transform md:-translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-medical-blue to-medical-teal"></div>
-            
-            {timeline.map((item, index) => (
-              <div key={index} className={`relative flex items-center mb-12 animate-slide-in-${index % 2 === 0 ? 'left' : 'right'}`} style={{animationDelay: `${index * 0.2}s`}}>
-                <div className={`w-full ${index % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8 md:ml-auto'} pl-12 md:w-1/2`}>
-                  <Card className="p-6 hover:shadow-xl transition-all duration-300 group">
-                    <div className="flex items-center mb-4">
-                      <Calendar className="w-5 h-5 text-medical-blue mr-2" />
-                      <span className="text-2xl font-bold text-medical-blue">{item.year}</span>
-                    </div>
-                    <h3 className="text-xl font-semibold text-luxury-navy mb-3">{item.title}</h3>
-                    <p className="text-muted-foreground">{item.description}</p>
-                  </Card>
-                </div>
-                <div className="absolute left-4 md:left-1/2 md:transform md:-translate-x-1/2 w-8 h-8 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-white rounded-full"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
       
       {/* Our Mission Section */}
       <section className="py-20 bg-gradient-to-b from-soft-gray/20 to-background">
@@ -83,7 +84,9 @@ const AboutPage = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            <div className="text-center group animate-scale-in" style={{animationDelay: "0.1s"}}>
+            <div className="text-center group animate-scale-in" style={{
+            animationDelay: "0.1s"
+          }}>
               <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Award className="w-8 h-8 text-white" />
               </div>
@@ -91,7 +94,9 @@ const AboutPage = () => {
               <p className="text-muted-foreground text-sm">Premium quality in every stitch</p>
             </div>
 
-            <div className="text-center group animate-scale-in" style={{animationDelay: "0.2s"}}>
+            <div className="text-center group animate-scale-in" style={{
+            animationDelay: "0.2s"
+          }}>
               <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Shield className="w-8 h-8 text-white" />
               </div>
@@ -99,7 +104,9 @@ const AboutPage = () => {
               <p className="text-muted-foreground text-sm">Built to last through demanding shifts</p>
             </div>
 
-            <div className="text-center group animate-scale-in" style={{animationDelay: "0.3s"}}>
+            <div className="text-center group animate-scale-in" style={{
+            animationDelay: "0.3s"
+          }}>
               <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Leaf className="w-8 h-8 text-white" />
               </div>
@@ -107,7 +114,9 @@ const AboutPage = () => {
               <p className="text-muted-foreground text-sm">Eco-conscious materials and processes</p>
             </div>
 
-            <div className="text-center group animate-scale-in" style={{animationDelay: "0.4s"}}>
+            <div className="text-center group animate-scale-in" style={{
+            animationDelay: "0.4s"
+          }}>
               <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Globe className="w-8 h-8 text-white" />
               </div>
@@ -140,29 +149,7 @@ const AboutPage = () => {
       </section>
 
       {/* Global Presence */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl font-bold text-luxury-navy mb-6">
-              Global Presence
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Our commitment to healthcare excellence spans continents, with teams dedicated to serving medical professionals worldwide.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {locations.map((location, index) => (
-              <Card key={index} className="p-6 text-center hover:shadow-xl transition-all duration-300 animate-scale-in" style={{animationDelay: `${index * 0.1}s`}}>
-                <MapPin className="w-8 h-8 text-medical-blue mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-luxury-navy mb-2">{location.city}</h3>
-                <p className="text-medical-blue font-medium mb-2">{location.role}</p>
-                <p className="text-muted-foreground text-sm">{location.employees} employees</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* Company Culture */}
       <section className="py-20 bg-gradient-to-b from-soft-gray/10 to-background">
@@ -177,23 +164,21 @@ const AboutPage = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {culture.map((item, index) => (
-              <div key={index} className="text-center group animate-scale-in" style={{animationDelay: `${index * 0.1}s`}}>
+            {culture.map((item, index) => <div key={index} className="text-center group animate-scale-in" style={{
+            animationDelay: `${index * 0.1}s`
+          }}>
                 <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center mx-auto mb-6 text-white group-hover:scale-110 transition-transform duration-300">
                   {item.icon}
                 </div>
                 <h3 className="text-xl font-semibold text-luxury-navy mb-3">{item.title}</h3>
                 <p className="text-muted-foreground">{item.description}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
 
       {/* About Our Founder */}
       <FounderSection />
-    </div>
-  );
+    </div>;
 };
-
 export default AboutPage;
