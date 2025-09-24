@@ -45,16 +45,18 @@ export const AdminLogin: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-medical-blue/5 via-medical-teal/5 to-luxury-navy/10 px-4">
-      <Card className="w-full max-w-md glass border-white/20 shadow-luxury backdrop-blur-xl bg-gradient-to-b from-white/90 to-white/80 animate-scale-in">
-        <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6">
-          <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-medical-blue to-medical-teal p-3 sm:p-4 shadow-glow">
-            <div className="w-full h-full rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-white to-white/80"></div>
-            </div>
+      <Card className="w-full max-w-md glass border-white/20 shadow-luxury backdrop-blur-xl bg-white/10 animate-scale-in">
+        <CardHeader className="space-y-4 text-center px-6 py-6">
+          <div className="mx-auto w-20 h-20 rounded-2xl overflow-hidden shadow-glow">
+            <img 
+              src="/images/aura-logo.jpg" 
+              alt="AURA Logo" 
+              className="w-full h-full object-cover"
+            />
           </div>
           <CardTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Admin Portal</CardTitle>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6">
+        <CardContent className="p-6">
           <p className="text-center text-muted-foreground mb-6 text-sm sm:text-base">
             Please sign in with your admin account to access the dashboard
           </p>

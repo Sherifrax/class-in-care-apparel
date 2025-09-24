@@ -44,20 +44,29 @@ export const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
   };
 
   if (emailSent) {
-    return (
-      <Card className="w-full max-w-md mx-auto glass border-white/20 shadow-luxury backdrop-blur-xl bg-gradient-to-b from-white/90 to-white/80 animate-scale-in sm:mx-4 mx-2">
-        <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6">
-          <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-medical-blue to-medical-teal p-3 sm:p-4 shadow-glow">
-            <div className="w-full h-full rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-white to-white/80"></div>
-            </div>
-          </div>
-          <CardTitle className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Check your email</CardTitle>
+  return (
+    <Card className="w-full border-0 shadow-none bg-transparent">
+      <CardHeader className="space-y-4 text-center px-6 py-6">
+        <div className="mx-auto w-20 h-20 rounded-2xl overflow-hidden shadow-glow">
+          <img 
+            src="/images/aura-logo.jpg" 
+            alt="AURA Logo" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="space-y-2">
+          <CardTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+            {emailSent ? 'Check Your Email' : 'Reset Password'}
+          </CardTitle>
           <CardDescription className="text-sm sm:text-base text-muted-foreground">
-            We've sent a password reset link to your email address.
+            {emailSent 
+              ? 'We\'ve sent a password reset link to your email address' 
+              : 'Enter your email address and we\'ll send you a link to reset your password'
+            }
           </CardDescription>
-        </CardHeader>
-        <CardContent className="p-4 sm:p-6">
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-6 px-6 pb-6">
           <Button
             variant="outline"
             className="w-full h-10 sm:h-12 border-2 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5 text-medical-blue font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02]"
@@ -72,19 +81,23 @@ export const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto glass border-white/20 shadow-luxury backdrop-blur-xl bg-gradient-to-b from-white/90 to-white/80 animate-scale-in sm:mx-4 mx-2">
-      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6">
-        <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-medical-blue to-medical-teal p-3 sm:p-4 shadow-glow">
-          <div className="w-full h-full rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-white to-white/80"></div>
-          </div>
+    <Card className="w-full border-0 shadow-none bg-transparent">
+      <CardHeader className="space-y-4 text-center px-6 py-6">
+        <div className="mx-auto w-20 h-20 rounded-2xl overflow-hidden shadow-glow">
+          <img 
+            src="/images/aura-logo.jpg" 
+            alt="AURA Logo" 
+            className="w-full h-full object-cover"
+          />
         </div>
-        <CardTitle className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Reset your password</CardTitle>
-        <CardDescription className="text-sm sm:text-base text-muted-foreground">
-          Enter your email address and we'll send you a link to reset your password.
-        </CardDescription>
+        <div className="space-y-2">
+          <CardTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Reset your password</CardTitle>
+          <CardDescription className="text-sm sm:text-base text-muted-foreground">
+            Enter your email address and we'll send you a link to reset your password.
+          </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-4 p-4 sm:p-6">
+      <CardContent className="space-y-6 px-6 pb-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField

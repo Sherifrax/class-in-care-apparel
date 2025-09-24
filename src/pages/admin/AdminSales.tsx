@@ -288,22 +288,22 @@ const AdminSalesContent: React.FC = () => {
       {/* Filters */}
       <Card className="glass border-medical-blue/20 bg-gradient-to-r from-white/90 to-white/80">
         <CardContent className="p-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-medical-blue/60 w-4 h-4" />
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="relative flex-[3]">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
-                placeholder="Search by order ID or customer email..."
+                placeholder="Search orders by customer name, email, or order ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                className="pl-10 bg-white/50 border-white/20 focus:border-medical-blue/50 backdrop-blur-sm"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[200px] border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl">
+              <SelectTrigger className="w-full sm:w-[180px] sm:flex-[1] bg-white/50 border-white/20 focus:border-medical-blue/50 backdrop-blur-sm">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">All Orders</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="processing">Processing</SelectItem>
                 <SelectItem value="shipped">Shipped</SelectItem>

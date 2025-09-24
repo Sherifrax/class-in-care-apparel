@@ -57,21 +57,25 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto glass border-white/20 shadow-luxury backdrop-blur-xl bg-gradient-to-b from-white/90 to-white/80 animate-scale-in sm:mx-4 mx-2 max-h-[90vh] overflow-y-auto">
-      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6">
-        <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-medical-teal to-medical-blue p-3 sm:p-4 shadow-glow">
-          <div className="w-full h-full rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-white to-white/80"></div>
-          </div>
+    <Card className="w-full border-0 shadow-none bg-transparent">
+      <CardHeader className="space-y-4 text-center px-6 py-6">
+        <div className="mx-auto w-20 h-20 rounded-2xl overflow-hidden shadow-glow">
+          <img 
+            src="/images/aura-logo.jpg" 
+            alt="AURA Logo" 
+            className="w-full h-full object-cover"
+          />
         </div>
-        <CardTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-teal to-medical-blue bg-clip-text text-transparent">
-          Join AURA
-        </CardTitle>
-        <CardDescription className="text-sm sm:text-base text-muted-foreground">
-          Create your account and discover premium medical apparel
-        </CardDescription>
+        <div className="space-y-2">
+          <CardTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-teal to-medical-blue bg-clip-text text-transparent">
+            Join AURA
+          </CardTitle>
+          <CardDescription className="text-sm sm:text-base text-muted-foreground">
+            Create your account and discover premium medical apparel
+          </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-8">
+      <CardContent className="space-y-6 px-6 pb-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField

@@ -168,7 +168,6 @@ const AdminDashboardContent: React.FC = () => {
             <p className="text-lg text-muted-foreground">Monitor your business performance and growth</p>
           </div>
           <div className="flex flex-wrap gap-3 mt-4 lg:mt-0">
-            <AdminNotifications />
             <Button 
               onClick={() => navigate('/admin/products')} 
               variant="outline"
