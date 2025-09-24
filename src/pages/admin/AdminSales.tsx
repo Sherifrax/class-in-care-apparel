@@ -15,7 +15,10 @@ import {
   TrendingUp,
   ShoppingCart,
   Users,
-  BarChart3
+  BarChart3,
+  RefreshCw,
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminRoute } from '@/components/admin/AdminRoute';
@@ -66,6 +69,7 @@ const AdminSalesContent: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -182,19 +186,51 @@ const AdminSalesContent: React.FC = () => {
     setFilteredOrders(filtered);
   }, [orders, searchTerm, statusFilter]);
 
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    setUpdatingStatus(orderId);
+    try {
+      const { data, error } = await supabase.functions.invoke('update-order-status', {
+        body: { 
+          order_id: orderId, 
+          status: newStatus 
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Status Updated",
+        description: `Order status changed to ${newStatus}`,
+        variant: "default",
+      });
+
+      // Refresh orders to get updated data
+      fetchOrders();
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update order status",
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     const statusMap = {
-      pending: { variant: 'secondary' as const, label: 'Pending' },
-      processing: { variant: 'default' as const, label: 'Processing' },
-      shipped: { variant: 'outline' as const, label: 'Shipped' },
-      delivered: { variant: 'default' as const, label: 'Delivered' },
-      cancelled: { variant: 'destructive' as const, label: 'Cancelled' }
+      pending: { variant: 'secondary' as const, label: 'Pending', color: 'bg-yellow-100 text-yellow-800' },
+      processing: { variant: 'default' as const, label: 'Processing', color: 'bg-blue-100 text-blue-800' },
+      shipped: { variant: 'outline' as const, label: 'Shipped', color: 'bg-purple-100 text-purple-800' },
+      delivered: { variant: 'default' as const, label: 'Delivered', color: 'bg-green-100 text-green-800' },
+      cancelled: { variant: 'destructive' as const, label: 'Cancelled', color: 'bg-red-100 text-red-800' }
     };
     
     const statusInfo = statusMap[status as keyof typeof statusMap] || statusMap.pending;
     
     return (
-      <Badge variant={statusInfo.variant}>
+      <Badge variant={statusInfo.variant} className={`${statusInfo.color} border-0 font-medium`}>
         {statusInfo.label}
       </Badge>
     );
@@ -285,33 +321,53 @@ const AdminSalesContent: React.FC = () => {
         </Card>
       </div>
 
-      {/* Filters */}
-      <Card className="glass border-medical-blue/20 bg-gradient-to-r from-white/90 to-white/80">
-        <CardContent className="p-6">
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="relative flex-[3]">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+      {/* Enhanced Filters */}
+      <Card className="glass border-medical-blue/30 bg-gradient-to-r from-white/95 to-medical-blue/5 shadow-lg hover:shadow-xl transition-all duration-300">
+        <CardContent className="p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-medical-blue/10 rounded-lg">
+              <Filter className="w-5 h-5 text-medical-blue" />
+            </div>
+            <h3 className="text-lg font-semibold text-luxury-navy">Filter & Search Orders</h3>
+          </div>
+          
+          <div className="flex flex-col lg:flex-row gap-6">
+            <div className="relative flex-1 lg:flex-[4]">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-medical-blue/60 h-5 w-5" />
               <Input
-                placeholder="Search orders by customer name, email, or order ID..."
+                placeholder="Search by customer email, order ID, or any details..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-white/50 border-white/20 focus:border-medical-blue/50 backdrop-blur-sm"
+                className="pl-12 h-12 bg-white/70 border-2 border-medical-blue/20 focus:border-medical-blue/50 focus:ring-4 focus:ring-medical-blue/10 backdrop-blur-sm text-base font-medium shadow-sm hover:shadow-md transition-all duration-200"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[180px] sm:flex-[1] bg-white/50 border-white/20 focus:border-medical-blue/50 backdrop-blur-sm">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Orders</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="processing">Processing</SelectItem>
-                <SelectItem value="shipped">Shipped</SelectItem>
-                <SelectItem value="delivered">Delivered</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
+            
+            <div className="lg:flex-[2]">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="h-12 bg-white/70 border-2 border-medical-blue/20 focus:border-medical-blue/50 focus:ring-4 focus:ring-medical-blue/10 backdrop-blur-sm text-base font-medium shadow-sm hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-medical-blue/50"></div>
+                    <SelectValue placeholder="Filter by status" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-white/95 backdrop-blur-md border-medical-blue/20">
+                  <SelectItem value="all" className="hover:bg-medical-blue/5">All Orders</SelectItem>
+                  <SelectItem value="pending" className="hover:bg-yellow-50">🟡 Pending</SelectItem>
+                  <SelectItem value="processing" className="hover:bg-blue-50">🔵 Processing</SelectItem>
+                  <SelectItem value="shipped" className="hover:bg-purple-50">🟣 Shipped</SelectItem>
+                  <SelectItem value="delivered" className="hover:bg-green-50">🟢 Delivered</SelectItem>
+                  <SelectItem value="cancelled" className="hover:bg-red-50">🔴 Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
+          
+          {(searchTerm || statusFilter !== 'all') && (
+            <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground bg-medical-blue/5 px-4 py-2 rounded-lg">
+              <AlertCircle className="w-4 h-4" />
+              Showing {filteredOrders.length} of {orders.length} orders
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -363,7 +419,33 @@ const AdminSalesContent: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex items-center gap-2">
+                      <Select
+                        value={order.status}
+                        onValueChange={(newStatus) => updateOrderStatus(order.id, newStatus)}
+                        disabled={updatingStatus === order.id}
+                      >
+                        <SelectTrigger className="w-[140px] h-9 bg-white/70 border-medical-blue/20 hover:border-medical-blue/40 text-sm">
+                          {updatingStatus === order.id ? (
+                            <div className="flex items-center gap-2">
+                              <RefreshCw className="w-3 h-3 animate-spin" />
+                              <span className="text-xs">Updating...</span>
+                            </div>
+                          ) : (
+                            <SelectValue />
+                          )}
+                        </SelectTrigger>
+                        <SelectContent className="bg-white/95 backdrop-blur-md">
+                          <SelectItem value="pending" className="hover:bg-yellow-50">🟡 Pending</SelectItem>
+                          <SelectItem value="processing" className="hover:bg-blue-50">🔵 Processing</SelectItem>
+                          <SelectItem value="shipped" className="hover:bg-purple-50">🟣 Shipped</SelectItem>
+                          <SelectItem value="delivered" className="hover:bg-green-50">🟢 Delivered</SelectItem>
+                          <SelectItem value="cancelled" className="hover:bg-red-50">🔴 Cancelled</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
                     <Button
                       variant="outline"
                       size="sm"
