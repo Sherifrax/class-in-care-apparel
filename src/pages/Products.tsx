@@ -128,8 +128,38 @@ const Products = () => {
     return true;
   });
 
-  // Use categories from database with dynamic counts
-  const allCategories = categories.map(category => ({
+  // Helper function to map filter group names to selectedFilters keys
+  const getFilterKey = (filterGroupName: string) => {
+    switch (filterGroupName.toLowerCase()) {
+      case 'size': return 'sizes';
+      case 'color': return 'colors';
+      case 'features': return 'features';
+      case 'price range': return 'priceRange';
+      default: return filterGroupName.toLowerCase();
+    }
+  };
+
+  // De-duplicate categories by name and add dynamic counts
+  const uniqueCategories = categories.reduce((acc, category) => {
+    const existing = acc.find(c => c.name === category.name);
+    if (!existing) {
+      acc.push(category);
+    }
+    return acc;
+  }, [] as Category[]);
+
+  // Add "All Collections" if not present
+  if (!uniqueCategories.find(c => c.name === 'All Collections')) {
+    uniqueCategories.unshift({
+      id: 'all',
+      name: 'All Collections',
+      count: 0,
+      active: true
+    });
+  }
+
+  // Use unique categories with dynamic counts
+  const allCategories = uniqueCategories.map(category => ({
     ...category,
     count: category.name === 'All Collections' 
       ? products.length 
@@ -168,19 +198,24 @@ const Products = () => {
   };
 
   // Toggle filter option
-  const toggleFilterOption = (filterType: keyof typeof selectedFilters, option: string) => {
-    if (filterType === 'priceRange') {
+  const toggleFilterOption = (filterGroupName: string, option: string) => {
+    const filterKey = getFilterKey(filterGroupName);
+    
+    if (filterKey === 'priceRange') {
       setSelectedFilters(prev => ({
         ...prev,
         priceRange: prev.priceRange === option ? null : option
       }));
     } else {
-      setSelectedFilters(prev => ({
-        ...prev,
-        [filterType]: prev[filterType].includes(option)
-          ? prev[filterType].filter(item => item !== option)
-          : [...prev[filterType], option]
-      }));
+      setSelectedFilters(prev => {
+        const currentArray = prev[filterKey as keyof typeof prev] as string[];
+        return {
+          ...prev,
+          [filterKey]: (currentArray || []).includes(option)
+            ? (currentArray || []).filter(item => item !== option)
+            : [...(currentArray || []), option]
+        };
+      });
     }
   };
 
@@ -256,6 +291,7 @@ const Products = () => {
                   hasActiveFilters && "bg-medical-blue/10 border-medical-blue"
                 )}
                 onClick={() => setShowFilters(!showFilters)}
+                disabled={filterOptions.every(group => group.options.length === 0)}
               >
                 <Filter className="w-4 h-4 text-medical-blue" />
                 <span className="font-medium">Filters</span>
@@ -334,31 +370,29 @@ const Products = () => {
                 <div key={filterGroup.name} className="space-y-3">
                   <h4 className="font-medium text-sm text-foreground">{filterGroup.name}</h4>
                   <div className="space-y-2 max-h-40 overflow-y-auto">
-                    {filterGroup.options.map((option) => {
-                      const isSelected = filterGroup.name === 'Price Range' 
-                        ? selectedFilters.priceRange === option
-                        : selectedFilters[filterGroup.name.toLowerCase() as keyof typeof selectedFilters].includes(option);
-                      
-                      return (
-                        <label key={option} className="flex items-center space-x-2 cursor-pointer group">
-                          <input
-                            type={filterGroup.name === 'Price Range' ? 'radio' : 'checkbox'}
-                            checked={isSelected}
-                            onChange={() => toggleFilterOption(
-                              filterGroup.name === 'Price Range' ? 'priceRange' : filterGroup.name.toLowerCase() as keyof typeof selectedFilters,
-                              option
-                            )}
-                            className="w-4 h-4 text-medical-blue border-gray-300 rounded focus:ring-medical-blue"
-                          />
-                          <span className={cn(
-                            "text-sm transition-colors",
-                            isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground"
-                          )}>
-                            {option}
-                          </span>
-                        </label>
-                      );
-                    })}
+                     {filterGroup.options.map((option) => {
+                       const filterKey = getFilterKey(filterGroup.name);
+                       const isSelected = filterKey === 'priceRange' 
+                         ? selectedFilters.priceRange === option
+                         : (selectedFilters[filterKey as keyof typeof selectedFilters] as string[] || []).includes(option);
+                       
+                       return (
+                         <label key={option} className="flex items-center space-x-2 cursor-pointer group">
+                           <input
+                             type={filterGroup.name === 'Price Range' ? 'radio' : 'checkbox'}
+                             checked={isSelected}
+                             onChange={() => toggleFilterOption(filterGroup.name, option)}
+                             className="w-4 h-4 text-medical-blue border-gray-300 rounded focus:ring-medical-blue"
+                           />
+                           <span className={cn(
+                             "text-sm transition-colors",
+                             isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground"
+                           )}>
+                             {option}
+                           </span>
+                         </label>
+                       );
+                     })}
                   </div>
                 </div>
               ))}
