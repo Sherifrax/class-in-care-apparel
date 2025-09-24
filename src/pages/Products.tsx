@@ -43,10 +43,17 @@ interface Category {
 }
 
 const Products = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All Collections");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
+  const [selectedFilters, setSelectedFilters] = useState({
+    sizes: [] as string[],
+    colors: [] as string[],
+    features: [] as string[],
+    priceRange: null as string | null,
+  });
+  const [showFilters, setShowFilters] = useState(false);
   const { addToCart } = useCart();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { toast } = useToast();
@@ -79,38 +86,111 @@ const Products = () => {
     }
   });
 
-  // Filter products based on selected category
-  const filteredProducts = selectedCategory === "All Collections" 
-    ? products 
-    : products.filter(product => 
-        product.product_categories?.name === selectedCategory
-      );
+  // Apply all filters
+  const filteredProducts = products.filter(product => {
+    // Category filter
+    if (selectedCategory !== null) {
+      const productCategory = product.product_categories?.name || null;
+      if (productCategory !== selectedCategory) return false;
+    }
 
-  // Calculate category counts dynamically
-  const categoriesWithCounts = categories.map(category => ({
-    ...category,
-    count: products.filter(p => p.product_categories?.name === category.name).length
-  }));
+    // Size filter
+    if (selectedFilters.sizes.length > 0) {
+      if (!selectedFilters.sizes.some(size => product.sizes.includes(size))) return false;
+    }
+
+    // Color filter
+    if (selectedFilters.colors.length > 0) {
+      if (!selectedFilters.colors.some(color => product.colors.includes(color))) return false;
+    }
+
+    // Features filter
+    if (selectedFilters.features.length > 0) {
+      if (!selectedFilters.features.some(feature => product.features.includes(feature))) return false;
+    }
+
+    // Price range filter
+    if (selectedFilters.priceRange) {
+      const price = parseFloat(product.price);
+      switch (selectedFilters.priceRange) {
+        case "Under 200 AED":
+          if (price >= 200) return false;
+          break;
+        case "200-300 AED":
+          if (price < 200 || price > 300) return false;
+          break;
+        case "Over 300 AED":
+          if (price <= 300) return false;
+          break;
+      }
+    }
+
+    return true;
+  });
+
+  // Calculate category counts dynamically including "All Collections"
+  const allCategories = [
+    { id: 'all', name: 'All Collections', count: products.length, active: true },
+    ...categories.map(category => ({
+      ...category,
+      count: products.filter(p => p.product_categories?.name === category.name).length
+    }))
+  ];
 
   // Get unique filter options from products
   const filterOptions = [
     { 
       name: "Size", 
-      options: [...new Set(products.flatMap(p => p.sizes))].sort()
+      options: [...new Set(products.flatMap(p => p.sizes))].filter(Boolean).sort()
     },
     { 
       name: "Color", 
-      options: [...new Set(products.flatMap(p => p.colors))].sort()
+      options: [...new Set(products.flatMap(p => p.colors))].filter(Boolean).sort()
     },
     { 
       name: "Features", 
-      options: [...new Set(products.flatMap(p => p.features))].sort()
+      options: [...new Set(products.flatMap(p => p.features))].filter(Boolean).sort()
     },
     { 
       name: "Price Range", 
       options: ["Under 200 AED", "200-300 AED", "Over 300 AED"]
     }
   ];
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSelectedFilters({
+      sizes: [],
+      colors: [],
+      features: [],
+      priceRange: null,
+    });
+    setSelectedCategory(null);
+  };
+
+  // Toggle filter option
+  const toggleFilterOption = (filterType: keyof typeof selectedFilters, option: string) => {
+    if (filterType === 'priceRange') {
+      setSelectedFilters(prev => ({
+        ...prev,
+        priceRange: prev.priceRange === option ? null : option
+      }));
+    } else {
+      setSelectedFilters(prev => ({
+        ...prev,
+        [filterType]: prev[filterType].includes(option)
+          ? prev[filterType].filter(item => item !== option)
+          : [...prev[filterType], option]
+      }));
+    }
+  };
+
+  // Check if any filters are active
+  const hasActiveFilters = selectedCategory !== null || 
+    selectedFilters.sizes.length > 0 || 
+    selectedFilters.colors.length > 0 || 
+    selectedFilters.features.length > 0 || 
+    selectedFilters.priceRange !== null;
 
   const handleAddToCart = async () => {
     if (!selectedProduct || !selectedSize) return;
@@ -168,65 +248,68 @@ const Products = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             {/* Filter Controls */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 flex-1 w-full">
-              {/* Filter Button - Hidden on mobile to save space */}
+              {/* Filter Toggle Button */}
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="hidden sm:flex gap-2 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/10 transition-all duration-200"
+                className={cn(
+                  "gap-2 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/10 transition-all duration-200",
+                  hasActiveFilters && "bg-medical-blue/10 border-medical-blue"
+                )}
+                onClick={() => setShowFilters(!showFilters)}
               >
                 <Filter className="w-4 h-4 text-medical-blue" />
                 <span className="font-medium">Filters</span>
+                {hasActiveFilters && (
+                  <Badge variant="secondary" className="text-xs">
+                    {[selectedFilters.sizes.length, selectedFilters.colors.length, selectedFilters.features.length, selectedFilters.priceRange ? 1 : 0, selectedCategory ? 1 : 0].reduce((a, b) => a + b, 0)}
+                  </Badge>
+                )}
               </Button>
               
-              {/* Desktop Category Pills - Optimized spacing */}
-              <div className="hidden md:flex flex-wrap gap-1.5 max-w-full overflow-x-auto no-scrollbar">
-                <Button
-                  variant={selectedCategory === "All Collections" ? "default" : "ghost"}
-                  size="sm"
-                  className={cn(
-                    "text-xs font-medium whitespace-nowrap transition-all duration-200 rounded-full px-3 py-1.5",
-                    selectedCategory === "All Collections" 
-                      ? "bg-gradient-to-r from-medical-blue to-medical-teal text-white shadow-sm hover:shadow-md" 
-                      : "hover:bg-medical-blue/10 hover:text-medical-blue border-medical-blue/20"
-                  )}
-                  onClick={() => setSelectedCategory("All Collections")}
+              {/* Clear Filters Button */}
+              {hasActiveFilters && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={clearFilters}
+                  className="text-xs text-muted-foreground hover:text-foreground"
                 >
-                  All Collections <Badge variant="secondary" className="ml-1.5 text-xs px-1.5 py-0.5">
-                    {selectedCategory === "All Collections" ? filteredProducts.length : products.length}
-                  </Badge>
+                  Clear All
                 </Button>
-                {categoriesWithCounts.map((category) => (
+              )}
+              
+              {/* Desktop Category Pills */}
+              <div className="hidden md:flex flex-wrap gap-1.5 max-w-full overflow-x-auto no-scrollbar">
+                {allCategories.map((category) => (
                   <Button
                     key={category.id}
-                    variant={selectedCategory === category.name ? "default" : "ghost"}
+                    variant={selectedCategory === (category.id === 'all' ? null : category.name) ? "default" : "ghost"}
                     size="sm"
                     className={cn(
                       "text-xs font-medium whitespace-nowrap transition-all duration-200 rounded-full px-3 py-1.5",
-                      selectedCategory === category.name 
+                      selectedCategory === (category.id === 'all' ? null : category.name)
                         ? "bg-gradient-to-r from-medical-blue to-medical-teal text-white shadow-sm hover:shadow-md" 
                         : "hover:bg-medical-blue/10 hover:text-medical-blue border-medical-blue/20"
                     )}
-                    onClick={() => setSelectedCategory(category.name)}
+                    onClick={() => setSelectedCategory(category.id === 'all' ? null : category.name)}
                   >
                     {category.name} <Badge variant="secondary" className="ml-1.5 text-xs px-1.5 py-0.5">
-                      {selectedCategory === category.name ? filteredProducts.length : category.count}
+                      {category.count}
                     </Badge>
                   </Button>
                 ))}
               </div>
 
-              {/* Mobile Category Dropdown - Full width on mobile */}
+              {/* Mobile Category Dropdown */}
               <div className="md:hidden w-full">
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <Select value={selectedCategory || "all"} onValueChange={(value) => setSelectedCategory(value === "all" ? null : value)}>
                   <SelectTrigger className="w-full border-medical-blue/30 hover:border-medical-blue text-sm">
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-white/95 backdrop-blur-md border-medical-blue/20">
-                    <SelectItem value="All Collections">
-                      All Collections ({products.length})
-                    </SelectItem>
-                    {categoriesWithCounts.map((category) => (
-                      <SelectItem key={category.id} value={category.name}>
+                    {allCategories.map((category) => (
+                      <SelectItem key={category.id} value={category.id === 'all' ? 'all' : category.name}>
                         {category.name} ({category.count})
                       </SelectItem>
                     ))}
@@ -242,6 +325,48 @@ const Products = () => {
           </div>
         </div>
       </section>
+
+      {/* Advanced Filters Panel */}
+      {showFilters && (
+        <section className="py-6 bg-white border-b border-gray-200">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {filterOptions.map((filterGroup) => (
+                <div key={filterGroup.name} className="space-y-3">
+                  <h4 className="font-medium text-sm text-foreground">{filterGroup.name}</h4>
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {filterGroup.options.map((option) => {
+                      const isSelected = filterGroup.name === 'Price Range' 
+                        ? selectedFilters.priceRange === option
+                        : selectedFilters[filterGroup.name.toLowerCase() as keyof typeof selectedFilters].includes(option);
+                      
+                      return (
+                        <label key={option} className="flex items-center space-x-2 cursor-pointer group">
+                          <input
+                            type={filterGroup.name === 'Price Range' ? 'radio' : 'checkbox'}
+                            checked={isSelected}
+                            onChange={() => toggleFilterOption(
+                              filterGroup.name === 'Price Range' ? 'priceRange' : filterGroup.name.toLowerCase() as keyof typeof selectedFilters,
+                              option
+                            )}
+                            className="w-4 h-4 text-medical-blue border-gray-300 rounded focus:ring-medical-blue"
+                          />
+                          <span className={cn(
+                            "text-sm transition-colors",
+                            isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground"
+                          )}>
+                            {option}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
       
       {/* Products Grid */}
       <section className="py-16 bg-gradient-to-b from-background to-soft-gray/20">
