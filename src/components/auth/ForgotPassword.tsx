@@ -46,19 +46,19 @@ export const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
   if (emailSent) {
   return (
     <Card className="w-full border-0 shadow-none bg-transparent">
-      <CardHeader className="space-y-4 text-center px-6 py-6">
-        <div className="mx-auto w-20 h-20 rounded-2xl overflow-hidden shadow-glow">
+      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6">
+        <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-glow">
           <img 
             src="/images/aura-logo.jpg" 
             alt="AURA Logo" 
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="space-y-2">
-          <CardTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+        <div className="space-y-1 sm:space-y-2">
+          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
             {emailSent ? 'Check Your Email' : 'Reset Password'}
           </CardTitle>
-          <CardDescription className="text-sm sm:text-base text-muted-foreground">
+          <CardDescription className="text-xs sm:text-sm lg:text-base text-muted-foreground">
             {emailSent 
               ? 'We\'ve sent a password reset link to your email address' 
               : 'Enter your email address and we\'ll send you a link to reset your password'
@@ -66,7 +66,7 @@ export const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6 px-6 pb-6">
+      <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
           <Button
             variant="outline"
             className="w-full h-10 sm:h-12 border-2 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5 text-medical-blue font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02]"
@@ -82,24 +82,24 @@ export const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
 
   return (
     <Card className="w-full border-0 shadow-none bg-transparent">
-      <CardHeader className="space-y-4 text-center px-6 py-6">
-        <div className="mx-auto w-20 h-20 rounded-2xl overflow-hidden shadow-glow">
+      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6">
+        <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-glow">
           <img 
             src="/images/aura-logo.jpg" 
             alt="AURA Logo" 
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="space-y-2">
-          <CardTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Reset your password</CardTitle>
-          <CardDescription className="text-sm sm:text-base text-muted-foreground">
+        <div className="space-y-1 sm:space-y-2">
+          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Reset your password</CardTitle>
+          <CardDescription className="text-xs sm:text-sm lg:text-base text-muted-foreground">
             Enter your email address and we'll send you a link to reset your password.
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6 px-6 pb-6">
+      <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
             <FormField
               control={form.control}
               name="email"

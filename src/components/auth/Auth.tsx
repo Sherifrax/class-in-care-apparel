@@ -29,7 +29,7 @@ export const Auth: React.FC<AuthProps> = ({ isOpen, onClose, defaultMode = 'sign
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md border-0 p-0">
+      <DialogContent className="w-[95vw] max-w-md sm:w-full border-0 p-0 max-h-[95vh] overflow-y-auto">
         {mode === 'signin' && (
           <SignIn 
             onToggleMode={handleToggleMode} 

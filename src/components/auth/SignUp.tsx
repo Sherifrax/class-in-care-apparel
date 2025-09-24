@@ -58,26 +58,26 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
 
   return (
     <Card className="w-full border-0 shadow-none bg-transparent">
-      <CardHeader className="space-y-4 text-center px-6 py-6">
-        <div className="mx-auto w-20 h-20 rounded-2xl overflow-hidden shadow-glow">
+      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6">
+        <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-glow">
           <img 
             src="/images/aura-logo.jpg" 
             alt="AURA Logo" 
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="space-y-2">
-          <CardTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-teal to-medical-blue bg-clip-text text-transparent">
+        <div className="space-y-1 sm:space-y-2">
+          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-medical-teal to-medical-blue bg-clip-text text-transparent">
             Join AURA
           </CardTitle>
-          <CardDescription className="text-sm sm:text-base text-muted-foreground">
+          <CardDescription className="text-xs sm:text-sm lg:text-base text-muted-foreground">
             Create your account and discover premium medical apparel
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6 px-6 pb-6">
+      <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-5">
             <FormField
               control={form.control}
               name="fullName"
@@ -90,7 +90,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
                       <Input
                         {...field}
                         placeholder="Enter your full name"
-                        className="pl-12 h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60"
+                        className="pl-12 h-10 sm:h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60 text-sm sm:text-base"
                         disabled={loading}
                       />
                     </div>
@@ -113,7 +113,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
                         {...field}
                         type="email"
                         placeholder="Enter your email address"
-                        className="pl-12 h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60"
+                        className="pl-12 h-10 sm:h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60 text-sm sm:text-base"
                         disabled={loading}
                       />
                     </div>
@@ -136,7 +136,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
                         {...field}
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Create a secure password"
-                        className="pl-12 pr-12 h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60"
+                        className="pl-12 pr-12 h-10 sm:h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60 text-sm sm:text-base"
                         disabled={loading}
                       />
                       <Button
@@ -173,7 +173,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
                         {...field}
                         type={showConfirmPassword ? 'text' : 'password'}
                         placeholder="Confirm your password"
-                        className="pl-12 pr-12 h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60"
+                        className="pl-12 pr-12 h-10 sm:h-12 border-2 border-medical-teal/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-teal focus:ring-2 focus:ring-medical-teal/20 transition-all duration-300 placeholder:text-muted-foreground/60 text-sm sm:text-base"
                         disabled={loading}
                       />
                       <Button
@@ -200,7 +200,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
             <div className="pt-2">
               <Button 
                 type="submit" 
-                className="w-full h-12 bg-gradient-to-r from-medical-teal to-medical-blue hover:from-medical-teal-light hover:to-medical-blue-light text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100" 
+                className="w-full h-10 sm:h-12 bg-gradient-to-r from-medical-teal to-medical-blue hover:from-medical-teal-light hover:to-medical-blue-light text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base" 
                 disabled={loading}
               >
                 {loading ? (
@@ -229,7 +229,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
 
         <Button
           variant="outline"
-          className="w-full h-12 border-2 border-medical-teal/30 hover:border-medical-teal hover:bg-medical-teal/5 text-medical-teal font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02]"
+          className="w-full h-10 sm:h-12 border-2 border-medical-teal/30 hover:border-medical-teal hover:bg-medical-teal/5 text-medical-teal font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] text-sm sm:text-base"
           onClick={onToggleMode}
           disabled={loading}
         >
