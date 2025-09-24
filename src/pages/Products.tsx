@@ -96,17 +96,17 @@ const Products = () => {
 
     // Size filter
     if (selectedFilters.sizes.length > 0) {
-      if (!selectedFilters.sizes.some(size => product.sizes.includes(size))) return false;
+      if (!selectedFilters.sizes.some(size => (product.sizes || []).includes(size))) return false;
     }
 
     // Color filter
     if (selectedFilters.colors.length > 0) {
-      if (!selectedFilters.colors.some(color => product.colors.includes(color))) return false;
+      if (!selectedFilters.colors.some(color => (product.colors || []).includes(color))) return false;
     }
 
     // Features filter
     if (selectedFilters.features.length > 0) {
-      if (!selectedFilters.features.some(feature => product.features.includes(feature))) return false;
+      if (!selectedFilters.features.some(feature => (product.features || []).includes(feature))) return false;
     }
 
     // Price range filter
@@ -140,15 +140,15 @@ const Products = () => {
   const filterOptions = [
     { 
       name: "Size", 
-      options: [...new Set(products.flatMap(p => p.sizes))].filter(Boolean).sort()
+      options: [...new Set(products.flatMap(p => p.sizes || []))].filter(Boolean).sort()
     },
     { 
       name: "Color", 
-      options: [...new Set(products.flatMap(p => p.colors))].filter(Boolean).sort()
+      options: [...new Set(products.flatMap(p => p.colors || []))].filter(Boolean).sort()
     },
     { 
       name: "Features", 
-      options: [...new Set(products.flatMap(p => p.features))].filter(Boolean).sort()
+      options: [...new Set(products.flatMap(p => p.features || []))].filter(Boolean).sort()
     },
     { 
       name: "Price Range", 
