@@ -203,14 +203,6 @@ export default {
         "morph": {
           "0%, 100%": { borderRadius: "20px" },
           "50%": { borderRadius: "50px" }
-        },
-        "float-lg": {
-          "0%, 100%": { "transform": "translateY(0px)" },
-          "50%": { "transform": "translateY(-30px)" }
-        },
-        "reveal": {
-          "0%": { "opacity": "0", "transform": "translateY(50px)" },
-          "100%": { "opacity": "1", "transform": "translateY(0)" }
         }
       },
       animation: {
@@ -230,8 +222,6 @@ export default {
         "parallax": "parallax 10s linear infinite",
         "breathe": "breathe 4s ease-in-out infinite",
         "morph": "morph 8s ease-in-out infinite",
-        "float-lg": "float-lg 8s ease-in-out infinite",
-        "reveal": "reveal 0.8s ease-out forwards",
       },
     },
   },

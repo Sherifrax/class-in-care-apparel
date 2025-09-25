@@ -415,7 +415,7 @@ const Products = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {filteredProducts.map((product, index) => (
-              <Card key={product.id} className="p-4 sm:p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group interactive-card relative overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
+              <Card key={product.id} className="p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 group animate-scale-in relative overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
                 {/* Badge */}
                 {product.badge && (
                   <Badge className="absolute top-3 left-3 z-10" variant={product.badge === "Best Seller" ? "default" : "secondary"}>
@@ -428,7 +428,7 @@ const Products = () => {
                   variant="ghost"
                   size="sm"
                   className={cn(
-                    "absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-all bg-white/90 hover:bg-white hover:scale-110",
+                    "absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-all bg-white/90 hover:bg-white",
                     isFavorite(product.id) && "opacity-100 text-red-500"
                   )}
                   onClick={(e) => handleToggleFavorite(product.id, e)}
@@ -436,37 +436,44 @@ const Products = () => {
                   <Heart className={cn("w-4 h-4", isFavorite(product.id) && "fill-current")} />
                 </Button>
 
-                {/* Product Image with Enhanced Hover */}
-                <div className="rounded-xl h-56 sm:h-64 mb-4 overflow-hidden group-hover:scale-105 transition-transform duration-500 relative">
+                <div className="rounded-xl h-56 sm:h-64 mb-4 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
                   <img 
                     src={(product.images && product.images.length > 0) ? product.images[0] : product.image} 
                     alt={product.name}
-                    className="w-full h-full object-cover hover-glow"
+                    className="w-full h-full object-cover"
                   />
                   {product.images && product.images.length > 1 && (
-                    <Badge className="absolute top-3 left-3 bg-black/70 text-white animate-pulse">
+                    <Badge className="absolute top-3 left-3 bg-black/70 text-white">
                       +{product.images.length - 1} more
                     </Badge>
                   )}
                   
-                  {/* Enhanced Quick View Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-4">
-                    <Button
-                      size="sm"
-                      className="bg-white/90 text-black hover:bg-white transition-all duration-300 hover:scale-105 magnetic-hover"
+                  {/* Quick View Overlay */}
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                    <Button 
+                      variant="secondary" 
+                      size="sm" 
+                      className="gap-2"
                       onClick={() => openProductDialog(product)}
                     >
-                      <Eye className="w-4 h-4 mr-2" />
+                      <Eye className="w-4 h-4" />
                       Quick View
                     </Button>
                   </div>
                 </div>
-
-                {/* Product Info */}
+                
                 <div className="space-y-3">
-                  <div className="flex flex-wrap gap-2">
-                    {product.features.slice(0, 2).map((feature) => (
-                      <Badge key={feature} variant="secondary" className="text-xs">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-luxury-navy line-clamp-2">{product.name}</h3>
+                      <p className="text-muted-foreground text-sm mt-1 line-clamp-2">{product.description}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Features */}
+                  <div className="flex flex-wrap gap-1">
+                    {product.features.slice(0, 2).map((feature, i) => (
+                      <Badge key={i} variant="outline" className="text-xs">
                         {feature}
                       </Badge>
                     ))}
@@ -477,53 +484,83 @@ const Products = () => {
                     )}
                   </div>
                   
-                  <h3 className="font-semibold text-lg group-hover:text-medical-blue transition-colors duration-300">
-                    {product.name}
-                  </h3>
-                  
-                  <p className="text-muted-foreground text-sm line-clamp-2">
-                    {product.description}
-                  </p>
-                  
-                  <div className="flex items-center gap-1 text-sm">
-                    <div className="flex">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={cn(
-                            "w-4 h-4 transition-colors",
-                            i < product.rating ? "text-yellow-400 fill-current" : "text-gray-300"
-                          )} 
-                        />
+                        <Star key={i} className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-current text-yellow-500' : 'text-gray-300'}`} />
                       ))}
                     </div>
-                    <span className="text-muted-foreground">({product.reviews})</span>
+                    <span className="text-sm text-muted-foreground">({product.reviews} reviews)</span>
                   </div>
                   
-                  {product.track_stock && product.stock_quantity <= product.low_stock_threshold && product.stock_quantity > 0 && (
-                    <Badge variant="destructive" className="text-xs animate-pulse">
-                      Only {product.stock_quantity} left!
-                    </Badge>
-                  )}
-                </div>
-                
-                {/* Actions */}
-                <div className="flex items-center justify-between pt-4 border-t">
-                  <div className="space-y-1">
-                    <span className="text-xl font-bold text-luxury-navy">AED {product.price}</span>
-                    {product.original_price && (
-                      <span className="text-sm text-muted-foreground line-through">AED {product.original_price}</span>
-                    )}
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Colors:</span>
+                    <div className="flex gap-1">
+                      {product.colors.slice(0, 4).map((color, i) => (
+                        <div key={i} className="w-4 h-4 rounded-full bg-gradient-to-br from-medical-blue/30 to-medical-teal/30 border border-border cursor-pointer hover:scale-110 transition-transform"></div>
+                      ))}
+                      {product.colors.length > 4 && (
+                        <div className="w-4 h-4 rounded-full bg-gray-200 border border-border flex items-center justify-center">
+                          <span className="text-xs text-gray-600">+{product.colors.length - 4}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <Button 
-                    size="sm" 
-                    className="gap-2 text-xs magnetic-hover hover-lift"
-                    onClick={() => openProductDialog(product)}
-                    disabled={product.track_stock && product.stock_quantity === 0}
-                  >
-                    <ShoppingCart className="w-4 h-4" />
-                    {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
-                  </Button>
+                  
+                  {/* Sizes */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Sizes:</span>
+                    <div className="flex gap-1">
+                      {product.sizes.slice(0, 4).map((size, i) => (
+                        <Badge key={i} variant="outline" className="text-xs px-2 py-0 cursor-pointer hover:bg-medical-blue hover:text-white transition-colors">
+                          {size}
+                        </Badge>
+                      ))}
+                      {product.sizes.length > 4 && (
+                        <Badge variant="outline" className="text-xs px-2 py-0">
+                          +{product.sizes.length - 4}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Stock Status */}
+                  {product.track_stock && (
+                    <div className="mb-3">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        product.stock_quantity === 0 
+                          ? 'bg-red-100 text-red-800' 
+                          : product.stock_quantity <= product.low_stock_threshold
+                          ? 'bg-orange-100 text-orange-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {product.stock_quantity === 0 
+                          ? 'Out of Stock' 
+                          : product.stock_quantity <= product.low_stock_threshold
+                          ? `Only ${product.stock_quantity} left`
+                          : 'In Stock'
+                        }
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center justify-between pt-3 border-t">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                      <span className="text-xl font-bold text-luxury-navy">AED {product.price}</span>
+                      {product.original_price && (
+                        <span className="text-sm text-muted-foreground line-through">AED {product.original_price}</span>
+                      )}
+                    </div>
+                    <Button 
+                      size="sm" 
+                      className="gap-2 text-xs"
+                      onClick={() => openProductDialog(product)}
+                      disabled={product.track_stock && product.stock_quantity === 0}
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                      {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+                    </Button>
+                  </div>
                 </div>
               </Card>
             ))}
@@ -537,10 +574,14 @@ const Products = () => {
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <Link to="/contact">
-                <Button size="lg">Contact Our Experts</Button>
+                <Button size="lg">
+                  Contact Our Experts
+                </Button>
               </Link>
               <Link to="/features">
-                <Button variant="outline" size="lg">Learn About Features</Button>
+                <Button variant="outline" size="lg">
+                  Learn About Features
+                </Button>
               </Link>
             </div>
           </div>
@@ -566,19 +607,23 @@ const Products = () => {
                         className="w-full h-64 object-cover rounded-lg"
                       />
                       <div className="flex gap-2 overflow-x-auto">
-                        {selectedProduct.images.slice(1).map((image, i) => (
+                        {selectedProduct.images.map((image, index) => (
                           <img
-                            key={i}
+                            key={index}
                             src={image}
-                            alt={`${selectedProduct.name} view ${i + 2}`}
-                            className="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-75"
+                            alt={`${selectedProduct.name} ${index + 1}`}
+                            className="w-16 h-16 object-cover rounded border-2 border-transparent hover:border-primary cursor-pointer flex-shrink-0"
+                            onClick={(e) => {
+                              const mainImage = e.currentTarget.parentElement?.previousElementSibling as HTMLImageElement;
+                              if (mainImage) mainImage.src = image;
+                            }}
                           />
                         ))}
                       </div>
                     </div>
                   ) : (
                     <img
-                      src={selectedProduct.image}
+                      src={(selectedProduct.images && selectedProduct.images.length > 0) ? selectedProduct.images[0] : selectedProduct.image}
                       alt={selectedProduct.name}
                       className="w-full h-64 object-cover rounded-lg"
                     />
@@ -587,92 +632,151 @@ const Products = () => {
                 
                 <div className="space-y-4">
                   <div>
-                    <p className="text-muted-foreground text-sm mb-2">{selectedProduct.description}</p>
-                    <div className="flex items-center gap-1 text-sm mb-2">
-                      <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                          <Star 
-                            key={i} 
-                            className={`w-4 h-4 ${i < selectedProduct.rating ? 'fill-current text-yellow-500' : 'text-gray-300'}`} 
-                          />
-                        ))}
-                      </div>
-                      <span className="text-muted-foreground">({selectedProduct.reviews} reviews)</span>
-                    </div>
-                    <div className="flex items-center gap-4 mb-4">
-                      <span className="text-2xl font-bold text-luxury-navy">AED {selectedProduct.price}</span>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-2xl font-bold text-luxury-navy">
+                        AED {selectedProduct.price}
+                      </span>
                       {selectedProduct.original_price && (
-                        <span className="text-lg text-muted-foreground line-through">AED {selectedProduct.original_price}</span>
+                        <span className="text-lg text-muted-foreground line-through">
+                          AED {selectedProduct.original_price}
+                        </span>
                       )}
                     </div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div>
-                      <Label htmlFor="size">Size</Label>
-                      <Select value={selectedSize} onValueChange={setSelectedSize}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select size" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {selectedProduct.sizes.map((size) => (
-                            <SelectItem key={size} value={size}>{size}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
                     
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className={cn(
+                            "w-4 h-4",
+                            i < Math.floor(selectedProduct.rating) ? "fill-current text-yellow-500" : "text-gray-300"
+                          )} />
+                        ))}
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        ({selectedProduct.reviews} reviews)
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="text-muted-foreground">
+                    {selectedProduct.description}
+                  </p>
+
+                  <div>
+                    <Label htmlFor="size">Size</Label>
+                    <Select value={selectedSize} onValueChange={setSelectedSize}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select size" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {selectedProduct.sizes.map((size) => (
+                          <SelectItem key={size} value={size}>
+                            {size}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                   <div>
+                     <Label htmlFor="quantity">Quantity</Label>
+                     <div className="flex items-center gap-2 mt-2">
+                       <Button
+                         variant="outline"
+                         size="icon"
+                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                         disabled={quantity <= 1}
+                       >
+                         <Minus className="w-4 h-4" />
+                       </Button>
+                       <Input 
+                         id="quantity"
+                         value={quantity}
+                         onChange={(e) => {
+                           const newQuantity = Math.max(1, parseInt(e.target.value) || 1);
+                           if (selectedProduct.track_stock) {
+                             setQuantity(Math.min(newQuantity, selectedProduct.stock_quantity));
+                           } else {
+                             setQuantity(newQuantity);
+                           }
+                         }}
+                         className="w-20 text-center"
+                         type="number"
+                         min="1"
+                         max={selectedProduct.track_stock ? selectedProduct.stock_quantity : undefined}
+                       />
+                       <Button
+                         variant="outline"
+                         size="icon"
+                         onClick={() => {
+                           if (selectedProduct.track_stock) {
+                             setQuantity(Math.min(quantity + 1, selectedProduct.stock_quantity));
+                           } else {
+                             setQuantity(quantity + 1);
+                           }
+                         }}
+                         disabled={selectedProduct.track_stock && quantity >= selectedProduct.stock_quantity}
+                       >
+                         <Plus className="w-4 h-4" />
+                       </Button>
+                     </div>
+                   </div>
+
+                   {selectedProduct.track_stock && (
+                     <div className="mb-2">
+                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                         selectedProduct.stock_quantity === 0 
+                           ? 'bg-red-100 text-red-800' 
+                           : selectedProduct.stock_quantity <= selectedProduct.low_stock_threshold
+                           ? 'bg-orange-100 text-orange-800'
+                           : 'bg-green-100 text-green-800'
+                       }`}>
+                         {selectedProduct.stock_quantity === 0 
+                           ? 'Out of Stock' 
+                           : selectedProduct.stock_quantity <= selectedProduct.low_stock_threshold
+                           ? `Only ${selectedProduct.stock_quantity} left`
+                           : `${selectedProduct.stock_quantity} available`
+                         }
+                       </span>
+                     </div>
+                   )}
+
+                   <Button 
+                     className="w-full" 
+                     onClick={handleAddToCart}
+                     disabled={!selectedSize || (selectedProduct.track_stock && (selectedProduct.stock_quantity === 0 || quantity > selectedProduct.stock_quantity))}
+                   >
+                     <ShoppingCart className="w-4 h-4 mr-2" />
+                     {selectedProduct.track_stock && selectedProduct.stock_quantity === 0 
+                       ? 'Out of Stock' 
+                       : `Add to Cart (${quantity} item${quantity !== 1 ? 's' : ''})`
+                     }
+                   </Button>
+
+                  {selectedProduct.features.length > 0 && (
                     <div>
-                      <Label htmlFor="quantity">Quantity</Label>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        >
-                          <Minus className="w-4 h-4" />
-                        </Button>
-                        <Input
-                          id="quantity"
-                          type="number"
-                          value={quantity}
-                          onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                          className="w-20 text-center"
-                          min="1"
-                        />
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setQuantity(quantity + 1)}
-                        >
-                          <Plus className="w-4 h-4" />
-                        </Button>
+                      <h4 className="font-medium mb-2">Features</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedProduct.features.map((feature, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {feature}
+                          </Badge>
+                        ))}
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex gap-2">
-                    <Button 
-                      className="flex-1" 
-                      onClick={handleAddToCart}
-                      disabled={!selectedSize || (selectedProduct.track_stock && selectedProduct.stock_quantity === 0)}
-                    >
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      {selectedProduct.track_stock && selectedProduct.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => handleToggleFavorite(selectedProduct.id, e)}
-                    >
-                      <Heart className={cn("w-4 h-4", isFavorite(selectedProduct.id) && "fill-current text-red-500")} />
-                    </Button>
-                  </div>
-                  
-                  {selectedProduct.track_stock && selectedProduct.stock_quantity <= selectedProduct.low_stock_threshold && selectedProduct.stock_quantity > 0 && (
-                    <Badge variant="destructive" className="text-xs">
-                      Only {selectedProduct.stock_quantity} left in stock!
-                    </Badge>
+                  )}
+
+                  {selectedProduct.colors.length > 0 && (
+                    <div>
+                      <h4 className="font-medium mb-2">Available Colors</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedProduct.colors.map((color, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {color}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
@@ -685,43 +789,57 @@ const Products = () => {
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-2xl md:text-3xl font-bold text-luxury-navy mb-4">Size Guide</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-luxury-navy mb-4">
+              Perfect Fit Guarantee
+            </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Find your perfect fit with our comprehensive sizing guide for all AURA medical uniforms.
+              We're so confident in our sizing that we offer free exchanges within 14 days. 
+              Find your perfect fit with our comprehensive size guide.
             </p>
           </div>
-          
-          <div className="bg-white rounded-2xl p-8 shadow-lg border">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-semibold">Size</th>
-                    <th className="text-left py-3 px-4 font-semibold">Chest (inches)</th>
-                    <th className="text-left py-3 px-4 font-semibold">Waist (inches)</th>
-                    <th className="text-left py-3 px-4 font-semibold">Hip (inches)</th>
-                    <th className="text-left py-3 px-4 font-semibold">Length (inches)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ['XS', '32-34', '26-28', '34-36', '25'],
-                    ['S', '34-36', '28-30', '36-38', '26'],
-                    ['M', '36-38', '30-32', '38-40', '27'],
-                    ['L', '38-40', '32-34', '40-42', '28'],
-                    ['XL', '40-42', '34-36', '42-44', '29'],
-                    ['XXL', '42-44', '36-38', '44-46', '30'],
-                  ].map((row, i) => (
-                    <tr key={i} className="border-b last:border-b-0 hover:bg-gray-50">
-                      <td className="py-3 px-4 font-medium">{row[0]}</td>
-                      <td className="py-3 px-4">{row[1]}</td>
-                      <td className="py-3 px-4">{row[2]}</td>
-                      <td className="py-3 px-4">{row[3]}</td>
-                      <td className="py-3 px-4">{row[4]}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="animate-slide-in-left">
+              <h3 className="text-xl font-bold text-luxury-navy mb-4">Size Guide Features</h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-medical-blue/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-xs font-bold text-medical-blue">1</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-luxury-navy">Detailed Measurements</h4>
+                    <p className="text-muted-foreground text-sm">Comprehensive size charts with exact measurements for all body types</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-medical-blue/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-xs font-bold text-medical-blue">2</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-luxury-navy">Fit Recommendations</h4>
+                    <p className="text-muted-foreground text-sm">Personalized fit suggestions based on your measurements and preferences</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-medical-blue/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-xs font-bold text-medical-blue">3</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-luxury-navy">Free Exchanges</h4>
+                    <p className="text-muted-foreground text-sm">No-hassle exchanges if the fit isn't perfect</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="animate-slide-in-right">
+              <div className="bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-2xl p-6 text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-xl">📏</span>
+                </div>
+                <h4 className="text-lg font-bold text-luxury-navy mb-3">Need Help with Sizing?</h4>
+                <p className="text-muted-foreground mb-4">Chat with our sizing experts for personalized assistance</p>
+                <Button>Get Sizing Help</Button>
+              </div>
             </div>
           </div>
         </div>
