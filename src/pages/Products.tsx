@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import AuroraCollection from "@/components/AuroraCollection";
+import AnimatedSection from "@/components/AnimatedSection";
+import EnhancedProductCard from "@/components/EnhancedProductCard";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-import { Star, ShoppingCart, Heart, Eye, Filter, Plus, Minus } from "lucide-react";
+import { Filter, Plus, Minus } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCart } from '@/contexts/CartContext';
@@ -469,6 +470,63 @@ const Products = () => {
                       <p className="text-muted-foreground text-sm mt-1 line-clamp-2">{product.description}</p>
                     </div>
                   </div>
+
+                  <div className="flex items-center gap-1 text-sm">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Star 
+                          key={i} 
+                          className={cn(
+                            "w-4 h-4",
+                            i < product.rating ? "text-yellow-400 fill-current" : "text-gray-300"
+                          )} 
+                        />
+                      ))}
+                    </div>
+                    <span className="text-muted-foreground">({product.reviews})</span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {product.features?.slice(0, 2).map((feature) => (
+                      <Badge key={feature} variant="secondary" className="text-xs">
+                        {feature}
+                      </Badge>
+                    ))}
+                    {product.features && product.features.length > 2 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{product.features.length - 2} more
+                      </Badge>
+                    )}
+                  </div>
+
+                  {product.track_stock && product.stock_quantity <= product.low_stock_threshold && product.stock_quantity > 0 && (
+                    <Badge variant="destructive" className="text-xs">
+                      Only {product.stock_quantity} left!
+                    </Badge>
+                  )}
+
+                  <div className="flex items-center justify-between pt-2">
+                    <div>
+                      <span className="text-xl font-bold text-luxury-navy">AED {product.price}</span>
+                      {product.original_price && (
+                        <span className="text-sm text-muted-foreground line-through ml-2">AED {product.original_price}</span>
+                      )}
+                    </div>
+                    <Button 
+                      size="sm" 
+                      className="gap-2 text-xs magnetic-hover"
+                      onClick={() => openProductDialog(product)}
+                      disabled={product.track_stock && product.stock_quantity === 0}
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                      {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+                    </Button>
+                  </div>
+                </div>
+                </Card>
+              </AnimatedSection>
+                    </div>
+                  </div>
                   
                   {/* Features */}
                   <div className="flex flex-wrap gap-1">
@@ -562,7 +620,7 @@ const Products = () => {
                     </Button>
                   </div>
                 </div>
-              </Card>
+              </AnimatedSection>
             ))}
           </div>
 
@@ -586,7 +644,7 @@ const Products = () => {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
       
       {/* Product Detail Dialog */}
       <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
