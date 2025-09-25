@@ -57,16 +57,6 @@ const AuroraCollection = () => {
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <Card className="p-6 text-center shadow-card hover:shadow-luxury transition-shadow">
-            <h4 className="text-xl font-bold text-luxury-navy mb-3">Full-Sleeve Authority</h4>
-            <p className="text-muted-foreground mb-4">
-              Sleek sets that project professionalism and command respect in any medical environment.
-            </p>
-            <Button variant="outline" className="w-full">
-              View Styles
-            </Button>
-          </Card>
-          
-          <Card className="p-6 text-center shadow-card hover:shadow-luxury transition-shadow">
             <h4 className="text-xl font-bold text-luxury-navy mb-3">Lightweight Flexibility</h4>
             <p className="text-muted-foreground mb-4">
               Ultra-comfortable options built for maximum mobility without compromising elegance.
