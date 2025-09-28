@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import heroVideo from "@/assets/aura-hero-animation.mp4";
 
 const Hero = () => {
@@ -33,9 +34,11 @@ const Hero = () => {
             <Button size="lg" className="bg-gradient-to-r from-luxury-gold to-luxury-gold-light hover:from-luxury-gold-dark hover:to-luxury-gold text-black font-semibold px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
               Explore AURA Collection
             </Button>
-            <Button variant="outline" size="lg" className="border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-black px-8 py-3 text-lg">
-              Discover Our Power
-            </Button>
+            <Link to="/about">
+              <Button variant="outline" size="lg" className="border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-black px-8 py-3 text-lg">
+                Discover Our Power
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

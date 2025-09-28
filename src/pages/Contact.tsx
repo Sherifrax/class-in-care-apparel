@@ -9,7 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { MapPin, Phone, Mail, Clock, MessageCircle, Users, Calendar, Award, Headphones, Globe2, Loader2 } from "lucide-react";
+import { Phone, Mail, Clock, MessageCircle, Award, Loader2 } from "lucide-react";
+
 const contactFormSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
   lastName: z.string().trim().min(1, "Last name is required").max(50, "Last name must be less than 50 characters"),
@@ -19,7 +20,9 @@ const contactFormSchema = z.object({
   message: z.string().trim().min(10, "Message must be at least 10 characters").max(1000, "Message must be less than 1000 characters"),
   subscribeToUpdates: z.boolean().default(false)
 });
+
 type ContactFormData = z.infer<typeof contactFormSchema>;
+
 const Contact = () => {
   const {
     toast
@@ -35,6 +38,7 @@ const Contact = () => {
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema)
   });
+
   const onSubmit = async (data: ContactFormData) => {
     try {
       const {
@@ -62,31 +66,7 @@ const Contact = () => {
       });
     }
   };
-  const supportTeam = [{
-    name: "Dr. Bayan",
-    role: "Founder & Product Expert",
-    specialty: "Product design and medical insights",
-    availability: "Available for consultations",
-    image: "DB"
-  }, {
-    name: "Lisa Chen",
-    role: "Senior Customer Success",
-    specialty: "Orders, sizing, and general support",
-    availability: "Mon-Fri 8AM-8PM EST",
-    image: "LC"
-  }, {
-    name: "Marcus Torres",
-    role: "Technical Specialist",
-    specialty: "Fabric technology and care instructions",
-    availability: "Mon-Fri 9AM-6PM EST",
-    image: "MT"
-  }, {
-    name: "Sarah Johnson",
-    role: "Bulk Orders Coordinator",
-    specialty: "Healthcare facility partnerships",
-    availability: "Mon-Fri 9AM-5PM EST",
-    image: "SJ"
-  }];
+
   const responseStats = [{
     metric: "< 2 min",
     label: "Average Chat Response",
@@ -104,49 +84,34 @@ const Contact = () => {
     label: "AI Support Available",
     icon: <Clock className="w-5 h-5" />
   }];
-  const contactMethods = [{
-    icon: <MessageCircle className="w-6 h-6" />,
-    title: "Live Chat",
-    subtitle: "Available 24/7",
-    description: "Get instant help from Dr. Bayan, our AI customer support specialist, available around the clock.",
-    action: "Start Chat Now",
-    highlight: true
-  }, {
-    icon: <Phone className="w-6 h-6" />,
-    title: "Phone Support",
-    subtitle: "Mon-Fri, 9 AM - 6 PM EST",
-    description: "Speak directly with our product specialists and sizing experts.",
-    action: "Call 1-800-AURA-MED",
-    highlight: false
-  }, {
-    icon: <Mail className="w-6 h-6" />,
-    title: "Email Support",
-    subtitle: "Response within 4 hours",
-    description: "For detailed inquiries, sizing questions, or order support.",
-    action: "Email auramedicaluniforms@hotmail.com",
-    highlight: false
-  }, {
-    icon: <Users className="w-6 h-6" />,
-    title: "Bulk Orders",
-    subtitle: "Special pricing available",
-    description: "Outfitting your entire team? Contact our bulk sales team for special pricing and customization options.",
-    action: "Request Quote",
-    highlight: false
-  }, {
-    icon: <Calendar className="w-6 h-6" />,
-    title: "Video Consultation",
-    subtitle: "15-30 min sessions",
-    description: "Schedule a personalized video call with our product experts for sizing guidance and recommendations.",
-    action: "Book Consultation",
-    highlight: false
-  }, {
-    icon: <Globe2 className="w-6 h-6" />,
-    title: "International Support",
-    subtitle: "Global shipping available",
-    description: "Serving healthcare professionals worldwide with localized support in multiple languages.",
-    action: "View Global Options",
-    highlight: false
-  }];
+
+  const contactMethods = [
+    {
+      icon: <MessageCircle className="w-6 h-6" />,
+      title: "Live Chat",
+      subtitle: "Available 24/7",
+      description: "Get instant help from Dr. Bayan, our AI customer support specialist, available around the clock.",
+      action: "Start Chat Now",
+      highlight: true
+    }, 
+    {
+      icon: <Phone className="w-6 h-6" />,
+      title: "Phone Support",
+      subtitle: "Mon-Fri, 9 AM - 6 PM EST",
+      description: "Speak directly with our product specialists and sizing experts.",
+      action: "Call 1-800-AURA-MED",
+      highlight: false
+    }, 
+    {
+      icon: <Mail className="w-6 h-6" />,
+      title: "Email Support",
+      subtitle: "Response within 4 hours",
+      description: "For detailed inquiries, sizing questions, or order support.",
+      action: "Email auramedicaluniforms@hotmail.com",
+      highlight: false
+    }
+  ];
+
   return <div className="min-h-screen pt-20">
       <CTA />
       
@@ -203,53 +168,6 @@ const Contact = () => {
           </div>
         </div>
       </section>
-
-      {/* Support Team */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl font-bold text-luxury-navy mb-6">
-              Meet Your Support Team
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Real people with healthcare expertise, ready to help you find the perfect uniform solution.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {supportTeam.map((member, index) => <Card key={index} className="p-6 text-center hover:shadow-xl transition-all duration-300 group animate-scale-in" style={{
-            animationDelay: `${index * 0.1}s`
-          }}>
-                <div className="w-20 h-20 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-2xl font-bold text-white">{member.image}</span>
-                </div>
-                <h4 className="text-lg font-semibold text-luxury-navy mb-1">{member.name}</h4>
-                <p className="text-medical-blue font-medium mb-3 text-sm">{member.role}</p>
-                <p className="text-muted-foreground text-xs mb-3">{member.specialty}</p>
-                <Badge variant="outline" className="text-xs">
-                  {member.availability}
-                </Badge>
-              </Card>)}
-          </div>
-
-          <div className="text-center animate-fade-in-up">
-            <h3 className="text-2xl font-bold text-luxury-navy mb-4">Need Immediate Assistance?</h3>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Our AI assistant Dr. Bayan is available 24/7 for instant support, or connect with a human expert during business hours.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Button size="lg">
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Chat with Dr. Bayan
-              </Button>
-              <Button variant="outline" size="lg">
-                <Headphones className="w-4 h-4 mr-2" />
-                Request Callback
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
       
       {/* Contact Form Section */}
       <section className="py-20 bg-gradient-to-b from-background to-soft-gray/20">
@@ -296,7 +214,6 @@ const Contact = () => {
                     <option value="General Information">General Information</option>
                     <option value="Product Questions">Product Questions</option>
                     <option value="Sizing Help">Sizing Help</option>
-                    <option value="Bulk Orders">Bulk Orders</option>
                     <option value="Custom Solutions">Custom Solutions</option>
                     <option value="Partnership Opportunities">Partnership Opportunities</option>
                   </select>
@@ -335,10 +252,6 @@ const Contact = () => {
                     <h5 className="font-medium text-luxury-navy mb-1">Need immediate help?</h5>
                     <p className="text-sm text-muted-foreground">Use our live chat feature for instant support from Dr. Bayan, available 24/7.</p>
                   </div>
-                  <div>
-                    <h5 className="font-medium text-luxury-navy mb-1">Ordering for a team?</h5>
-                    <p className="text-sm text-muted-foreground">Contact our bulk orders team for special pricing and customization options.</p>
-                  </div>
                 </div>
               </Card>
 
@@ -365,8 +278,6 @@ const Contact = () => {
                   </div>
                 </div>
               </Card>
-
-              
             </div>
           </div>
         </div>
@@ -441,4 +352,5 @@ const Contact = () => {
       </section>
     </div>;
 };
+
 export default Contact;

@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Award, Heart, Stethoscope, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import drBayan1 from "@/assets/dr-bayan-1.jpg";
 import drBayan2 from "@/assets/dr-bayan-2.jpg";
 import drBayan3 from "@/assets/dr-bayan-3.jpg";
@@ -21,12 +21,6 @@ const FounderSection = () => {
     { src: drBayan3, alt: "Dr. Bayan Hares - Side Profile" },
     { src: drBayan5, alt: "Dr. Bayan Hares - Surgical Attire" },
     { src: drBayan6, alt: "Dr. Bayan Hares - Back View" },
-  ];
-
-  const achievements = [
-    { icon: <Award className="w-6 h-6" />, text: "15+ Years Healthcare Experience" },
-    { icon: <Stethoscope className="w-6 h-6" />, text: "MD, Harvard Medical School" },
-    { icon: <Heart className="w-6 h-6" />, text: "Fashion Institute of Technology Graduate" }
   ];
 
   return (
@@ -73,17 +67,6 @@ const FounderSection = () => {
                 <p className="text-xl text-medical-blue font-semibold mb-6">
                   Founder & Chief Designer
                 </p>
-                
-                <div className="space-y-4 mb-8">
-                  {achievements.map((achievement, index) => (
-                    <div key={index} className="flex items-center text-muted-foreground">
-                      <div className="w-10 h-10 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full flex items-center justify-center text-white mr-4 flex-shrink-0">
-                        {achievement.icon}
-                      </div>
-                      <span className="font-medium">{achievement.text}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
 
               <div className="prose prose-lg text-muted-foreground mb-8">
