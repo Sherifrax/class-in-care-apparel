@@ -1,17 +1,12 @@
 import { Card } from "@/components/ui/card";
-
 const About = () => {
-  return (
-    <section id="about" className="py-20 bg-gradient-to-b from-background to-soft-gray">
+  return <section id="about" className="py-20 bg-gradient-to-b from-background to-soft-gray">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
             Founded by Excellence, Led by Vision
           </h2>
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            Aura Medical Uniforms was born from Dr. Bayan's vision and is brought to life under the leadership of CEO Suhaal Hamdan. 
-            Together, we're revolutionizing how healthcare professionals present themselves.
-          </p>
+          <p className="text-xl text-muted-foreground leading-relaxed">Aura Medical Uniforms was born from Dr. Bayan's vision and is brought to life under her leadership. Together, we're revolutionizing how healthcare professionals present themselves.</p>
         </div>
         
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -41,8 +36,6 @@ const About = () => {
           </Card>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default About;
