@@ -1,10 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import fabricTexture from "@/assets/fabric-texture.jpg";
-
 const AuroraCollection = () => {
-  return (
-    <section id="collection" className="py-20 bg-background">
+  return <section id="collection" className="py-20 bg-background">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
@@ -18,11 +16,7 @@ const AuroraCollection = () => {
         
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
           <div>
-            <img 
-              src={fabricTexture} 
-              alt="Premium medical fabric texture"
-              className="w-full h-96 object-cover rounded-2xl shadow-card"
-            />
+            <img src={fabricTexture} alt="Premium medical fabric texture" className="w-full h-96 object-cover rounded-2xl shadow-card" />
           </div>
           
           <div className="space-y-6">
@@ -55,30 +49,8 @@ const AuroraCollection = () => {
           </div>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="p-6 text-center shadow-card hover:shadow-luxury transition-shadow">
-            <h4 className="text-xl font-bold text-luxury-navy mb-3">Lightweight Flexibility</h4>
-            <p className="text-muted-foreground mb-4">
-              Ultra-comfortable options built for maximum mobility without compromising elegance.
-            </p>
-            <Button variant="outline" className="w-full">
-              View Styles
-            </Button>
-          </Card>
-          
-          <Card className="p-6 text-center shadow-card hover:shadow-luxury transition-shadow md:col-span-2 lg:col-span-1">
-            <h4 className="text-xl font-bold text-luxury-navy mb-3">Tailored Precision</h4>
-            <p className="text-muted-foreground mb-4">
-              Custom-fit options that enhance your silhouette while maintaining professional standards.
-            </p>
-            <Button variant="outline" className="w-full">
-              View Styles
-            </Button>
-          </Card>
-        </div>
+        
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default AuroraCollection;
