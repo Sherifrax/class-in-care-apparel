@@ -43,7 +43,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-white/20 mt-12 pt-8 text-center text-white/60">
-          <p>&copy; 2024 Aura Medical Uniforms. All rights reserved. Founded by <a href="https://www.instagram.com/dr.bayan_mhmhrs/?hl=en" target="_blank" rel="noopener noreferrer" className="hover:text-luxury-gold transition-colors">Dr. Bayan</a> • Led by CEO Suhaal Hamdan</p>
+          <p>&copy; 2024 Aura Medical Uniforms. All rights reserved. Founded by <a href="https://www.instagram.com/dr.bayan_mhmhrs/?hl=en" target="_blank" rel="noopener noreferrer" className="hover:text-luxury-gold transition-colors">Dr. Bayan</a></p>
         </div>
       </div>
     </footer>;
