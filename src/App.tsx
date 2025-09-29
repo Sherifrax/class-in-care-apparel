@@ -4,14 +4,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { Auth } from "@/components/auth/Auth";
-import { pageTransition } from "@/lib/animations";
-import AnimatedHeader from "./components/AnimatedHeader";
+import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -57,44 +55,33 @@ const AppContent = () => {
 
   return (
     <>
-      {!isAdminRoute && <AnimatedHeader />}
+      {!isAdminRoute && <Header />}
       <div className={!isAdminRoute ? "pt-24" : ""}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            variants={pageTransition}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-          >
-            <Routes>
-              <Route path="/" element={<AdminRedirectHandler><Home /></AdminRedirectHandler>} />
-              <Route path="/about" element={<AdminRedirectHandler><About /></AdminRedirectHandler>} />
-              <Route path="/products" element={<AdminRedirectHandler><Products /></AdminRedirectHandler>} />
-              <Route path="/favorites" element={<AdminRedirectHandler><Favorites /></AdminRedirectHandler>} />
-              <Route path="/features" element={<AdminRedirectHandler><Features /></AdminRedirectHandler>} />
-              <Route path="/contact" element={<AdminRedirectHandler><Contact /></AdminRedirectHandler>} />
-              <Route path="/profile" element={<AdminRedirectHandler><Profile /></AdminRedirectHandler>} />
-              <Route path="/my-orders" element={<AdminRedirectHandler><MyOrders /></AdminRedirectHandler>} />
-              <Route path="/settings" element={<AdminRedirectHandler><Settings /></AdminRedirectHandler>} />
-              <Route path="/cart" element={<AdminRedirectHandler><Cart /></AdminRedirectHandler>} />
-              <Route path="/checkout" element={<AdminRedirectHandler><Checkout /></AdminRedirectHandler>} />
-              <Route path="/payment-success" element={<AdminRedirectHandler><PaymentSuccess /></AdminRedirectHandler>} />
-              
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin/products" element={<AdminProducts />} />
-              <Route path="/admin/sales" element={<AdminSales />} />
-              <Route path="/admin/profile" element={<AdminProfile />} />
-              <Route path="/admin/settings" element={<AdminSettings />} />
-              
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </motion.div>
-        </AnimatePresence>
+        <Routes>
+          <Route path="/" element={<AdminRedirectHandler><Home /></AdminRedirectHandler>} />
+          <Route path="/about" element={<AdminRedirectHandler><About /></AdminRedirectHandler>} />
+          <Route path="/products" element={<AdminRedirectHandler><Products /></AdminRedirectHandler>} />
+          <Route path="/favorites" element={<AdminRedirectHandler><Favorites /></AdminRedirectHandler>} />
+          <Route path="/features" element={<AdminRedirectHandler><Features /></AdminRedirectHandler>} />
+          <Route path="/contact" element={<AdminRedirectHandler><Contact /></AdminRedirectHandler>} />
+          <Route path="/profile" element={<AdminRedirectHandler><Profile /></AdminRedirectHandler>} />
+          <Route path="/my-orders" element={<AdminRedirectHandler><MyOrders /></AdminRedirectHandler>} />
+          <Route path="/settings" element={<AdminRedirectHandler><Settings /></AdminRedirectHandler>} />
+          <Route path="/cart" element={<AdminRedirectHandler><Cart /></AdminRedirectHandler>} />
+          <Route path="/checkout" element={<AdminRedirectHandler><Checkout /></AdminRedirectHandler>} />
+          <Route path="/payment-success" element={<AdminRedirectHandler><PaymentSuccess /></AdminRedirectHandler>} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/sales" element={<AdminSales />} />
+          <Route path="/admin/profile" element={<AdminProfile />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
+          
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
         {!isAdminRoute && <Footer />}
       </div>
       
