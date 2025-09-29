@@ -64,7 +64,7 @@ const VideoReviews = () => {
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, threshold: 0.1 }}
+          viewport={{ once: true, amount: 0.1 }}
         >
           {reviews.map((review, index) => (
             <motion.div

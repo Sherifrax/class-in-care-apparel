@@ -21,7 +21,7 @@ const ScrollReveal = ({
 }: ScrollRevealProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { 
-    threshold,
+    amount: threshold,
     once: true,
     margin: "0px 0px -50px 0px"
   });
