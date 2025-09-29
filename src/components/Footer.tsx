@@ -1,6 +1,5 @@
 const Footer = () => {
-  return (
-    <footer className="bg-luxury-navy text-white py-16">
+  return <footer className="bg-luxury-navy text-white py-16">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
@@ -26,9 +25,9 @@ const Footer = () => {
             <h4 className="font-semibold mb-6">Shop</h4>
             <ul className="space-y-3 text-white/80">
               <li><a href="#" className="hover:text-white transition-colors">AURA Collection</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Full-Sleeve Sets</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Lightweight Options</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Accessories</a></li>
+              
+              
+              
             </ul>
           </div>
           
@@ -47,8 +46,6 @@ const Footer = () => {
           <p>&copy; 2024 Aura Medical Uniforms. All rights reserved. Founded by <a href="https://www.instagram.com/dr.bayan_mhmhrs/?hl=en" target="_blank" rel="noopener noreferrer" className="hover:text-luxury-gold transition-colors">Dr. Bayan</a> • Led by CEO Suhaal Hamdan</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
