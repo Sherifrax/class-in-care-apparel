@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCart } from '@/contexts/CartContext';
 import { useFavorites } from '@/contexts/FavoritesContext';
+import { useSizeGuide } from '@/contexts/SizeGuideContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from "@/lib/utils";
 interface Product {
@@ -62,6 +63,7 @@ const Products = () => {
   const {
     toast
   } = useToast();
+  const { openSizeGuide } = useSizeGuide();
 
   // Fetch products from Supabase
   const {
@@ -605,7 +607,7 @@ const Products = () => {
                 </div>
                 <h4 className="text-lg font-bold text-luxury-navy mb-3">Need Help with Sizing?</h4>
                 <p className="text-muted-foreground mb-4">Chat with our sizing experts for personalized assistance</p>
-                <Button>Get Sizing Help</Button>
+                <Button onClick={openSizeGuide}>Get Sizing Help</Button>
               </div>
             </div>
           </div>

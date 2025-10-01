@@ -1,4 +1,8 @@
+import { useSizeGuide } from "@/contexts/SizeGuideContext";
+
 const Footer = () => {
+  const { openSizeGuide } = useSizeGuide();
+  
   return <footer className="bg-luxury-navy text-white py-16">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-4 gap-8">
@@ -35,7 +39,7 @@ const Footer = () => {
             <h4 className="font-semibold mb-6">Contact</h4>
             <ul className="space-y-3 text-white/80">
               <li><a href="mailto:auramedicaluniforms@hotmail.com" className="hover:text-white transition-colors">auramedicaluniforms@hotmail.com</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Size Guide</a></li>
+              <li><button onClick={openSizeGuide} className="hover:text-white transition-colors text-left">Size Guide</button></li>
               <li><a href="#" className="hover:text-white transition-colors">Care Instructions</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Returns & Exchanges</a></li>
             </ul>

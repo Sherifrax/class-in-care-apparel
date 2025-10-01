@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { useSizeGuide } from "@/contexts/SizeGuideContext";
+
 const CTA = () => {
+  const { openSizeGuide } = useSizeGuide();
   return <section className="py-20 bg-gradient-to-br from-luxury-navy via-medical-blue to-medical-teal text-white">
       <div className="container mx-auto px-6 text-center">
         <div className="max-w-4xl mx-auto">
@@ -16,7 +19,7 @@ const CTA = () => {
             <Button size="lg" variant="secondary" className="bg-white text-luxury-navy hover:bg-white/90 px-8 py-3 text-lg">
               Shop AURA Collection
             </Button>
-            <Button size="lg" variant="outline" className="border-white hover:bg-white hover:text-luxury-navy px-8 py-3 text-lg text-zinc-950">
+            <Button size="lg" variant="outline" className="border-white hover:bg-white hover:text-luxury-navy px-8 py-3 text-lg text-zinc-950" onClick={openSizeGuide}>
               Request Size Guide
             </Button>
           </div>

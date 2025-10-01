@@ -8,7 +8,9 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
+import { SizeGuideProvider } from "@/contexts/SizeGuideContext";
 import { Auth } from "@/components/auth/Auth";
+import SizeGuideModal from "./components/SizeGuideModal";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -89,6 +91,7 @@ const AppContent = () => {
         isOpen={showAuth} 
         onClose={() => setShowAuth(false)} 
       />
+      <SizeGuideModal />
     </>
   );
 };
@@ -99,13 +102,15 @@ const App = () => (
       <AdminProvider>
         <CartProvider>
           <FavoritesProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <AppContent />
-              </BrowserRouter>
-            </TooltipProvider>
+            <SizeGuideProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <AppContent />
+                </BrowserRouter>
+              </TooltipProvider>
+            </SizeGuideProvider>
           </FavoritesProvider>
         </CartProvider>
       </AdminProvider>
