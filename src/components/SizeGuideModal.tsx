@@ -54,82 +54,82 @@ const SizeGuideModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={closeSizeGuide}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background via-background to-soft-gray/30 backdrop-blur-xl border-medical-blue/20">
-        <DialogHeader className="space-y-4 pb-6 border-b border-medical-blue/20">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-gradient-to-br from-medical-blue to-medical-teal rounded-xl shadow-glow">
-              <Ruler className="w-6 h-6 text-white" />
+      <DialogContent className="w-[95vw] max-w-5xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background via-background to-soft-gray/30 backdrop-blur-xl border-medical-blue/20 p-4 sm:p-6">
+        <DialogHeader className="space-y-3 sm:space-y-4 pb-4 sm:pb-6 border-b border-medical-blue/20">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="p-2 sm:p-3 bg-gradient-to-br from-medical-blue to-medical-teal rounded-lg sm:rounded-xl shadow-glow">
+              <Ruler className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <DialogTitle className="text-3xl font-bold text-gradient bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+              <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-gradient bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
                 AURA Medical Size Chart
               </DialogTitle>
-              <p className="text-sm text-muted-foreground mt-1">Measurements in Inches - Ready Body Measurement</p>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">Measurements in Inches - Ready Body Measurement</p>
             </div>
           </div>
         </DialogHeader>
 
-        <Tabs defaultValue="mens-top" className="w-full mt-6">
-          <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-soft-gray/50 backdrop-blur-sm rounded-xl">
+        <Tabs defaultValue="mens-top" className="w-full mt-4 sm:mt-6">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto p-1 bg-soft-gray/50 backdrop-blur-sm rounded-xl gap-1">
             <TabsTrigger 
               value="mens-top" 
-              className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-medical-blue data-[state=active]:to-medical-teal data-[state=active]:text-white rounded-lg py-3"
+              className="flex items-center justify-center gap-1 sm:gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-medical-blue data-[state=active]:to-medical-teal data-[state=active]:text-white rounded-lg py-2 sm:py-3 text-xs sm:text-sm"
             >
-              <Users className="w-4 h-4" />
-              <span className="hidden sm:inline">Mens</span> Top
+              <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Mens </span>Top
             </TabsTrigger>
             <TabsTrigger 
               value="mens-pant" 
-              className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-medical-blue data-[state=active]:to-medical-teal data-[state=active]:text-white rounded-lg py-3"
+              className="flex items-center justify-center gap-1 sm:gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-medical-blue data-[state=active]:to-medical-teal data-[state=active]:text-white rounded-lg py-2 sm:py-3 text-xs sm:text-sm"
             >
-              <Users className="w-4 h-4" />
-              <span className="hidden sm:inline">Mens</span> Pant
+              <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Mens </span>Pant
             </TabsTrigger>
             <TabsTrigger 
               value="female-top" 
-              className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-medical-blue data-[state=active]:to-medical-teal data-[state=active]:text-white rounded-lg py-3"
+              className="flex items-center justify-center gap-1 sm:gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-medical-blue data-[state=active]:to-medical-teal data-[state=active]:text-white rounded-lg py-2 sm:py-3 text-xs sm:text-sm"
             >
-              <User className="w-4 h-4" />
-              <span className="hidden sm:inline">Female</span> Top
+              <User className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Female </span>Top
             </TabsTrigger>
             <TabsTrigger 
               value="female-pant" 
-              className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-medical-blue data-[state=active]:to-medical-teal data-[state=active]:text-white rounded-lg py-3"
+              className="flex items-center justify-center gap-1 sm:gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-medical-blue data-[state=active]:to-medical-teal data-[state=active]:text-white rounded-lg py-2 sm:py-3 text-xs sm:text-sm"
             >
-              <User className="w-4 h-4" />
-              <span className="hidden sm:inline">Female</span> Pant
+              <User className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Female </span>Pant
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="mens-top" className="mt-6">
-            <div className="rounded-xl overflow-hidden border border-medical-blue/20 shadow-card bg-card/50 backdrop-blur-sm">
-              <div className="bg-gradient-to-r from-medical-blue to-medical-teal p-4">
-                <h3 className="text-white font-bold text-lg flex items-center gap-2">
-                  <Badge variant="secondary" className="bg-white/20 text-white">Mens Top</Badge>
-                  Ready Body Measurement
+          <TabsContent value="mens-top" className="mt-4 sm:mt-6">
+            <div className="rounded-lg sm:rounded-xl overflow-hidden border border-medical-blue/20 shadow-card bg-card/50 backdrop-blur-sm">
+              <div className="bg-gradient-to-r from-medical-blue to-medical-teal p-3 sm:p-4">
+                <h3 className="text-white font-bold text-sm sm:text-base md:text-lg flex flex-col xs:flex-row items-start xs:items-center gap-2">
+                  <Badge variant="secondary" className="bg-white/20 text-white text-xs sm:text-sm">Mens Top</Badge>
+                  <span className="text-xs sm:text-sm md:text-base">Ready Body Measurement</span>
                 </h3>
               </div>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-soft-gray/50 hover:bg-soft-gray/50">
-                      <TableHead className="font-bold text-luxury-navy">SIZES</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">LENGTH</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">CHEST ALL AROUND</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">SHOULDER</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">HIPS</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">SLEEVE</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">SIZES</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">LENGTH</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">CHEST</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">SHOULDER</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">HIPS</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">SLEEVE</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {mensTopData.map((row, index) => (
                       <TableRow key={row.size} className={index % 2 === 0 ? "bg-background" : "bg-soft-gray/30"}>
-                        <TableCell className="font-bold text-medical-blue">{row.size}</TableCell>
-                        <TableCell>{row.length}</TableCell>
-                        <TableCell>{row.chest}</TableCell>
-                        <TableCell>{row.shoulder}</TableCell>
-                        <TableCell>{row.hips}</TableCell>
-                        <TableCell>{row.sleeve}</TableCell>
+                        <TableCell className="font-bold text-medical-blue text-xs sm:text-sm">{row.size}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.length}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.chest}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.shoulder}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.hips}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.sleeve}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -138,31 +138,31 @@ const SizeGuideModal = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="mens-pant" className="mt-6">
-            <div className="rounded-xl overflow-hidden border border-medical-blue/20 shadow-card bg-card/50 backdrop-blur-sm">
-              <div className="bg-gradient-to-r from-medical-blue to-medical-teal p-4">
-                <h3 className="text-white font-bold text-lg flex items-center gap-2">
-                  <Badge variant="secondary" className="bg-white/20 text-white">Mens Pant</Badge>
-                  Ready Body Measurement
+          <TabsContent value="mens-pant" className="mt-4 sm:mt-6">
+            <div className="rounded-lg sm:rounded-xl overflow-hidden border border-medical-blue/20 shadow-card bg-card/50 backdrop-blur-sm">
+              <div className="bg-gradient-to-r from-medical-blue to-medical-teal p-3 sm:p-4">
+                <h3 className="text-white font-bold text-sm sm:text-base md:text-lg flex flex-col xs:flex-row items-start xs:items-center gap-2">
+                  <Badge variant="secondary" className="bg-white/20 text-white text-xs sm:text-sm">Mens Pant</Badge>
+                  <span className="text-xs sm:text-sm md:text-base">Ready Body Measurement</span>
                 </h3>
               </div>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-soft-gray/50 hover:bg-soft-gray/50">
-                      <TableHead className="font-bold text-luxury-navy">SIZES</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">LENGTH</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">HIP</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">WAIST</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">SIZES</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">LENGTH</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">HIP</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">WAIST</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {mensPantData.map((row, index) => (
                       <TableRow key={row.size} className={index % 2 === 0 ? "bg-background" : "bg-soft-gray/30"}>
-                        <TableCell className="font-bold text-medical-blue">{row.size}</TableCell>
-                        <TableCell>{row.length}</TableCell>
-                        <TableCell>{row.hip}</TableCell>
-                        <TableCell>{row.waist}</TableCell>
+                        <TableCell className="font-bold text-medical-blue text-xs sm:text-sm">{row.size}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.length}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.hip}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.waist}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -171,35 +171,35 @@ const SizeGuideModal = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="female-top" className="mt-6">
-            <div className="rounded-xl overflow-hidden border border-medical-blue/20 shadow-card bg-card/50 backdrop-blur-sm">
-              <div className="bg-gradient-to-r from-medical-blue to-medical-teal p-4">
-                <h3 className="text-white font-bold text-lg flex items-center gap-2">
-                  <Badge variant="secondary" className="bg-white/20 text-white">Female Top</Badge>
-                  Ready Body Measurement
+          <TabsContent value="female-top" className="mt-4 sm:mt-6">
+            <div className="rounded-lg sm:rounded-xl overflow-hidden border border-medical-blue/20 shadow-card bg-card/50 backdrop-blur-sm">
+              <div className="bg-gradient-to-r from-medical-blue to-medical-teal p-3 sm:p-4">
+                <h3 className="text-white font-bold text-sm sm:text-base md:text-lg flex flex-col xs:flex-row items-start xs:items-center gap-2">
+                  <Badge variant="secondary" className="bg-white/20 text-white text-xs sm:text-sm">Female Top</Badge>
+                  <span className="text-xs sm:text-sm md:text-base">Ready Body Measurement</span>
                 </h3>
               </div>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-soft-gray/50 hover:bg-soft-gray/50">
-                      <TableHead className="font-bold text-luxury-navy">SIZES</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">LENGTH</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">CHEST ALL AROUND</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">SHOULDER</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">HIPS</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">SLEEVE</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">SIZES</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">LENGTH</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">CHEST</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">SHOULDER</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">HIPS</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">SLEEVE</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {femaleTopData.map((row, index) => (
                       <TableRow key={row.size} className={index % 2 === 0 ? "bg-background" : "bg-soft-gray/30"}>
-                        <TableCell className="font-bold text-medical-blue">{row.size}</TableCell>
-                        <TableCell>{row.length}</TableCell>
-                        <TableCell>{row.chest}</TableCell>
-                        <TableCell>{row.shoulder}</TableCell>
-                        <TableCell>{row.hips}</TableCell>
-                        <TableCell>{row.sleeve}</TableCell>
+                        <TableCell className="font-bold text-medical-blue text-xs sm:text-sm">{row.size}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.length}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.chest}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.shoulder}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.hips}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.sleeve}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -208,31 +208,31 @@ const SizeGuideModal = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="female-pant" className="mt-6">
-            <div className="rounded-xl overflow-hidden border border-medical-blue/20 shadow-card bg-card/50 backdrop-blur-sm">
-              <div className="bg-gradient-to-r from-medical-blue to-medical-teal p-4">
-                <h3 className="text-white font-bold text-lg flex items-center gap-2">
-                  <Badge variant="secondary" className="bg-white/20 text-white">Female Pant</Badge>
-                  Ready Body Measurement
+          <TabsContent value="female-pant" className="mt-4 sm:mt-6">
+            <div className="rounded-lg sm:rounded-xl overflow-hidden border border-medical-blue/20 shadow-card bg-card/50 backdrop-blur-sm">
+              <div className="bg-gradient-to-r from-medical-blue to-medical-teal p-3 sm:p-4">
+                <h3 className="text-white font-bold text-sm sm:text-base md:text-lg flex flex-col xs:flex-row items-start xs:items-center gap-2">
+                  <Badge variant="secondary" className="bg-white/20 text-white text-xs sm:text-sm">Female Pant</Badge>
+                  <span className="text-xs sm:text-sm md:text-base">Ready Body Measurement</span>
                 </h3>
               </div>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-soft-gray/50 hover:bg-soft-gray/50">
-                      <TableHead className="font-bold text-luxury-navy">SIZES</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">LENGTH</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">HIP</TableHead>
-                      <TableHead className="font-bold text-luxury-navy">WAIST</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">SIZES</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">LENGTH</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">HIP</TableHead>
+                      <TableHead className="font-bold text-luxury-navy text-xs sm:text-sm whitespace-nowrap">WAIST</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {femalePantData.map((row, index) => (
                       <TableRow key={row.size} className={index % 2 === 0 ? "bg-background" : "bg-soft-gray/30"}>
-                        <TableCell className="font-bold text-medical-blue">{row.size}</TableCell>
-                        <TableCell>{row.length}</TableCell>
-                        <TableCell>{row.hip}</TableCell>
-                        <TableCell>{row.waist}</TableCell>
+                        <TableCell className="font-bold text-medical-blue text-xs sm:text-sm">{row.size}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.length}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.hip}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{row.waist}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -242,8 +242,8 @@ const SizeGuideModal = () => {
           </TabsContent>
         </Tabs>
 
-        <div className="mt-6 p-4 bg-gradient-to-r from-medical-blue/10 to-medical-teal/10 rounded-xl border border-medical-blue/20">
-          <p className="text-sm text-muted-foreground text-center">
+        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gradient-to-r from-medical-blue/10 to-medical-teal/10 rounded-lg sm:rounded-xl border border-medical-blue/20">
+          <p className="text-xs sm:text-sm text-muted-foreground text-center">
             <span className="font-semibold text-medical-blue">📏 Measuring Tip:</span> For the most accurate fit, measure while wearing light clothing. Need help? Contact our sizing experts!
           </p>
         </div>
