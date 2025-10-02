@@ -65,7 +65,7 @@ const Favorites = () => {
       return;
     }
 
-    addToCart(product.id, selectedSize, 1);
+    addToCart(product.id, selectedSize, undefined, 1);
   };
 
   const handleSizeSelect = (productId: string, size: string) => {

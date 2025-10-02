@@ -16,6 +16,7 @@ interface CustomerReceiptRequest {
   order_items: Array<{
     product_name: string;
     size: string;
+    color?: string;
     quantity: number;
     unit_price: number;
   }>;
@@ -42,6 +43,7 @@ const handler = async (req: Request): Promise<Response> => {
       <tr>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9;">${item.product_name}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.size}</td>
+        <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.color || 'N/A'}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.quantity}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: right;">${orderData.currency} ${item.unit_price.toFixed(2)}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: right; font-weight: 600;">${orderData.currency} ${(item.quantity * item.unit_price).toFixed(2)}</td>
@@ -106,6 +108,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <tr style="background-color: #f8fafc;">
                     <th style="padding: 16px 8px; text-align: left; color: #374151; font-weight: 600; font-size: 14px;">Product</th>
                     <th style="padding: 16px 8px; text-align: center; color: #374151; font-weight: 600; font-size: 14px;">Size</th>
+                    <th style="padding: 16px 8px; text-align: center; color: #374151; font-weight: 600; font-size: 14px;">Color</th>
                     <th style="padding: 16px 8px; text-align: center; color: #374151; font-weight: 600; font-size: 14px;">Qty</th>
                     <th style="padding: 16px 8px; text-align: right; color: #374151; font-weight: 600; font-size: 14px;">Price</th>
                     <th style="padding: 16px 8px; text-align: right; color: #374151; font-weight: 600; font-size: 14px;">Total</th>

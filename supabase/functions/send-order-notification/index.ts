@@ -16,6 +16,7 @@ interface OrderNotificationRequest {
   order_items: Array<{
     product_name: string;
     size: string;
+    color?: string;
     quantity: number;
     unit_price: number;
   }>;
@@ -42,6 +43,7 @@ const handler = async (req: Request): Promise<Response> => {
       <tr>
         <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.product_name}</td>
         <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.size}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.color || 'N/A'}</td>
         <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
         <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${orderData.currency} ${item.unit_price.toFixed(2)}</td>
         <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${orderData.currency} ${(item.quantity * item.unit_price).toFixed(2)}</td>
@@ -83,6 +85,7 @@ const handler = async (req: Request): Promise<Response> => {
               <tr style="background-color: #f1f5f9;">
                 <th style="padding: 12px 8px; text-align: left; border-bottom: 2px solid #e2e8f0;">Product</th>
                 <th style="padding: 12px 8px; text-align: left; border-bottom: 2px solid #e2e8f0;">Size</th>
+                <th style="padding: 12px 8px; text-align: left; border-bottom: 2px solid #e2e8f0;">Color</th>
                 <th style="padding: 12px 8px; text-align: center; border-bottom: 2px solid #e2e8f0;">Qty</th>
                 <th style="padding: 12px 8px; text-align: right; border-bottom: 2px solid #e2e8f0;">Unit Price</th>
                 <th style="padding: 12px 8px; text-align: right; border-bottom: 2px solid #e2e8f0;">Total</th>

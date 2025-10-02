@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { ColorSwatch } from '@/components/ColorSwatch';
 
 const Cart = () => {
   const { items, loading, updateQuantity, removeFromCart, getTotalPrice, getTotalItems } = useCart();
@@ -120,8 +121,14 @@ const Cart = () => {
                         <h3 className="font-bold text-lg text-luxury-navy group-hover:text-medical-blue transition-colors">
                           {item.product.name}
                         </h3>
-                        <p className="text-sm text-muted-foreground">Size: {item.size}</p>
-                        <p className="font-bold text-xl text-medical-blue">AED {item.product.price}</p>
+                      <p className="text-muted-foreground">Size: {item.size}</p>
+                      {item.color && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-muted-foreground">Color:</span>
+                          <ColorSwatch color={item.color} size="sm" showLabel />
+                        </div>
+                      )}
+                      <p className="font-bold text-xl text-medical-blue">AED {item.product.price}</p>
                       </div>
                       
                       <div className="flex items-center gap-3">

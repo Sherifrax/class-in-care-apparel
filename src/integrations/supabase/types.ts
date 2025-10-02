@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       cart_items: {
         Row: {
+          color: string | null
           created_at: string
           id: string
           product_id: string
@@ -25,6 +26,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          color?: string | null
           created_at?: string
           id?: string
           product_id: string
@@ -34,6 +36,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          color?: string | null
           created_at?: string
           id?: string
           product_id?: string
@@ -75,6 +78,7 @@ export type Database = {
       }
       order_items: {
         Row: {
+          color: string | null
           created_at: string | null
           id: string
           order_id: string | null
@@ -85,6 +89,7 @@ export type Database = {
           unit_price: number
         }
         Insert: {
+          color?: string | null
           created_at?: string | null
           id?: string
           order_id?: string | null
@@ -95,6 +100,7 @@ export type Database = {
           unit_price: number
         }
         Update: {
+          color?: string | null
           created_at?: string | null
           id?: string
           order_id?: string | null

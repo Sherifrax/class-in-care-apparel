@@ -7,6 +7,7 @@ interface CartItem {
   id: string;
   product_id: string;
   size: string;
+  color?: string;
   quantity: number;
   product: {
     name: string;
@@ -18,7 +19,7 @@ interface CartItem {
 interface CartContextType {
   items: CartItem[];
   loading: boolean;
-  addToCart: (productId: string, size: string, quantity?: number) => Promise<void>;
+  addToCart: (productId: string, size: string, color?: string, quantity?: number) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   removeFromCart: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -77,7 +78,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const addToCart = async (productId: string, size: string, quantity = 1) => {
+  const addToCart = async (productId: string, size: string, color?: string, quantity = 1) => {
     if (!user) {
       toast({
         title: "Sign in required",
@@ -106,9 +107,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      // Check if item already exists
+      // Check if item already exists (matching size and color)
       const existingItem = items.find(
-        item => item.product_id === productId && item.size === size
+        item => item.product_id === productId && item.size === size && item.color === color
       );
 
       if (existingItem) {
@@ -129,6 +130,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             user_id: user.id,
             product_id: productId,
             size,
+            color: color || null,
             quantity,
           });
 

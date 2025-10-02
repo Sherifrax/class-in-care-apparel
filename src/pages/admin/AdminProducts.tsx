@@ -12,6 +12,9 @@ import { AdminRoute } from '@/components/admin/AdminRoute';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { ColorSelector } from '@/components/ColorSelector';
+import { ColorSwatch } from '@/components/ColorSwatch';
+import { COLOR_ORDER } from '@/constants/colors';
 
 interface Product {
   id: string;
@@ -387,14 +390,28 @@ const AdminProductsContent: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="colors" className="text-sm font-semibold text-luxury-navy">Colors (comma-separated)</Label>
-                    <Input
-                      id="colors"
-                      value={formData.colors}
-                      onChange={(e) => setFormData({ ...formData, colors: e.target.value })}
-                      placeholder="Navy, White, Light Blue"
-                      className="mt-1 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                    <Label htmlFor="colors" className="text-sm font-semibold text-luxury-navy">
+                      Colors
+                    </Label>
+                    <p className="text-xs text-muted-foreground mb-2">Select available colors for this product</p>
+                    <ColorSelector
+                      colors={COLOR_ORDER}
+                      selectedColors={formData.colors.split(',').map(c => c.trim()).filter(c => c)}
+                      onColorSelect={(color) => {
+                        const currentColors = formData.colors.split(',').map(c => c.trim()).filter(c => c);
+                        const newColors = currentColors.includes(color)
+                          ? currentColors.filter(c => c !== color)
+                          : [...currentColors, color];
+                        setFormData({ ...formData, colors: newColors.join(', ') });
+                      }}
+                      multiSelect
+                      className="mb-2"
                     />
+                    {formData.colors && (
+                      <div className="text-xs text-muted-foreground mt-2">
+                        Selected: {formData.colors}
+                      </div>
+                    )}
                   </div>
 
                   <div>

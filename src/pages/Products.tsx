@@ -16,6 +16,9 @@ import { useFavorites } from '@/contexts/FavoritesContext';
 import { useSizeGuide } from '@/contexts/SizeGuideContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from "@/lib/utils";
+import { ColorSwatch } from "@/components/ColorSwatch";
+import { ColorSelector } from "@/components/ColorSelector";
+import { COLOR_ORDER } from "@/constants/colors";
 interface Product {
   id: string;
   name: string;
@@ -44,6 +47,7 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>('All Collections');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('');
+  const [selectedColor, setSelectedColor] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const [selectedFilters, setSelectedFilters] = useState({
     sizes: [] as string[],
@@ -246,9 +250,10 @@ const Products = () => {
       });
       return;
     }
-    await addToCart(selectedProduct.id, selectedSize, quantity);
+    await addToCart(selectedProduct.id, selectedSize, selectedColor || undefined, quantity);
     setSelectedProduct(null);
     setSelectedSize('');
+    setSelectedColor('');
     setQuantity(1);
   };
   const handleToggleFavorite = async (productId: string, e: React.MouseEvent) => {
@@ -263,6 +268,7 @@ const Products = () => {
   const openProductDialog = (product: Product) => {
     setSelectedProduct(product);
     setSelectedSize(product.sizes[0] || '');
+    setSelectedColor(product.colors[0] || '');
     setQuantity(1);
   };
   if (productsLoading || categoriesLoading) {
@@ -285,18 +291,27 @@ const Products = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filterOptions.map(filterGroup => <div key={filterGroup.name} className="space-y-3">
                   <h4 className="font-medium text-sm text-foreground">{filterGroup.name}</h4>
-                  <div className="space-y-2 max-h-40 overflow-y-auto">
-                     {filterGroup.options.map(option => {
+                     <div className="space-y-2 max-h-40 overflow-y-auto">
+                       {filterGroup.options.map(option => {
                 const filterKey = getFilterKey(filterGroup.name);
                 const isSelected = filterKey === 'priceRange' ? selectedFilters.priceRange === option : (selectedFilters[filterKey as keyof typeof selectedFilters] as string[] || []).includes(option);
                 return <label key={option} className="flex items-center space-x-2 cursor-pointer group">
                            <input type={filterGroup.name === 'Price Range' ? 'radio' : 'checkbox'} checked={isSelected} onChange={() => toggleFilterOption(filterGroup.name, option)} className="w-4 h-4 text-medical-blue border-gray-300 rounded focus:ring-medical-blue" />
-                           <span className={cn("text-sm transition-colors", isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground")}>
-                             {option}
-                           </span>
+                           {filterGroup.name === 'Colors' ? (
+                             <div className="flex items-center gap-2">
+                               <ColorSwatch color={option} size="sm" />
+                               <span className={cn("text-sm transition-colors", isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground")}>
+                                 {option}
+                               </span>
+                             </div>
+                           ) : (
+                             <span className={cn("text-sm transition-colors", isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground")}>
+                               {option}
+                             </span>
+                           )}
                          </label>;
               })}
-                  </div>
+                   </div>
                 </div>)}
             </div>
           </div>
@@ -493,6 +508,19 @@ const Products = () => {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {selectedProduct.colors.length > 0 && (
+                    <div>
+                      <Label>Color</Label>
+                      <div className="mt-2">
+                        <ColorSelector
+                          colors={selectedProduct.colors}
+                          selectedColor={selectedColor}
+                          onColorSelect={setSelectedColor}
+                        />
+                      </div>
+                    </div>
+                  )}
 
                    <div>
                      <Label htmlFor="quantity">Quantity</Label>

@@ -17,6 +17,7 @@ interface OrderUpdateRequest {
   order_items: Array<{
     product_name: string;
     size: string;
+    color?: string;
     quantity: number;
     unit_price: number;
   }>;
