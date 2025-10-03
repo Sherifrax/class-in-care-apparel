@@ -25,6 +25,7 @@ import { AdminRoute } from '@/components/admin/AdminRoute';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { ColorSwatch } from '@/components/ColorSwatch';
 
 interface Order {
   id: string;
@@ -45,6 +46,7 @@ interface OrderItem {
   id: string;
   product_name: string;
   size: string;
+  color?: string;
   quantity: number;
   unit_price: number;
 }
@@ -517,9 +519,20 @@ const AdminSalesContent: React.FC = () => {
                 <div className="space-y-3">
                   {selectedOrder.order_items?.map((item) => (
                     <div key={item.id} className="flex justify-between items-center p-4 bg-white/50 rounded-xl border border-medical-blue/10">
-                      <div>
+                      <div className="flex-1">
                         <div className="font-medium text-luxury-navy">{item.product_name}</div>
-                        <div className="text-sm text-muted-foreground">Size: {item.size}</div>
+                        <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
+                          <span>Size: {item.size}</span>
+                          {item.color && (
+                            <>
+                              <span>•</span>
+                              <div className="flex items-center gap-1">
+                                <ColorSwatch color={item.color} size="sm" />
+                                <span>{item.color}</span>
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </div>
                       <div className="text-right">
                         <div className="font-medium">x{item.quantity}</div>

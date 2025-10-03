@@ -105,7 +105,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Format order items summary
     const itemsSummary = orderData.order_items.slice(0, 3).map(item => 
-      `${item.product_name} (${item.size}) x${item.quantity}`
+      `${item.product_name} (${item.size}${item.color ? `, ${item.color}` : ''}) x${item.quantity}`
     ).join(', ') + (orderData.order_items.length > 3 ? ` +${orderData.order_items.length - 3} more` : '');
 
     const trackingSection = orderData.tracking_number ? `

@@ -43,7 +43,7 @@ const handler = async (req: Request): Promise<Response> => {
       <tr>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9;">${item.product_name}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.size}</td>
-        <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.color || 'N/A'}</td>
+        <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.color || '-'}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.quantity}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: right;">${orderData.currency} ${item.unit_price.toFixed(2)}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: right; font-weight: 600;">${orderData.currency} ${(item.quantity * item.unit_price).toFixed(2)}</td>

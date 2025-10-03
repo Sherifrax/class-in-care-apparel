@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ColorSwatch } from '@/components/ColorSwatch';
 import { 
   Package, 
   Calendar, 
@@ -41,6 +42,7 @@ interface OrderItem {
   id: string;
   product_name: string;
   size: string;
+  color?: string;
   quantity: number;
   unit_price: number;
 }
@@ -254,11 +256,20 @@ const MyOrdersContent: React.FC = () => {
                             <div className="space-y-2 max-h-24 overflow-y-auto">
                               {order.order_items.slice(0, 3).map((item) => (
                                 <div key={item.id} className="text-sm flex justify-between items-center">
-                                  <div>
+                                  <div className="flex-1">
                                     <span className="font-medium text-luxury-navy">{item.product_name}</span>
-                                    <span className="text-muted-foreground ml-2 text-xs">
-                                      Size: {item.size}
-                                    </span>
+                                    <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                                      <span>Size: {item.size}</span>
+                                      {item.color && (
+                                        <>
+                                          <span>•</span>
+                                          <div className="flex items-center gap-1">
+                                            <ColorSwatch color={item.color} size="sm" />
+                                            <span>{item.color}</span>
+                                          </div>
+                                        </>
+                                      )}
+                                    </div>
                                   </div>
                                   <div className="text-xs text-muted-foreground">
                                     Qty: {item.quantity}
@@ -432,12 +443,21 @@ const MyOrdersContent: React.FC = () => {
                             <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center">
                               <span className="font-bold text-purple-600">{index + 1}</span>
                             </div>
-                            <div>
-                              <div className="font-semibold text-luxury-navy text-lg">{item.product_name}</div>
-                              <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                <span>Size: <span className="font-medium">{item.size}</span></span>
-                              </div>
-                            </div>
+                             <div>
+                               <div className="font-semibold text-luxury-navy text-lg">{item.product_name}</div>
+                               <div className="text-sm text-muted-foreground flex items-center gap-2">
+                                 <span>Size: <span className="font-medium">{item.size}</span></span>
+                                 {item.color && (
+                                   <>
+                                     <span>•</span>
+                                     <div className="flex items-center gap-1">
+                                       <ColorSwatch color={item.color} size="sm" />
+                                       <span className="font-medium">{item.color}</span>
+                                     </div>
+                                   </>
+                                 )}
+                               </div>
+                             </div>
                           </div>
                           <div className="text-right">
                             <div className="text-lg font-bold text-purple-700">x{item.quantity}</div>

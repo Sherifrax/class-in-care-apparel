@@ -386,10 +386,12 @@ const Products = () => {
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-muted-foreground">Colors:</span>
                     <div className="flex gap-1">
-                      {product.colors.slice(0, 4).map((color, i) => <div key={i} className="w-4 h-4 rounded-full bg-gradient-to-br from-medical-blue/30 to-medical-teal/30 border border-border cursor-pointer hover:scale-110 transition-transform"></div>)}
-                      {product.colors.length > 4 && <div className="w-4 h-4 rounded-full bg-gray-200 border border-border flex items-center justify-center">
-                          <span className="text-xs text-gray-600">+{product.colors.length - 4}</span>
-                        </div>}
+                      {product.colors.slice(0, 4).map((color, i) => (
+                        <ColorSwatch key={i} color={color} size="sm" />
+                      ))}
+                      {product.colors.length > 4 && (
+                        <div className="text-xs text-muted-foreground">+{product.colors.length - 4}</div>
+                      )}
                     </div>
                   </div>
                   
@@ -570,10 +572,10 @@ const Products = () => {
 
                   {selectedProduct.colors.length > 0 && <div>
                       <h4 className="font-medium mb-2">Available Colors</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {selectedProduct.colors.map((color, index) => <Badge key={index} variant="secondary" className="text-xs">
-                            {color}
-                          </Badge>)}
+                      <div className="flex flex-wrap gap-2">
+                        {selectedProduct.colors.map((color) => (
+                          <ColorSwatch key={color} color={color} size="md" showLabel />
+                        ))}
                       </div>
                     </div>}
                 </div>
