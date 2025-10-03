@@ -211,82 +211,87 @@ const MyOrdersContent: React.FC = () => {
           <div className="space-y-6">
             {orders.map((order) => (
               <Card key={order.id} className={`glass ${getStatusColor(order.status)} border-2 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01] overflow-hidden rounded-2xl backdrop-blur-xl`}>
-                <CardContent className="p-8 lg:p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-                      <div className="flex-1 space-y-6">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-4">
-                            <div className="p-4 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-2xl shadow-soft border border-medical-blue/20">
-                              <Package className="w-7 h-7 text-medical-blue" />
+                <CardContent className="p-6">
+                  <div className="flex flex-col gap-6">
+                    {/* Header Section */}
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-4 flex-1">
+                        <div className="p-4 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-2xl shadow-soft border border-medical-blue/20 flex-shrink-0">
+                          <Package className="w-7 h-7 text-medical-blue" />
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="font-bold text-xl text-luxury-navy">Order #{order.id.slice(0, 8)}</h3>
+                          <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mt-2">
+                            <div className="flex items-center gap-1.5">
+                              <Calendar className="w-4 h-4 flex-shrink-0" />
+                              <span className="whitespace-nowrap">{new Date(order.created_at).toLocaleDateString()}</span>
                             </div>
-                            <div>
-                              <h3 className="font-bold text-2xl lg:text-xl text-luxury-navy">Order #{order.id.slice(0, 8)}</h3>
-                              <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="w-4 h-4" />
-                                  {new Date(order.created_at).toLocaleDateString()}
+                            <div className="flex items-center gap-1.5">
+                              <Package className="w-4 h-4 flex-shrink-0" />
+                              <span className="whitespace-nowrap">{order.order_items?.length || 0} item{order.order_items?.length !== 1 ? 's' : ''}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        {getStatusBadge(order.status)}
+                      </div>
+                    </div>
+                    
+                    {/* Content Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                      {/* Total Amount */}
+                      <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
+                        <div className="text-sm font-medium text-muted-foreground mb-2">Total Amount</div>
+                        <div className="font-bold text-2xl bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+                          AED {order.total_amount.toFixed(2)}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-2 space-y-1">
+                          <div>Subtotal: AED {order.subtotal.toFixed(2)}</div>
+                          <div>Delivery: AED {order.delivery_cost.toFixed(2)}</div>
+                        </div>
+                      </div>
+                      
+                      {/* Order Items */}
+                      {order.order_items && order.order_items.length > 0 && (
+                        <div className="lg:col-span-2 bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
+                          <div className="text-sm font-medium text-muted-foreground mb-3">Order Items:</div>
+                          <div className="space-y-2 max-h-24 overflow-y-auto">
+                            {order.order_items.slice(0, 3).map((item) => (
+                              <div key={item.id} className="text-sm flex justify-between items-center gap-3">
+                                <div className="flex-1 min-w-0">
+                                  <span className="font-medium text-luxury-navy block truncate">{item.product_name}</span>
+                                  <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                                    <span className="whitespace-nowrap">Size: {item.size}</span>
+                                    {item.color && (
+                                      <>
+                                        <span>•</span>
+                                        <div className="flex items-center gap-1">
+                                          <ColorSwatch color={item.color} size="sm" />
+                                          <span>{item.color}</span>
+                                        </div>
+                                      </>
+                                    )}
+                                  </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <Package className="w-4 h-4" />
-                                  {order.order_items?.length || 0} item{order.order_items?.length !== 1 ? 's' : ''}
+                                <div className="text-xs text-muted-foreground whitespace-nowrap">
+                                  Qty: {item.quantity}
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                          <div className="flex-shrink-0">
-                            {getStatusBadge(order.status)}
-                          </div>
-                        </div>
-                      
-                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <div className="lg:col-span-1 bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
-                          <div className="text-sm font-medium text-muted-foreground mb-2">Total Amount</div>
-                          <div className="font-bold text-3xl lg:text-2xl bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
-                            AED {order.total_amount.toFixed(2)}
-                          </div>
-                          <div className="text-xs text-muted-foreground mt-2 space-y-1">
-                            <div>Subtotal: AED {order.subtotal.toFixed(2)}</div>
-                            <div>Delivery: AED {order.delivery_cost.toFixed(2)}</div>
+                            ))}
+                            {order.order_items.length > 3 && (
+                              <div className="text-xs text-medical-blue font-medium">
+                                +{order.order_items.length - 3} more items
+                              </div>
+                            )}
                           </div>
                         </div>
-                        
-                        {order.order_items && order.order_items.length > 0 && (
-                          <div className="lg:col-span-2 bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
-                            <div className="text-sm font-medium text-muted-foreground mb-3">Order Items:</div>
-                            <div className="space-y-2 max-h-24 overflow-y-auto">
-                              {order.order_items.slice(0, 3).map((item) => (
-                                <div key={item.id} className="text-sm flex justify-between items-center">
-                                  <div className="flex-1">
-                                    <span className="font-medium text-luxury-navy">{item.product_name}</span>
-                                    <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                                      <span>Size: {item.size}</span>
-                                      {item.color && (
-                                        <>
-                                          <span>•</span>
-                                          <div className="flex items-center gap-1">
-                                            <ColorSwatch color={item.color} size="sm" />
-                                            <span>{item.color}</span>
-                                          </div>
-                                        </>
-                                      )}
-                                    </div>
-                                  </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    Qty: {item.quantity}
-                                  </div>
-                                </div>
-                              ))}
-                              {order.order_items.length > 3 && (
-                                <div className="text-xs text-medical-blue font-medium">
-                                  +{order.order_items.length - 3} more items
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                      )}
+                    </div>
 
-                      <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
+                    {/* Shipping Address and Button Section */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                      <div className="lg:col-span-2 bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
                         <div className="flex items-center gap-3 mb-3">
                           <div className="p-2 bg-medical-teal/10 rounded-lg">
                             <MapPin className="w-4 h-4 text-medical-teal" />
@@ -308,19 +313,19 @@ const MyOrdersContent: React.FC = () => {
                           </p>
                         )}
                       </div>
-                    </div>
-                    
-                    <div className="flex flex-col gap-3 lg:w-48">
-                      <Button
-                        onClick={() => setSelectedOrder(order)}
-                        size="sm"
-                        className="bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] text-sm px-6 py-2.5 h-10 w-full lg:w-auto rounded-xl font-medium"
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Details
-                      </Button>
-                      <div className="text-xs text-muted-foreground text-center lg:text-right">
-                        Updated: {new Date(order.updated_at).toLocaleDateString()}
+                      
+                      {/* Button Column */}
+                      <div className="flex flex-col gap-3">
+                        <Button
+                          onClick={() => setSelectedOrder(order)}
+                          className="w-full bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-medium h-12"
+                        >
+                          <Eye className="w-4 h-4 mr-2" />
+                          View Details
+                        </Button>
+                        <div className="text-xs text-muted-foreground text-center">
+                          Updated: {new Date(order.updated_at).toLocaleDateString()}
+                        </div>
                       </div>
                     </div>
                   </div>

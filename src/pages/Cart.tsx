@@ -106,7 +106,7 @@ const Cart = () => {
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {items.map((item) => (
-                <Card key={item.id} className="group glass border-medical-blue/20 bg-gradient-to-r from-white/90 to-white/80 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01]">
+                <Card key={item.id} className="group glass border-medical-blue/20 bg-gradient-to-r from-white/90 to-white/80 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01] rounded-2xl">
                   <CardContent className="p-6">
                     <div className="flex items-center gap-6">
                       <div className="relative overflow-hidden rounded-xl">
@@ -132,22 +132,22 @@ const Cart = () => {
                       </div>
                       
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 bg-medical-blue/5 rounded-xl p-2">
+                        <div className="flex items-center gap-2 glass bg-medical-blue/10 rounded-xl p-2 border border-medical-blue/20 shadow-soft">
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             disabled={item.quantity <= 1}
-                            className="h-8 w-8 hover:bg-medical-blue/10 rounded-lg"
+                            className="h-8 w-8 hover:bg-medical-blue/20 rounded-lg transition-all"
                           >
                             <Minus className="w-4 h-4" />
                           </Button>
-                          <span className="w-8 text-center font-medium">{item.quantity}</span>
+                          <span className="w-10 text-center font-bold text-medical-blue">{item.quantity}</span>
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="h-8 w-8 hover:bg-medical-blue/10 rounded-lg"
+                            className="h-8 w-8 hover:bg-medical-blue/20 rounded-lg transition-all"
                           >
                             <Plus className="w-4 h-4" />
                           </Button>

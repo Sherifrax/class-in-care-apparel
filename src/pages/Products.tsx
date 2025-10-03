@@ -283,10 +283,69 @@ const Products = () => {
       <AuroraCollection />
       
       {/* Optimized Filter Bar */}
-      
+      <section className="bg-white border-b border-gray-200 sticky top-20 z-30 shadow-soft backdrop-blur-sm">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide flex-1">
+              {allCategories.map(category => (
+                <Button
+                  key={category.id}
+                  variant={selectedCategory === category.name ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category.name)}
+                  className={cn(
+                    "flex-shrink-0 transition-all duration-300 rounded-xl",
+                    selectedCategory === category.name 
+                      ? "bg-gradient-to-r from-medical-blue to-medical-teal shadow-glow" 
+                      : "hover:border-medical-blue hover:bg-medical-blue/5"
+                  )}
+                >
+                  {category.name}
+                  <Badge variant="secondary" className="ml-2 bg-white/20">
+                    {category.count}
+                  </Badge>
+                </Button>
+              ))}
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+                className={cn(
+                  "gap-2 flex-shrink-0 rounded-xl transition-all duration-300",
+                  showFilters 
+                    ? "bg-medical-blue text-white hover:bg-medical-blue-light" 
+                    : "hover:border-medical-blue hover:bg-medical-blue/5"
+                )}
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+                {hasActiveFilters && (
+                  <Badge className="ml-1 bg-medical-teal text-white">
+                    Active
+                  </Badge>
+                )}
+              </Button>
+              
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl"
+                >
+                  Clear All
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Advanced Filters Panel */}
-      {showFilters && <section className="py-6 bg-white border-b border-gray-200">
+      {showFilters && <section className="py-6 bg-gradient-to-br from-medical-blue/5 to-medical-teal/5 border-b border-medical-blue/20 animate-fade-in">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filterOptions.map(filterGroup => <div key={filterGroup.name} className="space-y-3">
@@ -330,7 +389,7 @@ const Products = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {filteredProducts.map((product, index) => <Card key={product.id} className="p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 group animate-scale-in relative overflow-hidden" style={{
+            {filteredProducts.map((product, index) => <Card key={product.id} className="p-4 sm:p-6 glass border-medical-blue/20 hover:shadow-luxury hover:border-medical-blue/40 transition-all duration-300 group animate-scale-in relative overflow-hidden rounded-2xl bg-gradient-to-b from-white/95 to-white/90" style={{
             animationDelay: `${index * 0.1}s`
           }}>
                 {/* Badge */}
@@ -343,15 +402,19 @@ const Products = () => {
                   <Heart className={cn("w-4 h-4", isFavorite(product.id) && "fill-current")} />
                 </Button>
 
-                <div className="rounded-xl h-56 sm:h-64 mb-4 overflow-hidden group-hover:scale-105 transition-transform duration-300 relative">
-                  <img src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} className="w-full h-full object-cover" />
+                <div className="rounded-2xl h-56 sm:h-64 mb-4 overflow-hidden relative shadow-soft">
+                  <img src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                   {product.images && product.images.length > 1 && <Badge className="absolute top-3 left-3 bg-black/70 text-white">
                       +{product.images.length - 1} more
                     </Badge>}
                   
                   {/* Quick View Overlay */}
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
-                    <Button variant="secondary" size="sm" className="gap-2" onClick={() => openProductDialog(product)}>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-2xl flex items-center justify-center">
+                    <Button 
+                      size="sm" 
+                      className="gap-2 bg-white/95 text-medical-blue hover:bg-white shadow-luxury backdrop-blur-sm" 
+                      onClick={() => openProductDialog(product)}
+                    >
                       <Eye className="w-4 h-4" />
                       Quick View
                     </Button>
@@ -415,14 +478,19 @@ const Products = () => {
                       </span>
                     </div>}
                   
-                  <div className="flex items-center justify-between pt-3 border-t">
+                  <div className="flex items-center justify-between pt-3 border-t border-medical-blue/10">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                      <span className="text-xl font-bold text-luxury-navy">AED {product.price}</span>
+                      <span className="text-xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AED {product.price}</span>
                       {product.original_price && <span className="text-sm text-muted-foreground line-through">AED {product.original_price}</span>}
                     </div>
-                    <Button size="sm" className="gap-2 text-xs" onClick={() => openProductDialog(product)} disabled={product.track_stock && product.stock_quantity === 0}>
+                    <Button 
+                      size="sm" 
+                      className="gap-2 text-xs bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-xl" 
+                      onClick={() => openProductDialog(product)} 
+                      disabled={product.track_stock && product.stock_quantity === 0}
+                    >
                       <ShoppingCart className="w-4 h-4" />
-                      {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+                      {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add'}
                     </Button>
                   </div>
                 </div>
@@ -453,10 +521,10 @@ const Products = () => {
       
       {/* Product Detail Dialog */}
       <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90">
           {selectedProduct && <>
-              <DialogHeader>
-                <DialogTitle>{selectedProduct.name}</DialogTitle>
+              <DialogHeader className="border-b border-medical-blue/20 pb-4">
+                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">{selectedProduct.name}</DialogTitle>
               </DialogHeader>
               
               <div className="grid md:grid-cols-2 gap-6">
@@ -526,25 +594,45 @@ const Products = () => {
 
                    <div>
                      <Label htmlFor="quantity">Quantity</Label>
-                     <div className="flex items-center gap-2 mt-2">
-                       <Button variant="outline" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))} disabled={quantity <= 1}>
+                     <div className="flex items-center gap-2 mt-2 glass bg-medical-blue/5 rounded-xl p-2 border border-medical-blue/20">
+                       <Button 
+                         variant="ghost" 
+                         size="icon" 
+                         onClick={() => setQuantity(Math.max(1, quantity - 1))} 
+                         disabled={quantity <= 1}
+                         className="hover:bg-medical-blue/10 rounded-lg"
+                       >
                          <Minus className="w-4 h-4" />
                        </Button>
-                       <Input id="quantity" value={quantity} onChange={e => {
-                    const newQuantity = Math.max(1, parseInt(e.target.value) || 1);
-                    if (selectedProduct.track_stock) {
-                      setQuantity(Math.min(newQuantity, selectedProduct.stock_quantity));
-                    } else {
-                      setQuantity(newQuantity);
-                    }
-                  }} className="w-20 text-center" type="number" min="1" max={selectedProduct.track_stock ? selectedProduct.stock_quantity : undefined} />
-                       <Button variant="outline" size="icon" onClick={() => {
-                    if (selectedProduct.track_stock) {
-                      setQuantity(Math.min(quantity + 1, selectedProduct.stock_quantity));
-                    } else {
-                      setQuantity(quantity + 1);
-                    }
-                  }} disabled={selectedProduct.track_stock && quantity >= selectedProduct.stock_quantity}>
+                       <Input 
+                         id="quantity" 
+                         value={quantity} 
+                         onChange={e => {
+                           const newQuantity = Math.max(1, parseInt(e.target.value) || 1);
+                           if (selectedProduct.track_stock) {
+                             setQuantity(Math.min(newQuantity, selectedProduct.stock_quantity));
+                           } else {
+                             setQuantity(newQuantity);
+                           }
+                         }} 
+                         className="w-20 text-center border-0 bg-transparent font-bold" 
+                         type="number" 
+                         min="1" 
+                         max={selectedProduct.track_stock ? selectedProduct.stock_quantity : undefined} 
+                       />
+                       <Button 
+                         variant="ghost" 
+                         size="icon" 
+                         onClick={() => {
+                           if (selectedProduct.track_stock) {
+                             setQuantity(Math.min(quantity + 1, selectedProduct.stock_quantity));
+                           } else {
+                             setQuantity(quantity + 1);
+                           }
+                         }} 
+                         disabled={selectedProduct.track_stock && quantity >= selectedProduct.stock_quantity}
+                         className="hover:bg-medical-blue/10 rounded-lg"
+                       >
                          <Plus className="w-4 h-4" />
                        </Button>
                      </div>
@@ -556,8 +644,12 @@ const Products = () => {
                        </span>
                      </div>}
 
-                   <Button className="w-full" onClick={handleAddToCart} disabled={!selectedSize || selectedProduct.track_stock && (selectedProduct.stock_quantity === 0 || quantity > selectedProduct.stock_quantity)}>
-                     <ShoppingCart className="w-4 h-4 mr-2" />
+                   <Button 
+                     className="w-full h-12 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-semibold" 
+                     onClick={handleAddToCart} 
+                     disabled={!selectedSize || selectedProduct.track_stock && (selectedProduct.stock_quantity === 0 || quantity > selectedProduct.stock_quantity)}
+                   >
+                     <ShoppingCart className="w-5 h-5 mr-2" />
                      {selectedProduct.track_stock && selectedProduct.stock_quantity === 0 ? 'Out of Stock' : `Add to Cart (${quantity} item${quantity !== 1 ? 's' : ''})`}
                    </Button>
 
