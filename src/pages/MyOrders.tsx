@@ -286,14 +286,14 @@ const MyOrdersContent: React.FC = () => {
                         )}
                       </div>
 
-                      {order.shipping_address && (
-                        <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="p-2 bg-medical-teal/10 rounded-lg">
-                              <MapPin className="w-4 h-4 text-medical-teal" />
-                            </div>
-                            <span className="font-semibold text-sm text-luxury-navy">Shipping Address</span>
+                      <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="p-2 bg-medical-teal/10 rounded-lg">
+                            <MapPin className="w-4 h-4 text-medical-teal" />
                           </div>
+                          <span className="font-semibold text-sm text-luxury-navy">Shipping Address</span>
+                        </div>
+                        {order.shipping_address ? (
                           <div className="text-sm text-muted-foreground leading-relaxed">
                             {order.shipping_address.line1}
                             {order.shipping_address.line2 && `, ${order.shipping_address.line2}`}
@@ -302,8 +302,12 @@ const MyOrdersContent: React.FC = () => {
                             <br />
                             {order.shipping_address.country}
                           </div>
-                        </div>
-                      )}
+                        ) : (
+                          <p className="text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
+                            Shipping address not provided
+                          </p>
+                        )}
+                      </div>
                     </div>
                     
                     <div className="flex flex-col gap-3 lg:w-48">
@@ -403,15 +407,15 @@ const MyOrdersContent: React.FC = () => {
                   </Card>
                 </div>
 
-                {selectedOrder.shipping_address && (
-                  <Card className="glass border-medical-teal/20 bg-gradient-to-br from-white/80 to-medical-teal/5 shadow-soft rounded-2xl">
-                    <CardContent className="p-6 space-y-4">
-                      <h4 className="font-semibold text-xl text-luxury-navy flex items-center gap-2">
-                        <div className="p-2 bg-medical-teal/10 rounded-lg">
-                          <MapPin className="w-5 h-5 text-medical-teal" />
-                        </div>
-                        Shipping Address
-                      </h4>
+                <Card className="glass border-medical-teal/20 bg-gradient-to-br from-white/80 to-medical-teal/5 shadow-soft rounded-2xl">
+                  <CardContent className="p-6 space-y-4">
+                    <h4 className="font-semibold text-xl text-luxury-navy flex items-center gap-2">
+                      <div className="p-2 bg-medical-teal/10 rounded-lg">
+                        <MapPin className="w-5 h-5 text-medical-teal" />
+                      </div>
+                      Shipping Address
+                    </h4>
+                    {selectedOrder.shipping_address ? (
                       <div className="p-4 bg-white/50 rounded-xl text-sm leading-relaxed border border-medical-teal/10">
                         <div className="font-medium text-luxury-navy">
                           {selectedOrder.shipping_address.line1}
@@ -424,9 +428,15 @@ const MyOrdersContent: React.FC = () => {
                           {selectedOrder.shipping_address.country}
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                )}
+                    ) : (
+                      <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <p className="text-sm text-amber-800 font-medium">
+                          ⚠️ Shipping address not provided during checkout
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
 
                 <Card className="glass border-purple-200 bg-gradient-to-br from-white/80 to-purple-50 shadow-soft rounded-2xl">
                   <CardContent className="p-6 space-y-4">

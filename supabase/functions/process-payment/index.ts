@@ -40,6 +40,9 @@ serve(async (req) => {
       throw new Error("Payment not completed");
     }
 
+    // Log shipping details structure (no PII) for debugging
+    console.log('Shipping details available:', !!session.shipping_details?.address);
+
     // Check if order already exists
     const { data: existingOrder } = await supabaseAdmin
       .from('orders')
@@ -129,6 +132,7 @@ serve(async (req) => {
           product_id: item.product_id,
           product_name: item.name,
           size: item.size,
+          color: item.color || null,
           quantity: item.quantity,
           unit_price: unitPrice,
         });
@@ -151,6 +155,7 @@ serve(async (req) => {
         order_items: cartItems.map((item: any) => ({
           product_name: item.name,
           size: item.size,
+          color: item.color || null,
           quantity: item.quantity,
           unit_price: item.unit_price || parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0,
         })),

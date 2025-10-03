@@ -61,7 +61,14 @@ const handler = async (req: Request): Promise<Response> => {
           ${orderData.shipping_address.country || ''}
         </p>
       </div>
-    ` : '';
+    ` : `
+      <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 8px; margin-top: 16px;">
+        <h4 style="margin: 0 0 8px 0; color: #92400e; font-size: 16px; font-weight: 600;">⚠️ Shipping Address Not Provided</h4>
+        <p style="margin: 0; color: #78350f; line-height: 1.5; font-size: 14px;">
+          The shipping address was not provided during checkout. Please contact us to update your delivery details.
+        </p>
+      </div>
+    `;
 
     const customerName = orderData.customer_name || orderData.customer_email.split('@')[0];
     const orderNumber = orderData.order_id.slice(-8).toUpperCase();

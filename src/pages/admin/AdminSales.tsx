@@ -18,7 +18,8 @@ import {
   BarChart3,
   RefreshCw,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  MapPin
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminRoute } from '@/components/admin/AdminRoute';
@@ -502,14 +503,30 @@ const AdminSalesContent: React.FC = () => {
                 </div>
               </div>
 
-              {selectedOrder.shipping_address && (
+              {selectedOrder.shipping_address ? (
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-lg text-luxury-navy">Shipping Address</h4>
-                  <div className="p-4 bg-medical-teal/5 rounded-xl text-sm">
-                    <p>{selectedOrder.shipping_address.line1}</p>
-                    {selectedOrder.shipping_address.line2 && <p>{selectedOrder.shipping_address.line2}</p>}
-                    <p>{selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.state} {selectedOrder.shipping_address.postal_code}</p>
-                    <p>{selectedOrder.shipping_address.country}</p>
+                  <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-medical-teal" />
+                    Shipping Address
+                  </h4>
+                  <div className="p-4 bg-medical-teal/5 rounded-xl text-sm border border-medical-teal/20">
+                    <p className="font-medium text-luxury-navy">{selectedOrder.shipping_address.line1}</p>
+                    {selectedOrder.shipping_address.line2 && <p className="text-muted-foreground">{selectedOrder.shipping_address.line2}</p>}
+                    <p className="text-muted-foreground">{selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.state} {selectedOrder.shipping_address.postal_code}</p>
+                    <p className="text-muted-foreground">{selectedOrder.shipping_address.country}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-amber-600" />
+                    Shipping Address
+                  </h4>
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                    <p className="text-sm text-amber-800 font-medium flex items-center gap-2">
+                      <span className="text-lg">⚠️</span>
+                      Shipping address not provided - Contact customer for delivery details
+                    </p>
                   </div>
                 </div>
               )}

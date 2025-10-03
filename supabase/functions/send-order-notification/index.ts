@@ -58,7 +58,7 @@ const handler = async (req: Request): Promise<Response> => {
       ${orderData.shipping_address.city || ''}, ${orderData.shipping_address.state || ''} ${orderData.shipping_address.postal_code || ''}<br>
       ${orderData.shipping_address.country || ''}
       </p>
-    ` : '<p><strong>Shipping Address:</strong> Not provided</p>';
+    ` : '<p><strong>Shipping Address:</strong> <span style="color: #f59e0b; font-weight: 600;">⚠️ Not provided - Customer needs to be contacted</span></p>';
 
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">

@@ -72,7 +72,7 @@ serve(async (req) => {
         currency: currency.toLowerCase(),
         product_data: {
           name: item.product.name,
-          description: `Size: ${item.size}`,
+          description: `Size: ${item.size}${item.color ? `, Color: ${item.color}` : ''}`,
           images: [item.product.image],
         },
         unit_amount: Math.round(parseFloat(item.product.price.replace(/[^0-9.]/g, '')) * 100),
@@ -143,6 +143,7 @@ serve(async (req) => {
           product_id: item.product_id || item.product?.id || item.id,
           name: item.product?.name || item.name,
           size: item.size,
+          color: item.color || null,
           quantity: item.quantity,
           price: item.product?.price || item.price,
           unit_price: parseFloat((item.product?.price || item.price || '').replace(/[^0-9.]/g, '')) || 0,
