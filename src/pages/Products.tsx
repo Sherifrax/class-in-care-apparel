@@ -47,7 +47,7 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>('All Collections');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('');
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const [selectedFilters, setSelectedFilters] = useState({
     sizes: [] as string[],
@@ -67,7 +67,9 @@ const Products = () => {
   const {
     toast
   } = useToast();
-  const { openSizeGuide } = useSizeGuide();
+  const {
+    openSizeGuide
+  } = useSizeGuide();
 
   // Fetch products from Supabase
   const {
@@ -253,7 +255,7 @@ const Products = () => {
     await addToCart(selectedProduct.id, selectedSize, selectedColor || undefined, quantity);
     setSelectedProduct(null);
     setSelectedSize('');
-    setSelectedColor(null);
+    setSelectedColor('');
     setQuantity(1);
   };
   const handleToggleFavorite = async (productId: string, e: React.MouseEvent) => {
@@ -268,7 +270,7 @@ const Products = () => {
   const openProductDialog = (product: Product) => {
     setSelectedProduct(product);
     setSelectedSize(product.sizes[0] || '');
-    setSelectedColor(product.colors.length > 0 ? product.colors[0] : null);
+    setSelectedColor(product.colors[0] || '');
     setQuantity(1);
   };
   if (productsLoading || categoriesLoading) {
@@ -287,58 +289,26 @@ const Products = () => {
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide flex-1">
-              {allCategories.map(category => (
-                <Button
-                  key={category.id}
-                  variant={selectedCategory === category.name ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedCategory(category.name)}
-                  className={cn(
-                    "flex-shrink-0 transition-all duration-300 rounded-xl",
-                    selectedCategory === category.name 
-                      ? "bg-gradient-to-r from-medical-blue to-medical-teal shadow-glow" 
-                      : "hover:border-medical-blue hover:bg-medical-blue/5"
-                  )}
-                >
+              {allCategories.map(category => <Button key={category.id} variant={selectedCategory === category.name ? "default" : "outline"} size="sm" onClick={() => setSelectedCategory(category.name)} className={cn("flex-shrink-0 transition-all duration-300 rounded-xl", selectedCategory === category.name ? "bg-gradient-to-r from-medical-blue to-medical-teal shadow-glow" : "hover:border-medical-blue hover:bg-medical-blue/5")}>
                   {category.name}
                   <Badge variant="secondary" className="ml-2 bg-white/20">
                     {category.count}
                   </Badge>
-                </Button>
-              ))}
+                </Button>)}
             </div>
             
             <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowFilters(!showFilters)}
-                className={cn(
-                  "gap-2 flex-shrink-0 rounded-xl transition-all duration-300",
-                  showFilters 
-                    ? "bg-medical-blue text-white hover:bg-medical-blue-light" 
-                    : "hover:border-medical-blue hover:bg-medical-blue/5"
-                )}
-              >
+              <Button variant="outline" size="sm" onClick={() => setShowFilters(!showFilters)} className={cn("gap-2 flex-shrink-0 rounded-xl transition-all duration-300", showFilters ? "bg-medical-blue text-white hover:bg-medical-blue-light" : "hover:border-medical-blue hover:bg-medical-blue/5")}>
                 <Filter className="w-4 h-4" />
                 Filters
-                {hasActiveFilters && (
-                  <Badge className="ml-1 bg-medical-teal text-white">
+                {hasActiveFilters && <Badge className="ml-1 bg-medical-teal text-white">
                     Active
-                  </Badge>
-                )}
+                  </Badge>}
               </Button>
               
-              {hasActiveFilters && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl"
-                >
+              {hasActiveFilters && <Button variant="ghost" size="sm" onClick={clearFilters} className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl">
                   Clear All
-                </Button>
-              )}
+                </Button>}
             </div>
           </div>
         </div>
@@ -356,18 +326,14 @@ const Products = () => {
                 const isSelected = filterKey === 'priceRange' ? selectedFilters.priceRange === option : (selectedFilters[filterKey as keyof typeof selectedFilters] as string[] || []).includes(option);
                 return <label key={option} className="flex items-center space-x-2 cursor-pointer group">
                            <input type={filterGroup.name === 'Price Range' ? 'radio' : 'checkbox'} checked={isSelected} onChange={() => toggleFilterOption(filterGroup.name, option)} className="w-4 h-4 text-medical-blue border-gray-300 rounded focus:ring-medical-blue" />
-                           {filterGroup.name === 'Colors' ? (
-                             <div className="flex items-center gap-2">
+                           {filterGroup.name === 'Colors' ? <div className="flex items-center gap-2">
                                <ColorSwatch color={option} size="sm" />
                                <span className={cn("text-sm transition-colors", isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground")}>
                                  {option}
                                </span>
-                             </div>
-                           ) : (
-                             <span className={cn("text-sm transition-colors", isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground")}>
+                             </div> : <span className={cn("text-sm transition-colors", isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground")}>
                                {option}
-                             </span>
-                           )}
+                             </span>}
                          </label>;
               })}
                    </div>
@@ -410,11 +376,7 @@ const Products = () => {
                   
                   {/* Quick View Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-2xl flex items-center justify-center">
-                    <Button 
-                      size="sm" 
-                      className="gap-2 bg-white/95 text-medical-blue hover:bg-white shadow-luxury backdrop-blur-sm" 
-                      onClick={() => openProductDialog(product)}
-                    >
+                    <Button size="sm" className="gap-2 bg-white/95 text-medical-blue hover:bg-white shadow-luxury backdrop-blur-sm" onClick={() => openProductDialog(product)}>
                       <Eye className="w-4 h-4" />
                       Quick View
                     </Button>
@@ -449,12 +411,8 @@ const Products = () => {
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-muted-foreground">Colors:</span>
                     <div className="flex gap-1">
-                      {product.colors.slice(0, 4).map((color, i) => (
-                        <ColorSwatch key={i} color={color} size="sm" />
-                      ))}
-                      {product.colors.length > 4 && (
-                        <div className="text-xs text-muted-foreground">+{product.colors.length - 4}</div>
-                      )}
+                      {product.colors.slice(0, 4).map((color, i) => <ColorSwatch key={i} color={color} size="sm" />)}
+                      {product.colors.length > 4 && <div className="text-xs text-muted-foreground">+{product.colors.length - 4}</div>}
                     </div>
                   </div>
                   
@@ -483,12 +441,7 @@ const Products = () => {
                       <span className="text-xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AED {product.price}</span>
                       {product.original_price && <span className="text-sm text-muted-foreground line-through">AED {product.original_price}</span>}
                     </div>
-                    <Button 
-                      size="sm" 
-                      className="gap-2 text-xs bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-xl" 
-                      onClick={() => openProductDialog(product)} 
-                      disabled={product.track_stock && product.stock_quantity === 0}
-                    >
+                    <Button size="sm" className="gap-2 text-xs bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-xl" onClick={() => openProductDialog(product)} disabled={product.track_stock && product.stock_quantity === 0}>
                       <ShoppingCart className="w-4 h-4" />
                       {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add'}
                     </Button>
@@ -579,60 +532,34 @@ const Products = () => {
                     </Select>
                   </div>
 
-                  {selectedProduct.colors.length > 0 && (
-                    <div>
+                  {selectedProduct.colors.length > 0 && <div>
                       <Label>Color</Label>
                       <div className="mt-2">
-                        <ColorSelector
-                          colors={selectedProduct.colors}
-                          selectedColor={selectedColor}
-                          onColorSelect={setSelectedColor}
-                        />
+                        <ColorSelector colors={selectedProduct.colors} selectedColor={selectedColor} onColorSelect={setSelectedColor} />
                       </div>
-                    </div>
-                  )}
+                    </div>}
 
                    <div>
                      <Label htmlFor="quantity">Quantity</Label>
                      <div className="flex items-center gap-2 mt-2 glass bg-medical-blue/5 rounded-xl p-2 border border-medical-blue/20">
-                       <Button 
-                         variant="ghost" 
-                         size="icon" 
-                         onClick={() => setQuantity(Math.max(1, quantity - 1))} 
-                         disabled={quantity <= 1}
-                         className="hover:bg-medical-blue/10 rounded-lg"
-                       >
+                       <Button variant="ghost" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))} disabled={quantity <= 1} className="hover:bg-medical-blue/10 rounded-lg">
                          <Minus className="w-4 h-4" />
                        </Button>
-                       <Input 
-                         id="quantity" 
-                         value={quantity} 
-                         onChange={e => {
-                           const newQuantity = Math.max(1, parseInt(e.target.value) || 1);
-                           if (selectedProduct.track_stock) {
-                             setQuantity(Math.min(newQuantity, selectedProduct.stock_quantity));
-                           } else {
-                             setQuantity(newQuantity);
-                           }
-                         }} 
-                         className="w-20 text-center border-0 bg-transparent font-bold" 
-                         type="number" 
-                         min="1" 
-                         max={selectedProduct.track_stock ? selectedProduct.stock_quantity : undefined} 
-                       />
-                       <Button 
-                         variant="ghost" 
-                         size="icon" 
-                         onClick={() => {
-                           if (selectedProduct.track_stock) {
-                             setQuantity(Math.min(quantity + 1, selectedProduct.stock_quantity));
-                           } else {
-                             setQuantity(quantity + 1);
-                           }
-                         }} 
-                         disabled={selectedProduct.track_stock && quantity >= selectedProduct.stock_quantity}
-                         className="hover:bg-medical-blue/10 rounded-lg"
-                       >
+                       <Input id="quantity" value={quantity} onChange={e => {
+                    const newQuantity = Math.max(1, parseInt(e.target.value) || 1);
+                    if (selectedProduct.track_stock) {
+                      setQuantity(Math.min(newQuantity, selectedProduct.stock_quantity));
+                    } else {
+                      setQuantity(newQuantity);
+                    }
+                  }} className="w-20 text-center border-0 bg-transparent font-bold" type="number" min="1" max={selectedProduct.track_stock ? selectedProduct.stock_quantity : undefined} />
+                       <Button variant="ghost" size="icon" onClick={() => {
+                    if (selectedProduct.track_stock) {
+                      setQuantity(Math.min(quantity + 1, selectedProduct.stock_quantity));
+                    } else {
+                      setQuantity(quantity + 1);
+                    }
+                  }} disabled={selectedProduct.track_stock && quantity >= selectedProduct.stock_quantity} className="hover:bg-medical-blue/10 rounded-lg">
                          <Plus className="w-4 h-4" />
                        </Button>
                      </div>
@@ -644,11 +571,7 @@ const Products = () => {
                        </span>
                      </div>}
 
-                   <Button 
-                     className="w-full h-12 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-semibold" 
-                     onClick={handleAddToCart} 
-                     disabled={!selectedSize || selectedProduct.track_stock && (selectedProduct.stock_quantity === 0 || quantity > selectedProduct.stock_quantity)}
-                   >
+                   <Button className="w-full h-12 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-semibold" onClick={handleAddToCart} disabled={!selectedSize || selectedProduct.track_stock && (selectedProduct.stock_quantity === 0 || quantity > selectedProduct.stock_quantity)}>
                      <ShoppingCart className="w-5 h-5 mr-2" />
                      {selectedProduct.track_stock && selectedProduct.stock_quantity === 0 ? 'Out of Stock' : `Add to Cart (${quantity} item${quantity !== 1 ? 's' : ''})`}
                    </Button>
@@ -662,14 +585,7 @@ const Products = () => {
                       </div>
                     </div>}
 
-                  {selectedProduct.colors.length > 0 && <div>
-                      <h4 className="font-medium mb-2">Available Colors</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedProduct.colors.map((color) => (
-                          <ColorSwatch key={color} color={color} size="md" showLabel />
-                        ))}
-                      </div>
-                    </div>}
+                  {selectedProduct.colors.length > 0}
                 </div>
               </div>
             </>}
