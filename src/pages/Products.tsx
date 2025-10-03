@@ -8,9 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-import { Star, ShoppingCart, Heart, Eye, Filter, Plus, Minus } from "lucide-react";
+import { Star, ShoppingCart, Heart, Eye, Filter, Plus, Minus, ChevronLeft, ChevronRight } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useCart } from '@/contexts/CartContext';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { useSizeGuide } from '@/contexts/SizeGuideContext';
@@ -46,6 +47,7 @@ interface Category {
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>('All Collections');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
@@ -56,6 +58,7 @@ const Products = () => {
     priceRange: null as string | null
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const {
     addToCart
   } = useCart();
@@ -272,6 +275,12 @@ const Products = () => {
     setSelectedSize(product.sizes[0] || '');
     setSelectedColor(product.colors[0] || '');
     setQuantity(1);
+    setCurrentImageIndex(0);
+  };
+
+  const openQuickView = (product: Product) => {
+    setQuickViewProduct(product);
+    setCurrentImageIndex(0);
   };
   if (productsLoading || categoriesLoading) {
     return <div className="min-h-screen pt-20 flex items-center justify-center">
@@ -376,7 +385,7 @@ const Products = () => {
                   
                   {/* Quick View Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-2xl flex items-center justify-center">
-                    <Button size="sm" className="gap-2 bg-white/95 text-medical-blue hover:bg-white shadow-luxury backdrop-blur-sm" onClick={() => openProductDialog(product)}>
+                    <Button size="sm" className="gap-2 bg-white/95 text-medical-blue hover:bg-white shadow-luxury backdrop-blur-sm" onClick={() => openQuickView(product)}>
                       <Eye className="w-4 h-4" />
                       Quick View
                     </Button>
@@ -472,123 +481,364 @@ const Products = () => {
         </div>
       </section>
       
-      {/* Product Detail Dialog */}
+      {/* Product Detail Dialog (Add to Cart) */}
       <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
-        <DialogContent className="max-w-2xl glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90">
           {selectedProduct && <>
               <DialogHeader className="border-b border-medical-blue/20 pb-4">
                 <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">{selectedProduct.name}</DialogTitle>
               </DialogHeader>
               
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  {selectedProduct.images && selectedProduct.images.length > 1 ? <div className="space-y-2">
-                      <img src={selectedProduct.images[0]} alt={selectedProduct.name} className="w-full h-64 object-cover rounded-lg" />
-                      <div className="flex gap-2 overflow-x-auto">
-                        {selectedProduct.images.map((image, index) => <img key={index} src={image} alt={`${selectedProduct.name} ${index + 1}`} className="w-16 h-16 object-cover rounded border-2 border-transparent hover:border-primary cursor-pointer flex-shrink-0" onClick={e => {
-                    const mainImage = e.currentTarget.parentElement?.previousElementSibling as HTMLImageElement;
-                    if (mainImage) mainImage.src = image;
-                  }} />)}
+              <div className="space-y-6">
+                {/* Image Section - Full Width Top */}
+                <div className="w-full">
+                  {selectedProduct.images && selectedProduct.images.length > 1 ? (
+                    <div className="space-y-3">
+                      <div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
+                        <img 
+                          src={selectedProduct.images[currentImageIndex]} 
+                          alt={selectedProduct.name} 
+                          className="w-full h-80 object-cover"
+                        />
+                        {selectedProduct.badge && (
+                          <Badge className="absolute top-4 left-4 z-10" variant={selectedProduct.badge === "Best Seller" ? "default" : "secondary"}>
+                            {selectedProduct.badge}
+                          </Badge>
+                        )}
                       </div>
-                    </div> : <img src={selectedProduct.images && selectedProduct.images.length > 0 ? selectedProduct.images[0] : selectedProduct.image} alt={selectedProduct.name} className="w-full h-64 object-cover rounded-lg" />}
+                      <div className="flex gap-2 overflow-x-auto pb-2">
+                        {selectedProduct.images.map((image, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentImageIndex(index)}
+                            className={cn(
+                              "w-20 h-20 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0",
+                              currentImageIndex === index 
+                                ? "border-medical-blue ring-2 ring-medical-blue/30" 
+                                : "border-transparent hover:border-medical-blue/50"
+                            )}
+                          >
+                            <img 
+                              src={image} 
+                              alt={`${selectedProduct.name} ${index + 1}`} 
+                              className="w-full h-full object-cover"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
+                      <img 
+                        src={selectedProduct.images && selectedProduct.images.length > 0 ? selectedProduct.images[0] : selectedProduct.image} 
+                        alt={selectedProduct.name} 
+                        className="w-full h-80 object-cover"
+                      />
+                    </div>
+                  )}
                 </div>
-                
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-2xl font-bold text-luxury-navy">
-                        AED {selectedProduct.price}
-                      </span>
-                      {selectedProduct.original_price && <span className="text-lg text-muted-foreground line-through">
-                          AED {selectedProduct.original_price}
-                        </span>}
-                    </div>
-                    
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => <Star key={i} className={cn("w-4 h-4", i < Math.floor(selectedProduct.rating) ? "fill-current text-yellow-500" : "text-gray-300")} />)}
+
+                {/* Product Details Section */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Left Column - Info */}
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-3xl font-bold text-luxury-navy">
+                          AED {selectedProduct.price}
+                        </span>
+                        {selectedProduct.original_price && (
+                          <span className="text-lg text-muted-foreground line-through">
+                            AED {selectedProduct.original_price}
+                          </span>
+                        )}
                       </div>
-                      <span className="text-sm text-muted-foreground">
-                        ({selectedProduct.reviews} reviews)
-                      </span>
+                      
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              className={cn(
+                                "w-4 h-4",
+                                i < Math.floor(selectedProduct.rating) 
+                                  ? "fill-current text-yellow-500" 
+                                  : "text-gray-300"
+                              )} 
+                            />
+                          ))}
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          ({selectedProduct.reviews} reviews)
+                        </span>
+                      </div>
                     </div>
+
+                    <p className="text-muted-foreground leading-relaxed">
+                      {selectedProduct.description}
+                    </p>
+
+                    {selectedProduct.features.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold mb-2 text-luxury-navy">Features</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedProduct.features.map((feature, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {feature}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedProduct.track_stock && (
+                      <div>
+                        <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
+                          selectedProduct.stock_quantity === 0 
+                            ? 'bg-red-100 text-red-800' 
+                            : selectedProduct.stock_quantity <= selectedProduct.low_stock_threshold 
+                              ? 'bg-orange-100 text-orange-800' 
+                              : 'bg-green-100 text-green-800'
+                        }`}>
+                          {selectedProduct.stock_quantity === 0 
+                            ? 'Out of Stock' 
+                            : selectedProduct.stock_quantity <= selectedProduct.low_stock_threshold 
+                              ? `Only ${selectedProduct.stock_quantity} left` 
+                              : `${selectedProduct.stock_quantity} available`}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  <p className="text-muted-foreground">
-                    {selectedProduct.description}
-                  </p>
+                  {/* Right Column - Selection */}
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="size" className="text-base font-semibold">Select Size</Label>
+                      <Select value={selectedSize} onValueChange={setSelectedSize}>
+                        <SelectTrigger className="mt-2">
+                          <SelectValue placeholder="Choose your size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {selectedProduct.sizes.map(size => (
+                            <SelectItem key={size} value={size}>
+                              {size}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                  <div>
-                    <Label htmlFor="size">Size</Label>
-                    <Select value={selectedSize} onValueChange={setSelectedSize}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select size" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {selectedProduct.sizes.map(size => <SelectItem key={size} value={size}>
-                            {size}
-                          </SelectItem>)}
-                      </SelectContent>
-                    </Select>
+                    {selectedProduct.colors.length > 0 && (
+                      <div>
+                        <Label className="text-base font-semibold">Select Color</Label>
+                        <div className="mt-2">
+                          <ColorSelector 
+                            colors={selectedProduct.colors} 
+                            selectedColor={selectedColor} 
+                            onColorSelect={setSelectedColor} 
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <Label htmlFor="quantity" className="text-base font-semibold">Quantity</Label>
+                      <div className="flex items-center gap-3 mt-2 glass bg-medical-blue/5 rounded-xl p-3 border border-medical-blue/20">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => setQuantity(Math.max(1, quantity - 1))} 
+                          disabled={quantity <= 1}
+                          className="hover:bg-medical-blue/10 rounded-lg"
+                        >
+                          <Minus className="w-5 h-5" />
+                        </Button>
+                        <Input 
+                          id="quantity" 
+                          value={quantity} 
+                          onChange={e => {
+                            const newQuantity = Math.max(1, parseInt(e.target.value) || 1);
+                            if (selectedProduct.track_stock) {
+                              setQuantity(Math.min(newQuantity, selectedProduct.stock_quantity));
+                            } else {
+                              setQuantity(newQuantity);
+                            }
+                          }} 
+                          className="w-24 text-center border-0 bg-transparent font-bold text-lg" 
+                          type="number" 
+                          min="1" 
+                          max={selectedProduct.track_stock ? selectedProduct.stock_quantity : undefined}
+                        />
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => {
+                            if (selectedProduct.track_stock) {
+                              setQuantity(Math.min(quantity + 1, selectedProduct.stock_quantity));
+                            } else {
+                              setQuantity(quantity + 1);
+                            }
+                          }} 
+                          disabled={selectedProduct.track_stock && quantity >= selectedProduct.stock_quantity}
+                          className="hover:bg-medical-blue/10 rounded-lg"
+                        >
+                          <Plus className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <Button 
+                      className="w-full h-14 text-lg bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-semibold" 
+                      onClick={handleAddToCart} 
+                      disabled={!selectedSize || (selectedProduct.track_stock && (selectedProduct.stock_quantity === 0 || quantity > selectedProduct.stock_quantity))}
+                    >
+                      <ShoppingCart className="w-5 h-5 mr-2" />
+                      {selectedProduct.track_stock && selectedProduct.stock_quantity === 0 
+                        ? 'Out of Stock' 
+                        : `Add to Cart (${quantity} item${quantity !== 1 ? 's' : ''})`}
+                    </Button>
                   </div>
-
-                  {selectedProduct.colors.length > 0 && <div>
-                      <Label>Color</Label>
-                      <div className="mt-2">
-                        <ColorSelector colors={selectedProduct.colors} selectedColor={selectedColor} onColorSelect={setSelectedColor} />
-                      </div>
-                    </div>}
-
-                   <div>
-                     <Label htmlFor="quantity">Quantity</Label>
-                     <div className="flex items-center gap-2 mt-2 glass bg-medical-blue/5 rounded-xl p-2 border border-medical-blue/20">
-                       <Button variant="ghost" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))} disabled={quantity <= 1} className="hover:bg-medical-blue/10 rounded-lg">
-                         <Minus className="w-4 h-4" />
-                       </Button>
-                       <Input id="quantity" value={quantity} onChange={e => {
-                    const newQuantity = Math.max(1, parseInt(e.target.value) || 1);
-                    if (selectedProduct.track_stock) {
-                      setQuantity(Math.min(newQuantity, selectedProduct.stock_quantity));
-                    } else {
-                      setQuantity(newQuantity);
-                    }
-                  }} className="w-20 text-center border-0 bg-transparent font-bold" type="number" min="1" max={selectedProduct.track_stock ? selectedProduct.stock_quantity : undefined} />
-                       <Button variant="ghost" size="icon" onClick={() => {
-                    if (selectedProduct.track_stock) {
-                      setQuantity(Math.min(quantity + 1, selectedProduct.stock_quantity));
-                    } else {
-                      setQuantity(quantity + 1);
-                    }
-                  }} disabled={selectedProduct.track_stock && quantity >= selectedProduct.stock_quantity} className="hover:bg-medical-blue/10 rounded-lg">
-                         <Plus className="w-4 h-4" />
-                       </Button>
-                     </div>
-                   </div>
-
-                   {selectedProduct.track_stock && <div className="mb-2">
-                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${selectedProduct.stock_quantity === 0 ? 'bg-red-100 text-red-800' : selectedProduct.stock_quantity <= selectedProduct.low_stock_threshold ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'}`}>
-                         {selectedProduct.stock_quantity === 0 ? 'Out of Stock' : selectedProduct.stock_quantity <= selectedProduct.low_stock_threshold ? `Only ${selectedProduct.stock_quantity} left` : `${selectedProduct.stock_quantity} available`}
-                       </span>
-                     </div>}
-
-                   <Button className="w-full h-12 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-semibold" onClick={handleAddToCart} disabled={!selectedSize || selectedProduct.track_stock && (selectedProduct.stock_quantity === 0 || quantity > selectedProduct.stock_quantity)}>
-                     <ShoppingCart className="w-5 h-5 mr-2" />
-                     {selectedProduct.track_stock && selectedProduct.stock_quantity === 0 ? 'Out of Stock' : `Add to Cart (${quantity} item${quantity !== 1 ? 's' : ''})`}
-                   </Button>
-
-                  {selectedProduct.features.length > 0 && <div>
-                      <h4 className="font-medium mb-2">Features</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {selectedProduct.features.map((feature, index) => <Badge key={index} variant="outline" className="text-xs">
-                            {feature}
-                          </Badge>)}
-                      </div>
-                    </div>}
-
-                  {selectedProduct.colors.length > 0}
                 </div>
               </div>
             </>}
+        </DialogContent>
+      </Dialog>
+
+      {/* Quick View Dialog (Image Gallery) */}
+      <Dialog open={!!quickViewProduct} onOpenChange={() => setQuickViewProduct(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90">
+          {quickViewProduct && (
+            <>
+              <DialogHeader className="border-b border-medical-blue/20 pb-4">
+                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+                  {quickViewProduct.name}
+                </DialogTitle>
+              </DialogHeader>
+              
+              <div className="space-y-6">
+                {/* Large Image Carousel */}
+                {quickViewProduct.images && quickViewProduct.images.length > 0 ? (
+                  <div className="relative">
+                    <div className="relative h-[500px] rounded-2xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
+                      <img 
+                        src={quickViewProduct.images[currentImageIndex] || quickViewProduct.image} 
+                        alt={quickViewProduct.name}
+                        className="w-full h-full object-contain"
+                      />
+                      {quickViewProduct.badge && (
+                        <Badge className="absolute top-4 left-4 z-10 text-base px-4 py-2" variant={quickViewProduct.badge === "Best Seller" ? "default" : "secondary"}>
+                          {quickViewProduct.badge}
+                        </Badge>
+                      )}
+                      
+                      {/* Navigation Arrows */}
+                      {quickViewProduct.images.length > 1 && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-lg h-12 w-12 rounded-full"
+                            onClick={() => setCurrentImageIndex((prev) => 
+                              prev === 0 ? quickViewProduct.images!.length - 1 : prev - 1
+                            )}
+                          >
+                            <ChevronLeft className="w-6 h-6" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-lg h-12 w-12 rounded-full"
+                            onClick={() => setCurrentImageIndex((prev) => 
+                              prev === quickViewProduct.images!.length - 1 ? 0 : prev + 1
+                            )}
+                          >
+                            <ChevronRight className="w-6 h-6" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Thumbnail Navigation */}
+                    {quickViewProduct.images.length > 1 && (
+                      <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
+                        {quickViewProduct.images.map((image, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentImageIndex(index)}
+                            className={cn(
+                              "w-24 h-24 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 hover:scale-105",
+                              currentImageIndex === index 
+                                ? "border-medical-blue ring-4 ring-medical-blue/30 scale-105" 
+                                : "border-transparent hover:border-medical-blue/50"
+                            )}
+                          >
+                            <img 
+                              src={image} 
+                              alt={`${quickViewProduct.name} ${index + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="relative h-[500px] rounded-2xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
+                    <img 
+                      src={quickViewProduct.image} 
+                      alt={quickViewProduct.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                )}
+
+                {/* Quick Info & CTA */}
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-xl">
+                  <div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-3xl font-bold text-luxury-navy">
+                        AED {quickViewProduct.price}
+                      </span>
+                      {quickViewProduct.original_price && (
+                        <span className="text-lg text-muted-foreground line-through">
+                          AED {quickViewProduct.original_price}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star 
+                            key={i} 
+                            className={cn(
+                              "w-4 h-4",
+                              i < Math.floor(quickViewProduct.rating) 
+                                ? "fill-current text-yellow-500" 
+                                : "text-gray-300"
+                            )} 
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        ({quickViewProduct.reviews} reviews)
+                      </span>
+                    </div>
+                  </div>
+                  <Button 
+                    size="lg"
+                    className="gap-2 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300"
+                    onClick={() => {
+                      setQuickViewProduct(null);
+                      openProductDialog(quickViewProduct);
+                    }}
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    Add to Cart
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
       
