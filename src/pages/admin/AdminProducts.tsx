@@ -12,9 +12,7 @@ import { AdminRoute } from '@/components/admin/AdminRoute';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { ColorSelector } from '@/components/ColorSelector';
-import { ColorSwatch } from '@/components/ColorSwatch';
-import { COLOR_ORDER } from '@/constants/colors';
+import { ColorChipSelector } from '@/components/admin/ColorChipSelector';
 
 interface Product {
   id: string;
@@ -394,8 +392,7 @@ const AdminProductsContent: React.FC = () => {
                       Colors
                     </Label>
                     <p className="text-xs text-muted-foreground mb-2">Select available colors for this product</p>
-                    <ColorSelector
-                      colors={COLOR_ORDER}
+                    <ColorChipSelector
                       selectedColors={formData.colors.split(',').map(c => c.trim()).filter(c => c)}
                       onColorSelect={(color) => {
                         const currentColors = formData.colors.split(',').map(c => c.trim()).filter(c => c);
@@ -404,8 +401,6 @@ const AdminProductsContent: React.FC = () => {
                           : [...currentColors, color];
                         setFormData({ ...formData, colors: newColors.join(', ') });
                       }}
-                      multiSelect
-                      className="mb-2"
                     />
                   </div>
 
