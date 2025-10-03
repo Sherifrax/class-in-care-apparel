@@ -40,8 +40,11 @@ serve(async (req) => {
       throw new Error("Payment not completed");
     }
 
-    // Log shipping details structure (no PII) for debugging
-    console.log('Shipping details available:', !!session.shipping_details?.address);
+    // Determine shipping address from session
+    const shippingAddress = session.shipping_details?.address ?? session.customer_details?.address;
+    console.log('Shipping address source:', 
+      session.shipping_details?.address ? 'shipping_details' : 
+      session.customer_details?.address ? 'customer_details' : 'none');
 
     // Check if order already exists
     const { data: existingOrder } = await supabaseAdmin
@@ -105,13 +108,13 @@ serve(async (req) => {
         currency: 'AED',
         status: 'processing',
         customer_email: session.customer_email || session.customer_details?.email,
-        shipping_address: session.shipping_details?.address ? {
-          line1: session.shipping_details.address.line1,
-          line2: session.shipping_details.address.line2,
-          city: session.shipping_details.address.city,
-          state: session.shipping_details.address.state,
-          postal_code: session.shipping_details.address.postal_code,
-          country: session.shipping_details.address.country,
+        shipping_address: shippingAddress ? {
+          line1: shippingAddress.line1,
+          line2: shippingAddress.line2,
+          city: shippingAddress.city,
+          state: shippingAddress.state,
+          postal_code: shippingAddress.postal_code,
+          country: shippingAddress.country,
         } : null,
       })
       .select()
