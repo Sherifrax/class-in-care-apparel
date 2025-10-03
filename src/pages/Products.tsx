@@ -706,30 +706,36 @@ const Products = () => {
 
       {/* Quick View Dialog (Image Gallery) */}
       <Dialog open={!!quickViewProduct} onOpenChange={() => setQuickViewProduct(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90">
+        <DialogContent className="max-w-5xl max-h-[95vh] p-0 glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90 overflow-hidden">
           {quickViewProduct && (
-            <>
-              <DialogHeader className="border-b border-medical-blue/20 pb-4">
-                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+            <div className="flex flex-col h-full max-h-[95vh]">
+              <DialogHeader className="border-b border-medical-blue/20 pb-4 px-6 pt-6 flex-shrink-0">
+                <DialogTitle className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
                   {quickViewProduct.name}
                 </DialogTitle>
               </DialogHeader>
               
-              <div className="space-y-6">
+              <div className="overflow-y-auto flex-1 px-6 py-6 space-y-6">
                 {/* Large Image Carousel */}
                 {quickViewProduct.images && quickViewProduct.images.length > 0 ? (
-                  <div className="relative">
-                    <div className="relative h-[500px] rounded-2xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
+                  <div className="relative animate-fade-in">
+                    <div className="relative h-[400px] md:h-[600px] rounded-2xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5 shadow-luxury group">
                       <img 
                         src={quickViewProduct.images[currentImageIndex] || quickViewProduct.image} 
                         alt={quickViewProduct.name}
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-contain transition-all duration-500 group-hover:scale-105"
+                        key={currentImageIndex}
                       />
                       {quickViewProduct.badge && (
-                        <Badge className="absolute top-4 left-4 z-10 text-base px-4 py-2" variant={quickViewProduct.badge === "Best Seller" ? "default" : "secondary"}>
+                        <Badge className="absolute top-4 left-4 z-10 text-base px-4 py-2 animate-scale-in shadow-lg" variant={quickViewProduct.badge === "Best Seller" ? "default" : "secondary"}>
                           {quickViewProduct.badge}
                         </Badge>
                       )}
+                      
+                      {/* Image Counter */}
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium">
+                        {currentImageIndex + 1} / {quickViewProduct.images.length}
+                      </div>
                       
                       {/* Navigation Arrows */}
                       {quickViewProduct.images.length > 1 && (
@@ -737,53 +743,59 @@ const Products = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-lg h-12 w-12 rounded-full"
+                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-lg h-14 w-14 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
                             onClick={() => setCurrentImageIndex((prev) => 
                               prev === 0 ? quickViewProduct.images!.length - 1 : prev - 1
                             )}
                           >
-                            <ChevronLeft className="w-6 h-6" />
+                            <ChevronLeft className="w-7 h-7" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-lg h-12 w-12 rounded-full"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white shadow-lg h-14 w-14 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
                             onClick={() => setCurrentImageIndex((prev) => 
                               prev === quickViewProduct.images!.length - 1 ? 0 : prev + 1
                             )}
                           >
-                            <ChevronRight className="w-6 h-6" />
+                            <ChevronRight className="w-7 h-7" />
                           </Button>
                         </>
                       )}
+                      
+                      {/* Gradient Overlay for depth */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
                     </div>
 
                     {/* Thumbnail Navigation */}
                     {quickViewProduct.images.length > 1 && (
-                      <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
+                      <div className="mt-6 grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
                         {quickViewProduct.images.map((image, index) => (
                           <button
                             key={index}
                             onClick={() => setCurrentImageIndex(index)}
                             className={cn(
-                              "w-24 h-24 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 hover:scale-105",
+                              "aspect-square rounded-xl overflow-hidden border-2 transition-all duration-300 hover:scale-110 hover:shadow-lg group relative",
                               currentImageIndex === index 
-                                ? "border-medical-blue ring-4 ring-medical-blue/30 scale-105" 
+                                ? "border-medical-blue ring-4 ring-medical-blue/30 scale-105 shadow-glow" 
                                 : "border-transparent hover:border-medical-blue/50"
                             )}
                           >
                             <img 
                               src={image} 
                               alt={`${quickViewProduct.name} ${index + 1}`}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover group-hover:brightness-110 transition-all duration-300"
                             />
+                            {currentImageIndex === index && (
+                              <div className="absolute inset-0 bg-medical-blue/20 backdrop-blur-[1px]" />
+                            )}
                           </button>
                         ))}
                       </div>
                     )}
                   </div>
                 ) : (
-                  <div className="relative h-[500px] rounded-2xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
+                  <div className="relative h-[400px] md:h-[600px] rounded-2xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5 shadow-luxury animate-fade-in">
                     <img 
                       src={quickViewProduct.image} 
                       alt={quickViewProduct.name}
@@ -793,10 +805,10 @@ const Products = () => {
                 )}
 
                 {/* Quick Info & CTA */}
-                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-xl">
-                  <div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-xl border border-medical-blue/10 animate-fade-in">
+                  <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="text-3xl font-bold text-luxury-navy">
+                      <span className="text-2xl md:text-3xl font-bold text-luxury-navy">
                         AED {quickViewProduct.price}
                       </span>
                       {quickViewProduct.original_price && (
@@ -826,7 +838,7 @@ const Products = () => {
                   </div>
                   <Button 
                     size="lg"
-                    className="gap-2 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300"
+                    className="w-full sm:w-auto gap-2 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]"
                     onClick={() => {
                       setQuickViewProduct(null);
                       openProductDialog(quickViewProduct);
@@ -837,7 +849,7 @@ const Products = () => {
                   </Button>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>

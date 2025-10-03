@@ -289,44 +289,47 @@ const MyOrdersContent: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Shipping Address and Button Section */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                      <div className="lg:col-span-2 bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="p-2 bg-medical-teal/10 rounded-lg">
-                            <MapPin className="w-4 h-4 text-medical-teal" />
-                          </div>
-                          <span className="font-semibold text-sm text-luxury-navy">Shipping Address</span>
+                    {/* Shipping Address Section */}
+                    <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2 bg-medical-teal/10 rounded-lg">
+                          <MapPin className="w-4 h-4 text-medical-teal" />
                         </div>
-                        {order.shipping_address ? (
-                          <div className="text-sm text-muted-foreground leading-relaxed">
-                            {order.shipping_address.line1}
-                            {order.shipping_address.line2 && `, ${order.shipping_address.line2}`}
-                            <br />
-                            {order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.postal_code}
-                            <br />
-                            {order.shipping_address.country}
-                          </div>
-                        ) : (
-                          <p className="text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
-                            Shipping address not provided
-                          </p>
-                        )}
+                        <span className="font-semibold text-sm text-luxury-navy">Shipping Address</span>
                       </div>
-                      
-                      {/* Button Column */}
-                      <div className="flex flex-col gap-3">
-                        <Button
-                          onClick={() => setSelectedOrder(order)}
-                          className="w-full bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-medium h-12"
-                        >
-                          <Eye className="w-4 h-4 mr-2" />
-                          View Details
-                        </Button>
-                        <div className="text-xs text-muted-foreground text-center">
-                          Updated: {new Date(order.updated_at).toLocaleDateString()}
+                      {order.shipping_address ? (
+                        <div className="text-sm text-muted-foreground leading-relaxed">
+                          {order.shipping_address.line1}
+                          {order.shipping_address.line2 && `, ${order.shipping_address.line2}`}
+                          <br />
+                          {order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.postal_code}
+                          <br />
+                          {order.shipping_address.country}
                         </div>
+                      ) : (
+                        <p className="text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
+                          Shipping address not provided
+                        </p>
+                      )}
+                    </div>
+                    
+                    {/* Action Buttons Section */}
+                    <div className="flex flex-col sm:flex-row gap-3 items-stretch">
+                      <Button
+                        onClick={() => setSelectedOrder(order)}
+                        className="flex-1 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-medium h-12"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        View Details
+                      </Button>
+                      <div className="hidden lg:flex items-center justify-center px-4 text-xs text-muted-foreground bg-gradient-to-br from-white/60 to-white/40 rounded-xl border border-medical-blue/10">
+                        Updated: {new Date(order.updated_at).toLocaleDateString()}
                       </div>
+                    </div>
+                    
+                    {/* Mobile Updated Date */}
+                    <div className="lg:hidden text-xs text-muted-foreground text-center bg-gradient-to-br from-white/60 to-white/40 rounded-xl p-3 border border-medical-blue/10">
+                      Last updated: {new Date(order.updated_at).toLocaleDateString()}
                     </div>
                   </div>
                 </CardContent>
