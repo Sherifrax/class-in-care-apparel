@@ -27,7 +27,7 @@ export const ColorSelector = ({
   });
 
   return (
-    <div className={cn("flex flex-wrap gap-3", className)}>
+    <div className={cn("grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4", className)}>
       {sortedColors.map((color) => {
         const isSelected = multiSelect
           ? selectedColors.includes(color)
@@ -40,6 +40,7 @@ export const ColorSelector = ({
             size="lg"
             selected={isSelected}
             onClick={() => onColorSelect(color)}
+            showLabel={true}
           />
         );
       })}

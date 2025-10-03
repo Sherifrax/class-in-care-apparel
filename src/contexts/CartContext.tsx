@@ -107,9 +107,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
+      // Normalize color values to null if not provided
+      const normalizedColor = color || null;
+      
       // Check if item already exists (matching size and color)
       const existingItem = items.find(
-        item => item.product_id === productId && item.size === size && item.color === color
+        item => item.product_id === productId && item.size === size && (item.color || null) === normalizedColor
       );
 
       if (existingItem) {
@@ -130,7 +133,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             user_id: user.id,
             product_id: productId,
             size,
-            color: color || null,
+            color: normalizedColor,
             quantity,
           });
 

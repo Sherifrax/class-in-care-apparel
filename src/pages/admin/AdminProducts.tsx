@@ -407,11 +407,6 @@ const AdminProductsContent: React.FC = () => {
                       multiSelect
                       className="mb-2"
                     />
-                    {formData.colors && (
-                      <div className="text-xs text-muted-foreground mt-2">
-                        Selected: {formData.colors}
-                      </div>
-                    )}
                   </div>
 
                   <div>

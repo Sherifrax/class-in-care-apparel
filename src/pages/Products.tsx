@@ -47,7 +47,7 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>('All Collections');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('');
-  const [selectedColor, setSelectedColor] = useState<string>('');
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedFilters, setSelectedFilters] = useState({
     sizes: [] as string[],
@@ -253,7 +253,7 @@ const Products = () => {
     await addToCart(selectedProduct.id, selectedSize, selectedColor || undefined, quantity);
     setSelectedProduct(null);
     setSelectedSize('');
-    setSelectedColor('');
+    setSelectedColor(null);
     setQuantity(1);
   };
   const handleToggleFavorite = async (productId: string, e: React.MouseEvent) => {
@@ -268,7 +268,7 @@ const Products = () => {
   const openProductDialog = (product: Product) => {
     setSelectedProduct(product);
     setSelectedSize(product.sizes[0] || '');
-    setSelectedColor(product.colors[0] || '');
+    setSelectedColor(product.colors.length > 0 ? product.colors[0] : null);
     setQuantity(1);
   };
   if (productsLoading || categoriesLoading) {

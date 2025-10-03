@@ -33,7 +33,7 @@ export const ColorSwatch = ({
   return (
     <div
       className={cn(
-        "flex items-center gap-2",
+        "flex flex-col items-center gap-2 group",
         onClick && "cursor-pointer",
         className
       )}
@@ -45,16 +45,22 @@ export const ColorSwatch = ({
       <div
         className={cn(
           sizeClasses[size],
-          "rounded-full border-2 transition-all duration-200",
+          "rounded-full border-2 transition-all duration-300",
           isLightColor ? "border-border" : "border-transparent",
-          selected && "ring-2 ring-primary ring-offset-2",
-          onClick && "hover:scale-110"
+          selected && "ring-2 ring-medical-blue ring-offset-2 shadow-glow",
+          onClick && "hover:scale-110 hover:shadow-lg"
         )}
         style={{ backgroundColor: colorInfo.hex }}
         title={colorInfo.displayName}
       />
-      {showLabel && (
-        <span className="text-sm font-medium">{colorInfo.displayName}</span>
+      {(showLabel || selected || onClick) && (
+        <span className={cn(
+          "text-xs font-medium transition-all duration-200",
+          selected ? "text-medical-blue font-semibold" : "text-muted-foreground",
+          onClick && "group-hover:text-medical-blue"
+        )}>
+          {colorInfo.displayName}
+        </span>
       )}
     </div>
   );
