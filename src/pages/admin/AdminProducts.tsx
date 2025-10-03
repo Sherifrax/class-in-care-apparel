@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Edit, Trash2, Upload, Image as ImageIcon, Package, Star, DollarSign, BarChart3, TrendingUp } from 'lucide-react';
+import { Plus, Edit, Trash2, Upload, Image as ImageIcon, Package, Star, DollarSign, BarChart3, TrendingUp, RefreshCw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminRoute } from '@/components/admin/AdminRoute';
 import { AdminLayout } from '@/components/admin/AdminLayout';
@@ -316,220 +316,268 @@ const AdminProductsContent: React.FC = () => {
             </Button>
           </DialogTrigger>
 
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto glass border-medical-blue/20 bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-xl">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
-                {editingProduct ? 'Edit Product' : 'Add New Product'}
-              </DialogTitle>
-            </DialogHeader>
-            
-            <form onSubmit={handleSubmit} className="space-y-6 p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="name" className="text-sm font-semibold text-luxury-navy">Product Name</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="mt-1 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
-                      required
-                    />
-                  </div>
+          <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden glass border-medical-blue/20 bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-xl">
+            <div className="flex flex-col h-full max-h-[95vh]">
+              <DialogHeader className="flex-shrink-0 px-6 pt-6 pb-0">
+                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+                  {editingProduct ? 'Edit Product' : 'Add New Product'}
+                </DialogTitle>
+              </DialogHeader>
+              
+              <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+                <div className="overflow-y-auto flex-1 px-6 py-6">
+                  {/* Images Section - Full Width at Top */}
+                  <div className="space-y-4 mb-8 p-6 bg-gradient-to-br from-medical-blue/5 to-medical-teal/5 rounded-2xl border border-medical-blue/20">
+                    <h3 className="text-lg font-semibold text-luxury-navy flex items-center gap-2">
+                      <ImageIcon className="w-5 h-5 text-medical-blue" />
+                      Product Images
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div>
+                        <Label htmlFor="images" className="text-sm font-semibold text-luxury-navy">Upload New Images</Label>
+                        <Input
+                          id="images"
+                          type="file"
+                          multiple
+                          onChange={(e) => {
+                            if (e.target.files) {
+                              setFormData({ ...formData, images: Array.from(e.target.files) });
+                            }
+                          }}
+                          className="mt-2 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                        />
+                        <p className="text-xs text-muted-foreground mt-2">Upload multiple images for your product gallery</p>
+                      </div>
 
-                  <div>
-                    <Label htmlFor="description" className="text-sm font-semibold text-luxury-navy">Description</Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      className="mt-1 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl min-h-[100px]"
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="price" className="text-sm font-semibold text-luxury-navy">Price (AED)</Label>
-                      <Input
-                        id="price"
-                        type="number"
-                        step="0.01"
-                        value={formData.price}
-                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        className="mt-1 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="original_price" className="text-sm font-semibold text-luxury-navy">Original Price (AED)</Label>
-                      <Input
-                        id="original_price"
-                        type="number"
-                        step="0.01"
-                        value={formData.original_price}
-                        onChange={(e) => setFormData({ ...formData, original_price: e.target.value })}
-                        className="mt-1 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="sizes" className="text-sm font-semibold text-luxury-navy">Sizes (comma-separated)</Label>
-                    <Input
-                      id="sizes"
-                      value={formData.sizes}
-                      onChange={(e) => setFormData({ ...formData, sizes: e.target.value })}
-                      placeholder="S, M, L, XL"
-                      className="mt-1 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="colors" className="text-sm font-semibold text-luxury-navy">
-                      Colors
-                    </Label>
-                    <p className="text-xs text-muted-foreground mb-2">Select available colors for this product</p>
-                    <ColorChipSelector
-                      selectedColors={formData.colors.split(',').map(c => c.trim()).filter(c => c)}
-                      onColorSelect={(color) => {
-                        const currentColors = formData.colors.split(',').map(c => c.trim()).filter(c => c);
-                        const newColors = currentColors.includes(color)
-                          ? currentColors.filter(c => c !== color)
-                          : [...currentColors, color];
-                        setFormData({ ...formData, colors: newColors.join(', ') });
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="features" className="text-sm font-semibold text-luxury-navy">Features (comma-separated)</Label>
-                    <Input
-                      id="features"
-                      value={formData.features}
-                      onChange={(e) => setFormData({ ...formData, features: e.target.value })}
-                      placeholder="Antimicrobial, Moisture-wicking"
-                      className="mt-1 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="badge" className="text-sm font-semibold text-luxury-navy">Badge (optional)</Label>
-                    <Input
-                      id="badge"
-                      value={formData.badge}
-                      onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
-                      placeholder="New, Sale, Featured"
-                      className="mt-1 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="stock_quantity" className="text-sm font-semibold text-luxury-navy">Stock Quantity</Label>
-                    <Input
-                      id="stock_quantity"
-                      type="number"
-                      value={String(formData.stock_quantity)}
-                      onChange={(e) => setFormData({ ...formData, stock_quantity: Number(e.target.value) })}
-                      className="mt-1 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="low_stock_threshold" className="text-sm font-semibold text-luxury-navy">Low Stock Threshold</Label>
-                    <Input
-                      id="low_stock_threshold"
-                      type="number"
-                      value={String(formData.low_stock_threshold)}
-                      onChange={(e) => setFormData({ ...formData, low_stock_threshold: Number(e.target.value) })}
-                      className="mt-1 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
-                      required
-                    />
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      id="track_stock"
-                      type="checkbox"
-                      checked={formData.track_stock}
-                      onChange={(e) => setFormData({ ...formData, track_stock: e.target.checked })}
-                      className="h-5 w-5 rounded-xl border-2 border-medical-blue/20 focus:border-medical-blue focus:ring-0"
-                    />
-                    <Label htmlFor="track_stock" className="text-sm font-semibold text-luxury-navy">Track Stock</Label>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="images" className="text-sm font-semibold text-luxury-navy">Images</Label>
-                    <Input
-                      id="images"
-                      type="file"
-                      multiple
-                      onChange={(e) => {
-                        if (e.target.files) {
-                          setFormData({ ...formData, images: Array.from(e.target.files) });
-                        }
-                      }}
-                      className="mt-1"
-                    />
-                  </div>
-
-                  {editingProduct && editingProduct.images && editingProduct.images.length > 0 && (
-                    <div className="space-y-2">
-                      <Label className="text-sm font-semibold text-luxury-navy">Existing Images</Label>
-                      <div className="flex flex-wrap gap-2">
-                        {editingProduct.images.map((imageUrl, index) => (
-                          <div key={index} className="relative">
-                            <img
-                              src={imageUrl}
-                              alt={`Product Image ${index + 1}`}
-                              className="w-24 h-24 object-cover rounded-xl"
-                            />
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => {
-                                setImagesToRemove([...imagesToRemove, imageUrl]);
-                              }}
-                              className="absolute top-1 right-1 bg-white/80 hover:bg-white rounded-full shadow-md"
-                            >
-                              <Trash2 className="w-4 h-4 text-red-500" />
-                            </Button>
+                      {editingProduct && editingProduct.images && editingProduct.images.length > 0 && (
+                        <div className="space-y-2">
+                          <Label className="text-sm font-semibold text-luxury-navy">Current Images ({editingProduct.images.length})</Label>
+                          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-48 overflow-y-auto p-2 bg-white/50 rounded-xl">
+                            {editingProduct.images.map((imageUrl, index) => (
+                              <div key={index} className="relative group">
+                                <img
+                                  src={imageUrl}
+                                  alt={`Product ${index + 1}`}
+                                  className="w-full h-24 object-cover rounded-lg border-2 border-medical-blue/10 group-hover:border-medical-blue/30 transition-all"
+                                />
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => setImagesToRemove([...imagesToRemove, imageUrl])}
+                                  className="absolute -top-2 -right-2 h-6 w-6 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Product Details - Two Column Layout */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Left Column - Basic Info */}
+                    <div className="space-y-6">
+                      <div className="p-6 bg-white/50 rounded-2xl border border-medical-blue/10 space-y-4">
+                        <h3 className="text-lg font-semibold text-luxury-navy flex items-center gap-2">
+                          <Package className="w-5 h-5 text-medical-blue" />
+                          Basic Information
+                        </h3>
+                        
+                        <div>
+                          <Label htmlFor="name" className="text-sm font-semibold text-luxury-navy">Product Name</Label>
+                          <Input
+                            id="name"
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            className="mt-2 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="description" className="text-sm font-semibold text-luxury-navy">Description</Label>
+                          <Textarea
+                            id="description"
+                            value={formData.description}
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            className="mt-2 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl min-h-[120px]"
+                            required
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="price" className="text-sm font-semibold text-luxury-navy flex items-center gap-1">
+                              <DollarSign className="w-4 h-4" />
+                              Price (AED)
+                            </Label>
+                            <Input
+                              id="price"
+                              type="number"
+                              step="0.01"
+                              value={formData.price}
+                              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                              className="mt-2 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="original_price" className="text-sm font-semibold text-luxury-navy">Original Price</Label>
+                            <Input
+                              id="original_price"
+                              type="number"
+                              step="0.01"
+                              value={formData.original_price}
+                              onChange={(e) => setFormData({ ...formData, original_price: e.target.value })}
+                              className="mt-2 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                              placeholder="Optional"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="badge" className="text-sm font-semibold text-luxury-navy">Badge</Label>
+                          <Input
+                            id="badge"
+                            value={formData.badge}
+                            onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
+                            placeholder="e.g., New, Sale, Featured"
+                            className="mt-2 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                          />
+                        </div>
                       </div>
                     </div>
-                  )}
+
+                    {/* Right Column - Variants & Stock */}
+                    <div className="space-y-6">
+                      <div className="p-6 bg-white/50 rounded-2xl border border-medical-blue/10 space-y-4">
+                        <h3 className="text-lg font-semibold text-luxury-navy">Product Variants</h3>
+                        
+                        <div>
+                          <Label htmlFor="sizes" className="text-sm font-semibold text-luxury-navy">Available Sizes</Label>
+                          <Input
+                            id="sizes"
+                            value={formData.sizes}
+                            onChange={(e) => setFormData({ ...formData, sizes: e.target.value })}
+                            placeholder="S, M, L, XL, XXL"
+                            className="mt-2 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">Separate sizes with commas</p>
+                        </div>
+
+                        <div>
+                          <Label className="text-sm font-semibold text-luxury-navy">Available Colors</Label>
+                          <p className="text-xs text-muted-foreground mb-3">Select colors for this product</p>
+                          <ColorChipSelector
+                            selectedColors={formData.colors.split(',').map(c => c.trim()).filter(c => c)}
+                            onColorSelect={(color) => {
+                              const currentColors = formData.colors.split(',').map(c => c.trim()).filter(c => c);
+                              const newColors = currentColors.includes(color)
+                                ? currentColors.filter(c => c !== color)
+                                : [...currentColors, color];
+                              setFormData({ ...formData, colors: newColors.join(', ') });
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="features" className="text-sm font-semibold text-luxury-navy">Key Features</Label>
+                          <Input
+                            id="features"
+                            value={formData.features}
+                            onChange={(e) => setFormData({ ...formData, features: e.target.value })}
+                            placeholder="Antimicrobial, Moisture-wicking, Breathable"
+                            className="mt-2 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">Separate features with commas</p>
+                        </div>
+                      </div>
+
+                      <div className="p-6 bg-white/50 rounded-2xl border border-medical-blue/10 space-y-4">
+                        <h3 className="text-lg font-semibold text-luxury-navy flex items-center gap-2">
+                          <BarChart3 className="w-5 h-5 text-medical-blue" />
+                          Inventory Management
+                        </h3>
+
+                        <div className="flex items-center space-x-3 p-3 bg-medical-blue/5 rounded-xl">
+                          <Input
+                            id="track_stock"
+                            type="checkbox"
+                            checked={formData.track_stock}
+                            onChange={(e) => setFormData({ ...formData, track_stock: e.target.checked })}
+                            className="h-5 w-5 rounded border-2 border-medical-blue/30 focus:ring-medical-blue"
+                          />
+                          <Label htmlFor="track_stock" className="text-sm font-semibold text-luxury-navy cursor-pointer">
+                            Enable Stock Tracking
+                          </Label>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="stock_quantity" className="text-sm font-semibold text-luxury-navy">Stock Quantity</Label>
+                            <Input
+                              id="stock_quantity"
+                              type="number"
+                              value={String(formData.stock_quantity)}
+                              onChange={(e) => setFormData({ ...formData, stock_quantity: Number(e.target.value) })}
+                              className="mt-2 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                              required
+                            />
+                          </div>
+
+                          <div>
+                            <Label htmlFor="low_stock_threshold" className="text-sm font-semibold text-luxury-navy">Low Stock Alert</Label>
+                            <Input
+                              id="low_stock_threshold"
+                              type="number"
+                              value={String(formData.low_stock_threshold)}
+                              onChange={(e) => setFormData({ ...formData, low_stock_threshold: Number(e.target.value) })}
+                              className="mt-2 border-2 border-medical-blue/20 focus:border-medical-blue rounded-xl"
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex gap-4 pt-6">
-                <Button 
-                  type="submit" 
-                  disabled={uploading}
-                  className="flex-1 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]"
-                >
-                  {uploading ? 'Processing...' : (editingProduct ? 'Update Product' : 'Create Product')}
-                </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => setIsDialogOpen(false)}
-                  className="px-8 border-2 border-medical-blue/20 hover:border-medical-blue"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
+                
+                {/* Fixed Footer with Action Buttons */}
+                <div className="flex-shrink-0 border-t border-medical-blue/20 bg-white/90 backdrop-blur-sm px-6 py-4">
+                  <div className="flex gap-4">
+                    <Button 
+                      type="submit" 
+                      disabled={uploading}
+                      className="flex-1 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] h-11"
+                    >
+                      {uploading ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          {editingProduct ? 'Update Product' : 'Create Product'}
+                        </>
+                      )}
+                    </Button>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => setIsDialogOpen(false)}
+                      className="px-8 border-2 border-medical-blue/20 hover:border-medical-blue h-11"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

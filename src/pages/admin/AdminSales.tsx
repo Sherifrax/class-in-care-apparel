@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis } from '@/components/ui/pagination';
 import { Calendar, DollarSign, Package, Search, Filter, Download, Eye, TrendingUp, ShoppingCart, Users, BarChart3, RefreshCw, CheckCircle, AlertCircle, MapPin } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminRoute } from '@/components/admin/AdminRoute';
@@ -57,6 +58,8 @@ const AdminSalesContent: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const {
     toast
   } = useToast();
@@ -152,6 +155,7 @@ const AdminSalesContent: React.FC = () => {
       filtered = filtered.filter(order => order.status === statusFilter);
     }
     setFilteredOrders(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
   }, [orders, searchTerm, statusFilter]);
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     setUpdatingStatus(orderId);
@@ -356,63 +360,126 @@ const AdminSalesContent: React.FC = () => {
                 </p>
               </div>
             </CardContent>
-          </Card> : filteredOrders.map(order => <Card key={order.id} className="glass border-medical-blue/20 bg-gradient-to-r from-white/90 to-white/80 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01]">
-              <CardContent className="p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                  <div className="flex-1 space-y-3">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="font-bold text-lg text-luxury-navy">Order #{order.id.slice(0, 8)}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {order.customer_email} • {new Date(order.created_at).toLocaleDateString()}
-                        </p>
+          </Card> : (
+            <>
+              {filteredOrders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(order => <Card key={order.id} className="glass border-medical-blue/20 bg-gradient-to-r from-white/90 to-white/80 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01]">
+                <CardContent className="p-6">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className="flex-1 space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h3 className="font-bold text-lg text-luxury-navy">Order #{order.id.slice(0, 8)}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {order.customer_email} • {new Date(order.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        {getStatusBadge(order.status)}
                       </div>
-                      {getStatusBadge(order.status)}
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <span className="font-medium text-muted-foreground">Items:</span>
+                          <span className="ml-2 text-foreground">{order.order_items?.length || 0}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Subtotal:</span>
+                          <span className="ml-2 text-foreground">AED {order.subtotal.toFixed(2)}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-muted-foreground">Total:</span>
+                          <span className="ml-2 font-bold text-luxury-navy text-lg">AED {order.total_amount.toFixed(2)}</span>
+                        </div>
+                      </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                      <div>
-                        <span className="font-medium text-muted-foreground">Items:</span>
-                        <span className="ml-2 text-foreground">{order.order_items?.length || 0}</span>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <div className="flex items-center gap-2">
+                        <Select value={order.status} onValueChange={newStatus => updateOrderStatus(order.id, newStatus)} disabled={updatingStatus === order.id}>
+                          <SelectTrigger className="w-[140px] h-9 bg-white/70 border-medical-blue/20 hover:border-medical-blue/40 text-sm">
+                            {updatingStatus === order.id ? <div className="flex items-center gap-2">
+                                <RefreshCw className="w-3 h-3 animate-spin" />
+                                <span className="text-xs">Updating...</span>
+                              </div> : <SelectValue />}
+                          </SelectTrigger>
+                          <SelectContent className="bg-white/95 backdrop-blur-md">
+                            <SelectItem value="pending" className="hover:bg-yellow-50">🟡 Pending</SelectItem>
+                            <SelectItem value="processing" className="hover:bg-blue-50">🔵 Processing</SelectItem>
+                            <SelectItem value="shipped" className="hover:bg-purple-50">🟣 Shipped</SelectItem>
+                            <SelectItem value="delivered" className="hover:bg-green-50">🟢 Delivered</SelectItem>
+                            <SelectItem value="cancelled" className="hover:bg-red-50">🔴 Cancelled</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
-                      <div>
-                        <span className="font-medium text-muted-foreground">Subtotal:</span>
-                        <span className="ml-2 text-foreground">AED {order.subtotal.toFixed(2)}</span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-muted-foreground">Total:</span>
-                        <span className="ml-2 font-bold text-luxury-navy text-lg">AED {order.total_amount.toFixed(2)}</span>
-                      </div>
+                      
+                      <Button variant="outline" size="sm" onClick={() => setSelectedOrder(order)} className="border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5">
+                        <Eye className="w-4 h-4 mr-1" />
+                        View Details
+                      </Button>
                     </div>
                   </div>
-                  
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="flex items-center gap-2">
-                      <Select value={order.status} onValueChange={newStatus => updateOrderStatus(order.id, newStatus)} disabled={updatingStatus === order.id}>
-                        <SelectTrigger className="w-[140px] h-9 bg-white/70 border-medical-blue/20 hover:border-medical-blue/40 text-sm">
-                          {updatingStatus === order.id ? <div className="flex items-center gap-2">
-                              <RefreshCw className="w-3 h-3 animate-spin" />
-                              <span className="text-xs">Updating...</span>
-                            </div> : <SelectValue />}
-                        </SelectTrigger>
-                        <SelectContent className="bg-white/95 backdrop-blur-md">
-                          <SelectItem value="pending" className="hover:bg-yellow-50">🟡 Pending</SelectItem>
-                          <SelectItem value="processing" className="hover:bg-blue-50">🔵 Processing</SelectItem>
-                          <SelectItem value="shipped" className="hover:bg-purple-50">🟣 Shipped</SelectItem>
-                          <SelectItem value="delivered" className="hover:bg-green-50">🟢 Delivered</SelectItem>
-                          <SelectItem value="cancelled" className="hover:bg-red-50">🔴 Cancelled</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                </CardContent>
+              </Card>)}
+              
+              {/* Pagination */}
+              {filteredOrders.length > itemsPerPage && (
+                <Card className="glass border-medical-blue/20 bg-white/90 backdrop-blur-xl mt-6">
+                  <CardContent className="p-6">
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious 
+                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                            className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                          />
+                        </PaginationItem>
+                        
+                        {Array.from({ length: Math.ceil(filteredOrders.length / itemsPerPage) }, (_, i) => i + 1).map((page) => {
+                          const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+                          
+                          // Show first page, last page, current page, and pages around current
+                          if (
+                            page === 1 ||
+                            page === totalPages ||
+                            (page >= currentPage - 1 && page <= currentPage + 1)
+                          ) {
+                            return (
+                              <PaginationItem key={page}>
+                                <PaginationLink
+                                  onClick={() => setCurrentPage(page)}
+                                  isActive={currentPage === page}
+                                  className="cursor-pointer"
+                                >
+                                  {page}
+                                </PaginationLink>
+                              </PaginationItem>
+                            );
+                          } else if (page === currentPage - 2 || page === currentPage + 2) {
+                            return (
+                              <PaginationItem key={page}>
+                                <PaginationEllipsis />
+                              </PaginationItem>
+                            );
+                          }
+                          return null;
+                        })}
+                        
+                        <PaginationItem>
+                          <PaginationNext 
+                            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredOrders.length / itemsPerPage), prev + 1))}
+                            className={currentPage === Math.ceil(filteredOrders.length / itemsPerPage) ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
                     
-                    <Button variant="outline" size="sm" onClick={() => setSelectedOrder(order)} className="border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5">
-                      <Eye className="w-4 h-4 mr-1" />
-                      View Details
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>)}
+                    <div className="text-center mt-4 text-sm text-muted-foreground">
+                      Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredOrders.length)} of {filteredOrders.length} orders
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          )}
       </div>
 
       {/* Order Details Modal */}

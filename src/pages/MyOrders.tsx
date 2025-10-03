@@ -316,8 +316,9 @@ const MyOrdersContent: React.FC = () => {
                     {/* Action Buttons Section */}
                     <div className="flex flex-col sm:flex-row gap-3 items-stretch">
                       <Button
+                        size="sm"
                         onClick={() => setSelectedOrder(order)}
-                        className="flex-1 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-medium h-12"
+                        className="flex-1 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-medium"
                       >
                         <Eye className="w-4 h-4 mr-2" />
                         View Details
