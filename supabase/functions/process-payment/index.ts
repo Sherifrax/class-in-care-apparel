@@ -63,8 +63,39 @@ serve(async (req) => {
       });
     }
 
-    // Parse cart items from metadata
-    const cartItems = JSON.parse(session.metadata?.cart_items || '[]');
+    // Parse cart items from compact metadata format: "prod_id:size:color:qty,prod_id:size:color:qty"
+    const cartItemsCompact = session.metadata?.cart_items || '';
+    const itemEntries = cartItemsCompact.split(',').filter(Boolean);
+    
+    console.log('Fetching product details from database for items:', itemEntries);
+    
+    // Fetch full product details from database
+    const cartItems = [];
+    for (const entry of itemEntries) {
+      const [productId, size, color, quantity] = entry.split(':');
+      
+      // Fetch product details
+      const { data: product, error: productError } = await supabaseAdmin
+        .from('products')
+        .select('id, name, price')
+        .eq('id', productId)
+        .single();
+      
+      if (productError || !product) {
+        console.error('Error fetching product:', productError);
+        throw new Error(`Product not found: ${productId}`);
+      }
+      
+      cartItems.push({
+        product_id: productId,
+        name: product.name,
+        size: size,
+        color: color || null,
+        quantity: parseInt(quantity),
+        price: product.price,
+        unit_price: parseFloat(product.price.replace(/[^0-9.]/g, '')) || 0,
+      });
+    }
     
     // Validate stock availability before processing order
     console.log('Validating stock for cart items:', cartItems);

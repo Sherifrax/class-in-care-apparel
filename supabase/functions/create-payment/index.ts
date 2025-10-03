@@ -137,17 +137,17 @@ serve(async (req) => {
       cancel_url: `${req.headers.get("origin")}/checkout?canceled=true`,
       
       // Enhanced metadata for comprehensive order tracking
+      // Using compact format to stay within 500 char limit: "prod_id:size:color:qty,prod_id:size:color:qty"
       metadata: {
         user_id: user?.id || 'guest',
-        cart_items: JSON.stringify(cart_items.map((item: any) => ({
-          product_id: item.product_id || item.product?.id || item.id,
-          name: item.product?.name || item.name,
-          size: item.size,
-          color: item.color || null,
-          quantity: item.quantity,
-          price: item.product?.price || item.price,
-          unit_price: parseFloat((item.product?.price || item.price || '').replace(/[^0-9.]/g, '')) || 0,
-        }))),
+        cart_items: cart_items.map((item: any) => {
+          const productId = item.product_id || item.product?.id || item.id;
+          const size = item.size || '';
+          const color = item.color || '';
+          const quantity = item.quantity;
+          return `${productId}:${size}:${color}:${quantity}`;
+        }).join(','),
+        item_count: cart_items.length.toString(),
         subtotal: subtotal.toString(),
         delivery_cost: deliveryCost.toString(),
         total_amount: (subtotal + deliveryCost).toString(),
