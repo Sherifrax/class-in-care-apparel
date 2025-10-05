@@ -80,33 +80,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (error) {
-      // Handle specific error cases with better messages
-      let errorMessage = error.message;
-      
-      if (error.message.includes('Signups not allowed')) {
-        errorMessage = "Account creation is temporarily disabled. Please contact support.";
-      } else if (error.message.includes('already registered') || error.message.includes('already exists')) {
-        errorMessage = "This email is already registered. Please sign in instead.";
-      } else if (error.message.includes('rate limit')) {
-        errorMessage = "Too many signup attempts. Please try again in a few minutes.";
-      }
-      
       toast({
         title: "Sign Up Failed",
-        description: errorMessage,
+        description: error.message,
         variant: "destructive",
       });
       throw error;
-    }
-
-    // If user already exists but no error, show appropriate message
-    if (data.user && data.user.identities && data.user.identities.length === 0) {
-      toast({
-        title: "Account Already Exists",
-        description: "This email is already registered. Please sign in instead.",
-        variant: "destructive",
-      });
-      throw new Error("User already exists");
     }
 
     if (data.user && !data.session) {
