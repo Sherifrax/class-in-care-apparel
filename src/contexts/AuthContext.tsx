@@ -131,8 +131,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const resetPassword = async (email: string) => {
+    // Use custom domain for production, fallback to current origin for development
+    const redirectUrl = window.location.hostname.includes('lovableproject.com') 
+      ? `${window.location.origin}/reset-password`
+      : 'https://auramedical.store/reset-password';
+    
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: redirectUrl,
     });
 
     if (error) {
