@@ -18,14 +18,28 @@ const ResetPassword = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Ensure the recovery link establishes a session (supports both code and token_hash flows)
+    // Ensure the recovery link establishes a session (supports code, token_hash, and hash-based flows)
     const url = new URL(window.location.href);
-    const code = url.searchParams.get("code");
-    const tokenHash = url.searchParams.get("token_hash");
-    const type = url.searchParams.get("type");
+    const searchParams = url.searchParams;
+
+    // Also parse hash params (Supabase often sends recovery params in the URL hash)
+    const hashString = window.location.hash.startsWith("#") ? window.location.hash.slice(1) : window.location.hash;
+    const hashParams = new URLSearchParams(hashString);
+
+    const code = searchParams.get("code") || hashParams.get("code");
+    const tokenHash = searchParams.get("token_hash") || hashParams.get("token_hash");
+    const type = searchParams.get("type") || hashParams.get("type");
+    const accessToken = hashParams.get("access_token");
+    const refreshToken = hashParams.get("refresh_token");
+    const errorParam = hashParams.get("error");
+    const errorDescription = hashParams.get("error_description");
 
     const handleRecoverySession = async () => {
       try {
+        if (errorParam) {
+          throw new Error(errorDescription || errorParam);
+        }
+
         if (code) {
           const { error } = await supabase.auth.exchangeCodeForSession(code);
           if (error) throw error;
@@ -37,6 +51,18 @@ const ResetPassword = () => {
           });
           if (error) throw error;
           console.log("Verified recovery token and set session");
+        } else if (accessToken && refreshToken) {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+          if (error) throw error;
+          console.log("Set session from hash access and refresh tokens");
+        }
+
+        // Clean the URL to remove sensitive tokens
+        if (window.location.hash) {
+          window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
         }
       } catch (err) {
         console.error("Password recovery link handling failed:", err);
