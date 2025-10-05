@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { useEnhancedToast } from '@/hooks/useEnhancedToast';
+import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -15,14 +15,18 @@ const ResetPassword: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const toast = useEnhancedToast();
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check if we have a valid session from the reset link
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        toast.error('Invalid or expired reset link', 'Please request a new password reset.');
+        toast({
+          variant: "destructive",
+          title: "Invalid or expired reset link",
+          description: "Please request a new password reset."
+        });
         navigate('/');
       }
     };
@@ -33,12 +37,20 @@ const ResetPassword: React.FC = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match', 'Please make sure both passwords are the same.');
+      toast({
+        variant: "destructive",
+        title: "Passwords do not match",
+        description: "Please make sure both passwords are the same."
+      });
       return;
     }
 
     if (password.length < 6) {
-      toast.error('Password too short', 'Password must be at least 6 characters long.');
+      toast({
+        variant: "destructive",
+        title: "Password too short",
+        description: "Password must be at least 6 characters long."
+      });
       return;
     }
 
@@ -51,14 +63,21 @@ const ResetPassword: React.FC = () => {
 
       if (error) throw error;
 
-      toast.success('Password updated!', 'You can now sign in with your new password.');
+      toast({
+        title: "Password updated!",
+        description: "You can now sign in with your new password."
+      });
       
       // Sign out and redirect to home
       await supabase.auth.signOut();
       setTimeout(() => navigate('/'), 1500);
     } catch (error: any) {
       console.error('Error updating password:', error);
-      toast.error('Failed to update password', error.message);
+      toast({
+        variant: "destructive",
+        title: "Failed to update password",
+        description: error.message
+      });
     } finally {
       setLoading(false);
     }
