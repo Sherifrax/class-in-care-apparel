@@ -1,78 +1,90 @@
-import { toast } from 'sonner';
-import { CheckCircle, XCircle, AlertCircle, Info, ShoppingCart, LogIn, LogOut, Heart, Package, CreditCard } from "lucide-react";
-import React from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { CheckCircle, XCircle, AlertCircle, Info, ShoppingCart, Heart, LogIn, LogOut, UserPlus } from 'lucide-react';
 
 interface EnhancedToastProps {
-  type: 'success' | 'error' | 'warning' | 'info' | 'cart' | 'login' | 'logout' | 'favorite' | 'order' | 'payment';
+  type: 'success' | 'error' | 'warning' | 'info' | 'cart' | 'favorites' | 'login' | 'logout' | 'signup';
   title: string;
   description?: string;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
+  action?: any;
 }
 
 const getIcon = (type: EnhancedToastProps['type']) => {
-  const iconMap = {
-    success: CheckCircle,
-    error: XCircle,
-    warning: AlertCircle,
-    info: Info,
-    cart: ShoppingCart,
-    login: LogIn,
-    logout: LogOut,
-    favorite: Heart,
-    order: Package,
-    payment: CreditCard,
-  };
-  return iconMap[type];
+  switch (type) {
+    case 'success':
+      return CheckCircle;
+    case 'error':
+      return XCircle;
+    case 'warning':
+      return AlertCircle;
+    case 'info':
+      return Info;
+    case 'cart':
+      return ShoppingCart;
+    case 'favorites':
+      return Heart;
+    case 'login':
+      return LogIn;
+    case 'logout':
+      return LogOut;
+    case 'signup':
+      return UserPlus;
+    default:
+      return Info;
+  }
+};
+
+const getVariant = (type: EnhancedToastProps['type']) => {
+  switch (type) {
+    case 'success':
+    case 'cart':
+    case 'favorites':
+    case 'login':
+    case 'signup':
+      return 'default';
+    case 'error':
+      return 'destructive';
+    case 'warning':
+    case 'info':
+    case 'logout':
+      return 'default';
+    default:
+      return 'default';
+  }
 };
 
 export const useEnhancedToast = () => {
+  const { toast } = useToast();
+
   const showToast = ({ type, title, description, action }: EnhancedToastProps) => {
     const Icon = getIcon(type);
-    
-    const toastOptions: any = {
-      description,
-      duration: type === 'error' ? 3000 : 2000,
-      icon: React.createElement(Icon, { className: "h-5 w-5" }),
-      action: action ? {
-        label: action.label,
-        onClick: action.onClick,
-      } : undefined,
-    };
+    const variant = getVariant(type);
 
-    if (type === 'error') {
-      toast.error(title, toastOptions);
-    } else if (type === 'success') {
-      toast.success(title, toastOptions);
-    } else if (type === 'warning') {
-      toast.warning(title, toastOptions);
-    } else {
-      toast(title, toastOptions);
-    }
+    toast({
+      variant: variant as "default" | "destructive",
+      title,
+      description,
+      action,
+    });
   };
 
   return {
-    success: (title: string, description?: string, action?: EnhancedToastProps['action']) => 
+    success: (title: string, description?: string, action?: any) =>
       showToast({ type: 'success', title, description, action }),
-    error: (title: string, description?: string, action?: EnhancedToastProps['action']) => 
+    error: (title: string, description?: string, action?: any) =>
       showToast({ type: 'error', title, description, action }),
-    info: (title: string, description?: string, action?: EnhancedToastProps['action']) => 
-      showToast({ type: 'info', title, description, action }),
-    warning: (title: string, description?: string, action?: EnhancedToastProps['action']) => 
+    warning: (title: string, description?: string, action?: any) =>
       showToast({ type: 'warning', title, description, action }),
-    cart: (title: string, description?: string, action?: EnhancedToastProps['action']) => 
+    info: (title: string, description?: string, action?: any) =>
+      showToast({ type: 'info', title, description, action }),
+    cart: (title: string, description?: string, action?: any) =>
       showToast({ type: 'cart', title, description, action }),
-    login: (title: string, description?: string, action?: EnhancedToastProps['action']) => 
+    favorites: (title: string, description?: string, action?: any) =>
+      showToast({ type: 'favorites', title, description, action }),
+    login: (title: string, description?: string, action?: any) =>
       showToast({ type: 'login', title, description, action }),
-    logout: (title: string, description?: string, action?: EnhancedToastProps['action']) => 
+    logout: (title: string, description?: string, action?: any) =>
       showToast({ type: 'logout', title, description, action }),
-    favorite: (title: string, description?: string, action?: EnhancedToastProps['action']) => 
-      showToast({ type: 'favorite', title, description, action }),
-    order: (title: string, description?: string, action?: EnhancedToastProps['action']) => 
-      showToast({ type: 'order', title, description, action }),
-    payment: (title: string, description?: string, action?: EnhancedToastProps['action']) => 
-      showToast({ type: 'payment', title, description, action }),
+    signup: (title: string, description?: string, action?: any) =>
+      showToast({ type: 'signup', title, description, action }),
   };
 };
