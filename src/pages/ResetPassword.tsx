@@ -18,14 +18,46 @@ const ResetPassword = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if user came from password reset email
-    supabase.auth.onAuthStateChange((event) => {
+    // Ensure the recovery link establishes a session (supports both code and token_hash flows)
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get("code");
+    const tokenHash = url.searchParams.get("token_hash");
+    const type = url.searchParams.get("type");
+
+    const handleRecoverySession = async () => {
+      try {
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (error) throw error;
+          console.log("Exchanged recovery code for session");
+        } else if (tokenHash && (type === "recovery" || !type)) {
+          const { error } = await supabase.auth.verifyOtp({
+            type: "recovery",
+            token_hash: tokenHash,
+          });
+          if (error) throw error;
+          console.log("Verified recovery token and set session");
+        }
+      } catch (err) {
+        console.error("Password recovery link handling failed:", err);
+        toast({
+          title: "Invalid or expired link",
+          description: "Please request a new password reset link.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    handleRecoverySession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
-        // User is on the reset password page from email link
         console.log("Password recovery event detected");
       }
     });
-  }, []);
+
+    return () => subscription.unsubscribe();
+  }, [toast]);
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
