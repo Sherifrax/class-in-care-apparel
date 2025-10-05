@@ -69,9 +69,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.error('Error fetching cart items:', error);
       toast({
-        variant: "destructive",
         title: "Error",
-        description: "Failed to load cart items"
+        description: "Failed to load cart items",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -81,9 +81,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addToCart = async (productId: string, size: string, color?: string, quantity = 1) => {
     if (!user) {
       toast({
-        variant: "destructive",
         title: "Sign in required",
-        description: "Please sign in to add items to your cart"
+        description: "Please sign in to add items to your cart",
+        variant: "destructive",
       });
       return;
     }
@@ -100,9 +100,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (product?.track_stock && product.stock_quantity < quantity) {
         toast({
-          variant: "destructive",
           title: "Insufficient stock",
-          description: `Only ${product.stock_quantity} items available for ${product.name}`
+          description: `Only ${product.stock_quantity} items available for ${product.name}`,
+          variant: "destructive",
         });
         return;
       }
@@ -119,9 +119,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const newQuantity = existingItem.quantity + quantity;
         if (product?.track_stock && product.stock_quantity < newQuantity) {
           toast({
-            variant: "destructive",
             title: "Insufficient stock",
-            description: `Only ${product.stock_quantity} items available for ${product.name}`
+            description: `Only ${product.stock_quantity} items available for ${product.name}`,
+            variant: "destructive",
           });
           return;
         }
@@ -141,7 +141,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         toast({
           title: "Added to cart",
-          description: "Item added to your cart successfully"
+          description: "Item added to your cart successfully",
         });
 
         await fetchCartItems();
@@ -149,9 +149,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.error('Error adding to cart:', error);
       toast({
-        variant: "destructive",
         title: "Error",
-        description: "Failed to add item to cart"
+        description: "Failed to add item to cart",
+        variant: "destructive",
       });
     }
   };
@@ -175,9 +175,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.error('Error updating quantity:', error);
       toast({
-        variant: "destructive",
         title: "Error",
-        description: "Failed to update item quantity"
+        description: "Failed to update item quantity",
+        variant: "destructive",
       });
     }
   };
@@ -195,16 +195,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       toast({
         title: "Removed from cart",
-        description: "Item removed from your cart"
+        description: "Item removed from your cart",
       });
 
       await fetchCartItems();
     } catch (error) {
       console.error('Error removing from cart:', error);
       toast({
-        variant: "destructive",
         title: "Error",
-        description: "Failed to remove item from cart"
+        description: "Failed to remove item from cart",
+        variant: "destructive",
       });
     }
   };
@@ -223,9 +223,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.error('Error clearing cart:', error);
       toast({
-        variant: "destructive",
         title: "Error",
-        description: "Failed to clear cart"
+        description: "Failed to clear cart",
+        variant: "destructive",
       });
     }
   };

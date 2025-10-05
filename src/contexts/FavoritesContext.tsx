@@ -75,15 +75,15 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       queryClient.invalidateQueries({ queryKey: ['favorites', user?.id] });
       toast({
         title: "Added to Favorites",
-        description: "Product has been added to your favorites."
+        description: "Product has been added to your favorites.",
       });
     },
     onError: (error: any) => {
       console.error('Error adding to favorites:', error);
       toast({
-        variant: "destructive",
         title: "Error",
-        description: "Failed to add product to favorites."
+        description: "Failed to add product to favorites.",
+        variant: "destructive",
       });
     },
   });
@@ -105,15 +105,15 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       queryClient.invalidateQueries({ queryKey: ['favorites', user?.id] });
       toast({
         title: "Removed from Favorites",
-        description: "Product has been removed from your favorites."
+        description: "Product has been removed from your favorites.",
       });
     },
     onError: (error: any) => {
       console.error('Error removing from favorites:', error);
       toast({
-        variant: "destructive",
         title: "Error",
-        description: "Failed to remove product from favorites."
+        description: "Failed to remove product from favorites.",
+        variant: "destructive",
       });
     },
   });
@@ -146,9 +146,9 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const addToFavorites = async (productId: string) => {
     if (!user) {
       toast({
-        variant: "destructive",
         title: "Authentication Required",
-        description: "Please sign in to add items to favorites."
+        description: "Please sign in to add items to favorites.",
+        variant: "destructive",
       });
       return;
     }

@@ -34,14 +34,10 @@ export const Auth: React.FC<AuthProps> = ({ isOpen, onClose, defaultMode = 'sign
           <SignIn 
             onToggleMode={handleToggleMode} 
             onForgotPassword={handleForgotPassword}
-            onClose={onClose}
           />
         )}
         {mode === 'signup' && (
-          <SignUp 
-            onToggleMode={handleToggleMode}
-            onClose={onClose}
-          />
+          <SignUp onToggleMode={handleToggleMode} />
         )}
         {mode === 'forgot-password' && (
           <ForgotPassword onBack={handleBackToSignIn} />

@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   user: User | null;
@@ -29,7 +28,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Get initial session
@@ -38,9 +36,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('Error getting session:', error);
         toast({
+          title: "Error",
+          description: "Failed to get session",
           variant: "destructive",
-          title: "Session Error",
-          description: "Failed to get session"
         });
       } else {
         setSession(session);
@@ -62,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (event === 'SIGNED_OUT') {
         toast({
           title: "Goodbye!",
-          description: "You have been signed out successfully."
+          description: "You have been signed out successfully.",
         });
       }
     });
@@ -75,7 +73,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
         data: {
           full_name: fullName,
         },
@@ -84,9 +81,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (error) {
       toast({
-        variant: "destructive",
         title: "Sign Up Failed",
-        description: error.message
+        description: error.message,
+        variant: "destructive",
       });
       throw error;
     }
@@ -94,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (data.user && !data.session) {
       toast({
         title: "Check your email",
-        description: "We've sent you a confirmation link to complete your registration."
+        description: "We've sent you a confirmation link to complete your registration.",
       });
     }
   };
@@ -107,34 +104,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (error) {
       toast({
-        variant: "destructive",
         title: "Sign In Failed",
-        description: error.message
+        description: error.message,
+        variant: "destructive",
       });
       throw error;
     }
 
-    // Show success message and redirect
+    // Show success message only for actual sign in actions
     toast({
-      title: "Welcome back!",
-      description: "You have been signed in successfully."
+      title: "Welcome!",
+      description: "You have been signed in successfully.",
     });
-    
-    navigate('/');
   };
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
       toast({
-        variant: "destructive",
         title: "Sign Out Failed",
-        description: error.message
+        description: error.message,
+        variant: "destructive",
       });
       throw error;
     }
-    
-    navigate('/');
   };
 
   const resetPassword = async (email: string) => {
@@ -144,16 +137,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (error) {
       toast({
-        variant: "destructive",
         title: "Reset Password Failed",
-        description: error.message
+        description: error.message,
+        variant: "destructive",
       });
       throw error;
     }
 
     toast({
       title: "Check your email",
-      description: "We've sent you a password reset link."
+      description: "We've sent you a password reset link.",
     });
   };
 
