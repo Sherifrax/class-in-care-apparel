@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   user: User | null;
@@ -28,6 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Get initial session
@@ -73,6 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email,
       password,
       options: {
+        emailRedirectTo: `${window.location.origin}/`,
         data: {
           full_name: fullName,
         },
@@ -111,11 +114,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw error;
     }
 
-    // Show success message only for actual sign in actions
+    // Show success message and redirect
     toast({
       title: "Welcome!",
       description: "You have been signed in successfully.",
     });
+    
+    navigate('/');
   };
 
   const signOut = async () => {
@@ -128,6 +133,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       throw error;
     }
+    
+    navigate('/');
   };
 
   const resetPassword = async (email: string) => {

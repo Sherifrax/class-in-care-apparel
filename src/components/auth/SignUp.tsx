@@ -27,9 +27,10 @@ type SignUpFormData = z.infer<typeof signUpSchema>;
 
 interface SignUpProps {
   onToggleMode: () => void;
+  onClose: () => void;
 }
 
-export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
+export const SignUp: React.FC<SignUpProps> = ({ onToggleMode, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -49,6 +50,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
     setLoading(true);
     try {
       await signUp(data.email, data.password, data.fullName);
+      onClose(); // Close dialog on successful sign up
     } catch (error) {
       // Error is handled in the auth context
     } finally {

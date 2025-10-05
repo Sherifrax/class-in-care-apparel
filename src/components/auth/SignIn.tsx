@@ -21,9 +21,10 @@ type SignInFormData = z.infer<typeof signInSchema>;
 interface SignInProps {
   onToggleMode: () => void;
   onForgotPassword: () => void;
+  onClose: () => void;
 }
 
-export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }) => {
+export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
@@ -40,6 +41,7 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }
     setLoading(true);
     try {
       await signIn(data.email, data.password);
+      onClose(); // Close dialog on successful sign in
     } catch (error) {
       // Error is handled in the auth context
     } finally {
