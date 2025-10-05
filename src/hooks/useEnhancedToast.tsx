@@ -1,3 +1,4 @@
+import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, XCircle, AlertCircle, Info, ShoppingCart, Heart, LogIn, LogOut, UserPlus } from 'lucide-react';
 
@@ -61,9 +62,15 @@ export const useEnhancedToast = () => {
 
     toast({
       variant: variant as "default" | "destructive",
-      title,
+      title: (
+        <div className="flex items-center gap-2">
+          <Icon className="h-5 w-5" />
+          <span>{title}</span>
+        </div>
+      ) as any,
       description,
       action,
+      duration: type === 'error' ? 3000 : 2000,
     });
   };
 

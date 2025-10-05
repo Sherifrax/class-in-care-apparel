@@ -1,7 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -25,6 +23,7 @@ import Settings from "./pages/Settings";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import { AdminLogin } from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -33,8 +32,6 @@ import AdminSales from "./pages/admin/AdminSales";
 import { AdminRedirectHandler } from "./components/admin/AdminRedirectHandler";
 import AdminProfile from "./components/admin/AdminProfile";
 import AdminSettings from "./components/admin/AdminSettings";
-
-const queryClient = new QueryClient();
 
 const AppContent = () => {
   const location = useLocation();
@@ -72,6 +69,7 @@ const AppContent = () => {
           <Route path="/cart" element={<AdminRedirectHandler><Cart /></AdminRedirectHandler>} />
           <Route path="/checkout" element={<AdminRedirectHandler><Checkout /></AdminRedirectHandler>} />
           <Route path="/payment-success" element={<AdminRedirectHandler><PaymentSuccess /></AdminRedirectHandler>} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -97,25 +95,22 @@ const AppContent = () => {
 };
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <AuthProvider>
-        <AdminProvider>
-          <CartProvider>
-            <FavoritesProvider>
-              <SizeGuideProvider>
-                <TooltipProvider>
-                  <Toaster />
-                  <Sonner />
-                  <AppContent />
-                </TooltipProvider>
-              </SizeGuideProvider>
-            </FavoritesProvider>
-          </CartProvider>
-        </AdminProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </QueryClientProvider>
+  <BrowserRouter>
+    <AuthProvider>
+      <AdminProvider>
+        <CartProvider>
+          <FavoritesProvider>
+            <SizeGuideProvider>
+              <TooltipProvider>
+                <Toaster />
+                <AppContent />
+              </TooltipProvider>
+            </SizeGuideProvider>
+          </FavoritesProvider>
+        </CartProvider>
+      </AdminProvider>
+    </AuthProvider>
+  </BrowserRouter>
 );
 
 export default App;
