@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useSizeGuide } from "@/contexts/SizeGuideContext";
+import { Link } from "react-router-dom";
 
 const CTA = () => {
   const { openSizeGuide } = useSizeGuide();
@@ -16,9 +17,11 @@ const CTA = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" className="bg-white text-luxury-navy hover:bg-white/90 px-8 py-3 text-lg">
-              Shop AURA Collection
-            </Button>
+            <Link to="/products">
+              <Button size="lg" variant="secondary" className="bg-white text-luxury-navy hover:bg-white/90 px-8 py-3 text-lg">
+                Shop AURA Collection
+              </Button>
+            </Link>
             <Button size="lg" variant="outline" className="border-white hover:bg-white hover:text-luxury-navy px-8 py-3 text-lg text-zinc-950" onClick={openSizeGuide}>
               Request Size Guide
             </Button>
