@@ -231,13 +231,22 @@ const AdminProductsContent: React.FC = () => {
 
       setIsDialogOpen(false);
       fetchProducts();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving product:', error);
+      
+      // Extract more detailed error information
+      const errorMessage = error?.message || 
+        error?.details || 
+        error?.hint || 
+        'An unexpected error occurred. Please try again.';
+      
       toast({
         title: editingProduct ? "Update Failed" : "Creation Failed",
-        description: `Failed to ${editingProduct ? 'update' : 'create'} "${formData.name}". Please try again.`,
+        description: `Failed to ${editingProduct ? 'update' : 'create'} "${formData.name}". ${errorMessage}`,
         variant: "destructive",
       });
+      
+      // Keep dialog open on error so user can retry
     } finally {
       setUploading(false);
     }

@@ -205,7 +205,7 @@ export type Database = {
           description: string
           features: string[]
           id: string
-          image: string
+          image: string | null
           image_url: string | null
           images: string[] | null
           low_stock_threshold: number
@@ -227,7 +227,7 @@ export type Database = {
           description: string
           features?: string[]
           id?: string
-          image: string
+          image?: string | null
           image_url?: string | null
           images?: string[] | null
           low_stock_threshold?: number
@@ -249,7 +249,7 @@ export type Database = {
           description?: string
           features?: string[]
           id?: string
-          image?: string
+          image?: string | null
           image_url?: string | null
           images?: string[] | null
           low_stock_threshold?: number
