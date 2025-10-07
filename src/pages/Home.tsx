@@ -4,10 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles, Heart, Users, Star, PlayCircle, Award, TrendingUp, Clock, Globe } from "lucide-react";
+import { ArrowRight, Sparkles, Heart, Users, Star, PlayCircle, Award, TrendingUp, Clock, Globe, Zap, Eye, Shirt } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 const Home = () => {
+  const [scrollY, setScrollY] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
   // Fetch featured products
   const { data: featuredProducts = [] } = useQuery({
     queryKey: ['featured-products'],
@@ -22,58 +26,30 @@ const Home = () => {
     }
   });
 
-  const stats = [{
-    number: "50,000+",
-    label: "Healthcare Professionals",
-    icon: <Users className="w-6 h-6" />
-  }, {
-    number: "98%",
-    label: "Customer Satisfaction",
-    icon: <Star className="w-6 h-6" />
-  }, {
-    number: "2M+",
-    label: "Hours Worn",
-    icon: <Clock className="w-6 h-6" />
-  }, {
-    number: "25+",
-    label: "Countries Served",
-    icon: <Globe className="w-6 h-6" />
-  }];
-  const testimonials = [{
-    name: "Dr. Sarah Chen",
-    role: "Emergency Medicine Physician",
-    hospital: "Johns Hopkins Hospital",
-    quote: "After 12-hour shifts, I still look and feel professional. The fabric breathes amazingly well.",
-    rating: 5,
-    image: "SC"
-  }, {
-    name: "Nurse Maria Rodriguez",
-    role: "ICU Head Nurse",
-    hospital: "Mayo Clinic",
-    quote: "Finally, scrubs that don't look like pajamas. My patients notice the difference in my confidence.",
-    rating: 5,
-    image: "MR"
-  }, {
-    name: "Dr. James Kim",
-    role: "Surgeon",
-    hospital: "Cleveland Clinic",
-    quote: "The fit is perfect for long surgeries. No bunching, no restriction of movement.",
-    rating: 5,
-    image: "JK"
-  }];
-  const awards = [{
-    title: "Healthcare Innovation Award 2024",
-    org: "Medical Design Excellence"
-  }, {
-    title: "Best New Product",
-    org: "Healthcare Fashion Week"
-  }, {
-    title: "Sustainability Excellence",
-    org: "Green Healthcare Initiative"
-  }];
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  const floatingElements = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 4 + 2,
+    delay: Math.random() * 5,
+    duration: Math.random() * 10 + 10
+  }));
   return <div className="min-h-screen">
       <Hero />
-      
       
       {/* Enhanced Quick Overview Section */}
       <section className="py-24 bg-gradient-to-b from-background via-soft-gray/20 to-background relative overflow-hidden">
@@ -179,17 +155,8 @@ const Home = () => {
               </div>
             </div>
           </div>
-
-          {/* Video Section */}
-          
         </div>
       </section>
-
-      {/* Testimonials Section */}
-      
-
-      {/* Awards & Recognition */}
-      
 
       {/* Apple-Style Product Showcase */}
       <section className="py-32 bg-gradient-to-b from-background to-soft-gray/20 relative overflow-hidden">
@@ -238,13 +205,10 @@ const Home = () => {
                     <h3 className="text-5xl md:text-6xl font-bold text-luxury-navy mb-6 leading-tight">
                       {product.name}
                     </h3>
-                    <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                      {product.description}
-                    </p>
                     
-                    {/* Features */}
+                    {/* Product-Specific Features */}
                     <div className="space-y-4 mb-8">
-                      {product.features.slice(0, 3).map((feature, i) => (
+                      {product.features && product.features.slice(0, 4).map((feature, i) => (
                         <div key={i} className="flex items-center gap-3">
                           <div className="w-2 h-2 bg-gradient-to-r from-medical-blue to-medical-teal rounded-full"></div>
                           <span className="text-lg text-muted-foreground">{feature}</span>
@@ -269,8 +233,9 @@ const Home = () => {
             ))}
           </div>
 
+
           {/* Bottom CTA */}
-          <div className="text-center mt-32 animate-apple-reveal-stagger animate-stagger-4">
+          <div className="text-center mt-16 animate-apple-reveal-stagger animate-stagger-4">
             <Link to="/products">
               <Button 
                 size="lg" 
