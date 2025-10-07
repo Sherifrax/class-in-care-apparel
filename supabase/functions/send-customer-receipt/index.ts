@@ -168,8 +168,13 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     // Use verified domain or fallback to resend.dev for testing
-    const fromAddress = Deno.env.get("VERIFIED_EMAIL_FROM") || "AURA Medical Scrubs <onboarding@resend.dev>";
-
+    const rawFrom = Deno.env.get("VERIFIED_EMAIL_FROM")?.trim();
+    const simpleEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const nameEmailRegex = /^[^<>]+<\s*[^\s@]+@[^\s@]+\.[^\s@]+\s*>$/;
+    const fromAddress = (rawFrom && (simpleEmailRegex.test(rawFrom) || nameEmailRegex.test(rawFrom)))
+      ? rawFrom
+      : "AURA Medical Scrubs <onboarding@resend.dev>";
+    
     // Customer receipts go to the actual customer email
     const recipientEmail = orderData.customer_email;
     
