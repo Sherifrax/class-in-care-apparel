@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('Error getting session:', error);
         toast({
-          title: "Session Error",
+          title: "Error",
           description: "Failed to get session",
           variant: "destructive",
         });
@@ -56,10 +56,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
       
-      // Don't show toast here - it causes infinite loops
-      // Toast will be shown from signOut function instead
+      // Only show sign out message, as sign in messages will be handled by the sign in functions
       if (event === 'SIGNED_OUT') {
-        // Silent sign out
+        toast({
+          title: "Goodbye!",
+          description: "You have been signed out successfully.",
+        });
       }
     });
 
@@ -89,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (data.user && !data.session) {
       toast({
-        title: "Welcome to AURA!",
+        title: "Check your email",
         description: "We've sent you a confirmation link to complete your registration.",
       });
     }
@@ -112,8 +114,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Show success message only for actual sign in actions
     toast({
-      title: "Welcome back!",
-      description: "You've successfully signed in to AURA.",
+      title: "Welcome!",
+      description: "You have been signed in successfully.",
     });
   };
 
@@ -127,11 +129,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       throw error;
     }
-
-    toast({
-      title: "See you soon!",
-      description: "You've been signed out successfully.",
-    });
   };
 
   const resetPassword = async (email: string) => {

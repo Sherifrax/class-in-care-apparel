@@ -119,12 +119,6 @@ export const AdminNotifications: React.FC = () => {
         title: notification.title,
         description: notification.message,
       });
-    } else if (notification.type === 'low_stock') {
-      toast({
-        title: notification.title,
-        description: notification.message,
-        variant: "destructive",
-      });
     }
   };
 

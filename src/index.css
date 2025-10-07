@@ -331,50 +331,6 @@
     outline-offset: 2px;
   }
 
-  /* Enhanced Toast Animations */
-  @keyframes toast-slide-in {
-    from {
-      transform: translateX(100%) translateY(-50%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0) translateY(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes toast-slide-out {
-    from {
-      transform: translateX(0) translateY(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(100%) translateY(-50%);
-      opacity: 0;
-    }
-  }
-
-  @keyframes pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 40px rgba(14, 165, 233, 0.6);
-    }
-  }
-
-  .animate-toast-in {
-    animation: toast-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .animate-toast-out {
-    animation: toast-slide-out 0.3s cubic-bezier(0.4, 0, 1, 1);
-  }
-
-  .animate-pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
-
   /* Critical Fixes for Flex and Grid Layouts */
   .flex { display: flex !important; }
   .inline-flex { display: inline-flex !important; }
