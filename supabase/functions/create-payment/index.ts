@@ -21,7 +21,14 @@ serve(async (req) => {
 
   try {
     // Parse request body
-    const { currency = 'aed', cart_items = [] } = await req.json();
+    const { 
+      currency = 'aed', 
+      cart_items = [],
+      embroidery_requested = false,
+      embroidery_details = null,
+      express_shipping = false,
+      shipping_cost = 25
+    } = await req.json();
 
     // Basic logging to help debug cart mapping (no PII)
     try {
@@ -57,14 +64,15 @@ serve(async (req) => {
       }
     }
 
-    // Calculate total amount in cents (AED) including delivery
+    // Calculate total amount in cents (AED) including delivery and options
     const subtotal = cart_items.reduce((sum: number, item: any) => {
       const price = parseFloat(item.product.price.replace(/[^0-9.]/g, '')) || 0;
       return sum + (price * item.quantity);
     }, 0);
     
-    const deliveryCost = 25; // AED 25 delivery cost
-    const total = Math.round((subtotal + deliveryCost) * 100); // Convert to cents
+    const deliveryCost = shipping_cost; // From request (25 or 50)
+    const embroideryCost = embroidery_requested ? 25 : 0;
+    const total = Math.round((subtotal + deliveryCost + embroideryCost) * 100); // Convert to cents
 
     // Create line items for each product instead of bundling
     const lineItems = cart_items.map((item: any) => ({
@@ -85,13 +93,28 @@ serve(async (req) => {
       price_data: {
         currency: currency.toLowerCase(),
         product_data: {
-          name: 'Delivery',
-          description: 'Standard delivery service',
+          name: express_shipping ? 'Express Delivery (3 days)' : 'Standard Delivery (5-7 days)',
+          description: express_shipping ? 'Express delivery service' : 'Standard delivery service',
         },
         unit_amount: Math.round(deliveryCost * 100),
       },
       quantity: 1,
     });
+
+    // Add embroidery as a separate line item if requested
+    if (embroidery_requested && embroidery_details) {
+      lineItems.push({
+        price_data: {
+          currency: currency.toLowerCase(),
+          product_data: {
+            name: 'Custom Embroidery',
+            description: `Embroidery text: "${embroidery_details}"`,
+          },
+          unit_amount: Math.round(embroideryCost * 100),
+        },
+        quantity: 1,
+      });
+    }
 
     // Create a one-time payment session with comprehensive payment methods
     const session = await stripe.checkout.sessions.create({
@@ -150,7 +173,11 @@ serve(async (req) => {
         item_count: cart_items.length.toString(),
         subtotal: subtotal.toString(),
         delivery_cost: deliveryCost.toString(),
-        total_amount: (subtotal + deliveryCost).toString(),
+        embroidery_cost: embroideryCost.toString(),
+        embroidery_requested: embroidery_requested.toString(),
+        embroidery_details: embroidery_details || '',
+        express_shipping: express_shipping.toString(),
+        total_amount: (subtotal + deliveryCost + embroideryCost).toString(),
         currency: currency.toUpperCase(),
         order_type: 'ecommerce',
         source: 'web_checkout',

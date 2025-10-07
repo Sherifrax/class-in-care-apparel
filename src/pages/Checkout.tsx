@@ -3,11 +3,14 @@ import { useCart } from '@/contexts/CartContext';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ShieldCheck, ArrowRight } from 'lucide-react';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { ShieldCheck, ArrowRight, Truck, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useSizeGuide } from '@/contexts/SizeGuideContext';
 import PaymentMethodsInfo from '@/components/PaymentMethodsInfo';
 
 const CheckoutContent = () => {
@@ -34,8 +37,58 @@ const CheckoutContent = () => {
   }
 
   const [loading, setLoading] = useState(false);
+  const [shippingConfirmed, setShippingConfirmed] = useState(false);
+  const [sizeGuideConfirmed, setSizeGuideConfirmed] = useState(false);
+  const [embroideryRequested, setEmbroideryRequested] = useState(false);
+  const [embroideryDetails, setEmbroideryDetails] = useState('');
+  const [expressShipping, setExpressShipping] = useState(false);
+  const { openSizeGuide } = useSizeGuide();
+
+  const STANDARD_SHIPPING = 25;
+  const EXPRESS_SHIPPING = 50;
+  const EMBROIDERY_COST = 25;
+
+  const shippingCost = expressShipping ? EXPRESS_SHIPPING : STANDARD_SHIPPING;
+  const embroideryCost = embroideryRequested ? EMBROIDERY_COST : 0;
+  const finalTotal = getTotalPrice() + shippingCost + embroideryCost;
   
   const handleProceedToCheckout = async () => {
+    // Validate confirmations
+    if (!shippingConfirmed) {
+      toast({
+        title: "Shipping Confirmation Required",
+        description: "Please confirm you will pay for shipping to proceed.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!sizeGuideConfirmed) {
+      toast({
+        title: "Size Confirmation Required",
+        description: "Please confirm you have selected sizes according to our size guide.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (embroideryRequested && embroideryDetails.trim().length === 0) {
+      toast({
+        title: "Embroidery Details Required",
+        description: "Please enter the text you'd like embroidered.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (embroideryRequested && embroideryDetails.trim().length > 20) {
+      toast({
+        title: "Embroidery Text Too Long",
+        description: "Embroidery text must be 20 characters or less.",
+        variant: "destructive",
+      });
+      return;
+    }
     setLoading(true);
 
     try {
@@ -62,7 +115,11 @@ const CheckoutContent = () => {
           cart_items: items.map(item => ({
             ...item,
             product_id: item.product_id || item.id
-          }))
+          })),
+          embroidery_requested: embroideryRequested,
+          embroidery_details: embroideryRequested ? embroideryDetails.trim() : null,
+          express_shipping: expressShipping,
+          shipping_cost: shippingCost
         }
       });
 
@@ -112,6 +169,113 @@ const CheckoutContent = () => {
                 </CardContent>
               </Card>
 
+              {/* Pre-Checkout Confirmations */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Order Confirmations</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Shipping Confirmation */}
+                  <div className="flex items-start space-x-3">
+                    <Checkbox 
+                      id="shipping-confirm" 
+                      checked={shippingConfirmed}
+                      onCheckedChange={(checked) => setShippingConfirmed(checked as boolean)}
+                    />
+                    <label htmlFor="shipping-confirm" className="text-sm cursor-pointer">
+                      I confirm I will pay for shipping (AED {shippingCost.toFixed(2)} {expressShipping ? 'express' : 'standard'})
+                    </label>
+                  </div>
+
+                  {/* Size Guide Confirmation */}
+                  <div className="flex items-start space-x-3">
+                    <Checkbox 
+                      id="size-confirm" 
+                      checked={sizeGuideConfirmed}
+                      onCheckedChange={(checked) => setSizeGuideConfirmed(checked as boolean)}
+                    />
+                    <label htmlFor="size-confirm" className="text-sm cursor-pointer">
+                      I confirm I have selected my product according to the{' '}
+                      <button 
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openSizeGuide();
+                        }}
+                        className="text-primary underline hover:text-primary/80"
+                      >
+                        size guide
+                      </button>
+                    </label>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Shipping & Customization Options */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Shipping & Customization</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Express Shipping */}
+                  <div className="border rounded-lg p-4 hover:bg-accent/50 transition-colors">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox 
+                        id="express-shipping" 
+                        checked={expressShipping}
+                        onCheckedChange={(checked) => setExpressShipping(checked as boolean)}
+                      />
+                      <div className="flex-1">
+                        <label htmlFor="express-shipping" className="font-medium cursor-pointer flex items-center gap-2">
+                          <Zap className="w-4 h-4 text-yellow-600" />
+                          Express Shipping (+AED 50.00)
+                        </label>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Get your order in 3 business days instead of 5-7 days
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Custom Embroidery */}
+                  <div className="border rounded-lg p-4 hover:bg-accent/50 transition-colors">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox 
+                        id="embroidery" 
+                        checked={embroideryRequested}
+                        onCheckedChange={(checked) => {
+                          setEmbroideryRequested(checked as boolean);
+                          if (!checked) setEmbroideryDetails('');
+                        }}
+                      />
+                      <div className="flex-1">
+                        <label htmlFor="embroidery" className="font-medium cursor-pointer">
+                          Custom Embroidery (+AED 25.00)
+                        </label>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Add your name or custom text to your scrubs
+                        </p>
+                        
+                        {embroideryRequested && (
+                          <div className="mt-3">
+                            <Input
+                              placeholder="Enter text (max 20 characters)"
+                              value={embroideryDetails}
+                              onChange={(e) => setEmbroideryDetails(e.target.value)}
+                              maxLength={20}
+                              className="text-sm"
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {embroideryDetails.length}/20 characters
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Proceed to Checkout Button */}
               <Card>
                 <CardContent className="p-6">
@@ -119,7 +283,7 @@ const CheckoutContent = () => {
                     onClick={handleProceedToCheckout}
                     className="w-full" 
                     size="lg"
-                    disabled={loading}
+                    disabled={loading || !shippingConfirmed || !sizeGuideConfirmed}
                   >
                     {loading ? (
                       <>
@@ -135,8 +299,14 @@ const CheckoutContent = () => {
                   </Button>
                   
                   <div className="text-center mt-4 text-sm text-muted-foreground">
-                    Total: <strong>AED {(getTotalPrice() + 25).toFixed(2)}</strong> (including AED 25.00 delivery)
+                    Total: <strong>AED {finalTotal.toFixed(2)}</strong>
                   </div>
+                  
+                  {(!shippingConfirmed || !sizeGuideConfirmed) && (
+                    <p className="text-xs text-center text-muted-foreground mt-2">
+                      Please confirm all required items above to proceed
+                    </p>
+                  )}
                 </CardContent>
               </Card>
               
@@ -179,17 +349,26 @@ const CheckoutContent = () => {
                       <span>Subtotal:</span>
                       <span>AED {getTotalPrice().toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Delivery:</span>
-                      <span>AED 25.00</span>
+                    <div className="flex justify-between items-center">
+                      <span className="flex items-center gap-1">
+                        {expressShipping ? <Zap className="w-3 h-3 text-yellow-600" /> : <Truck className="w-3 h-3" />}
+                        Delivery {expressShipping ? '(Express)' : '(Standard)'}:
+                      </span>
+                      <span>AED {shippingCost.toFixed(2)}</span>
                     </div>
+                    {embroideryRequested && (
+                      <div className="flex justify-between">
+                        <span>Custom Embroidery:</span>
+                        <span>AED {EMBROIDERY_COST.toFixed(2)}</span>
+                      </div>
+                    )}
                   </div>
                   
                   <Separator />
                   
                   <div className="flex justify-between font-semibold text-lg">
                     <span>Total:</span>
-                    <span>AED {(getTotalPrice() + 25).toFixed(2)}</span>
+                    <span>AED {finalTotal.toFixed(2)}</span>
                   </div>
                 </CardContent>
               </Card>

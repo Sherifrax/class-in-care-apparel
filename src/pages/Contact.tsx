@@ -93,7 +93,16 @@ const Contact = () => {
       description: "Get instant help from Dr. Bayan, our AI customer support specialist, available around the clock.",
       action: "Start Chat Now",
       highlight: true
-    }, 
+    },
+    {
+      icon: <MessageCircle className="w-6 h-6" />,
+      title: "WhatsApp",
+      subtitle: "Quick responses",
+      description: "Chat with us on WhatsApp for fast, convenient support and order updates.",
+      action: "Chat on WhatsApp: +971 56 898 8436",
+      highlight: false,
+      link: "https://wa.me/971568988436"
+    },
     {
       icon: <Phone className="w-6 h-6" />,
       title: "Phone Support",
@@ -144,7 +153,7 @@ const Contact = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {contactMethods.map((method, index) => <Card key={index} className={`p-6 hover:shadow-xl transition-all duration-300 animate-scale-in ${method.highlight ? 'ring-2 ring-medical-blue/20 bg-gradient-to-br from-medical-blue/5 to-medical-teal/5' : ''}`} style={{
             animationDelay: `${index * 0.1}s`
           }}>
@@ -161,7 +170,12 @@ const Contact = () => {
                   </div>
                 </div>
                 <p className="text-muted-foreground mb-6 leading-relaxed">{method.description}</p>
-                <Button variant={method.highlight ? "default" : "outline"} className="w-full" size="sm">
+                <Button 
+                  variant={method.highlight ? "default" : "outline"} 
+                  className="w-full" 
+                  size="sm"
+                  onClick={() => method.link && window.open(method.link, '_blank')}
+                >
                   {method.action}
                 </Button>
               </Card>)}
@@ -306,13 +320,13 @@ const Contact = () => {
               <div>
                 <h4 className="text-lg font-semibold text-luxury-navy mb-3">How do I find my correct size?</h4>
                 <p className="text-muted-foreground">
-                  Use our detailed size guide or chat with our sizing experts. We also offer free exchanges within 14 days.
+                  Use our detailed size guide or chat with our sizing experts. We also offer free exchanges within 7 days.
                 </p>
               </div>
               <div>
                 <h4 className="text-lg font-semibold text-luxury-navy mb-3">What's your return policy?</h4>
                 <p className="text-muted-foreground">
-                  We accept returns and exchanges within 14 days. Items must be unworn with original tags attached.
+                  We accept returns and exchanges for non-customized items only within 7 days. Items must be unworn with original tags attached.
                 </p>
               </div>
             </div>
@@ -321,7 +335,7 @@ const Contact = () => {
               <div>
                 <h4 className="text-lg font-semibold text-luxury-navy mb-3">How long does shipping take?</h4>
                 <p className="text-muted-foreground">
-                  Standard shipping takes 2-5 business days. Express options available for faster delivery.
+                  Standard shipping takes 5-7 business days. Express delivery available for 3 business days (additional AED 50).
                 </p>
               </div>
               <div>
