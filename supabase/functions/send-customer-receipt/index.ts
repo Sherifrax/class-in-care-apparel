@@ -22,6 +22,10 @@ interface CustomerReceiptRequest {
   }>;
   subtotal: number;
   delivery_cost: number;
+  embroidery_requested?: boolean;
+  embroidery_details?: string;
+  embroidery_cost?: number;
+  express_shipping?: boolean;
   total_amount: number;
   currency: string;
   created_at: string;
@@ -135,9 +139,21 @@ const handler = async (req: Request): Promise<Response> => {
               <span style="color: #374151; font-weight: 500;">${orderData.currency} ${orderData.subtotal.toFixed(2)}</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-              <span style="color: #64748b;">Delivery:</span>
+              <span style="color: #64748b;">Delivery ${orderData.express_shipping ? '(Express 3 days)' : '(Standard 5-7 days)'}:</span>
               <span style="color: #374151; font-weight: 500;">${orderData.currency} ${orderData.delivery_cost.toFixed(2)}</span>
             </div>
+            ${orderData.embroidery_requested ? `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+              <span style="color: #64748b;">Custom Embroidery:</span>
+              <span style="color: #374151; font-weight: 500;">${orderData.currency} ${(orderData.embroidery_cost || 0).toFixed(2)}</span>
+            </div>
+            ${orderData.embroidery_details ? `
+            <div style="background-color: #f0f9ff; padding: 12px; border-radius: 6px; margin-bottom: 12px; border-left: 3px solid #0ea5e9;">
+              <span style="color: #0c4a6e; font-size: 12px; font-weight: 600;">Embroidery Text:</span>
+              <p style="margin: 4px 0 0 0; color: #0369a1; font-weight: 500;">"${orderData.embroidery_details}"</p>
+            </div>
+            ` : ''}
+            ` : ''}
             <hr style="margin: 16px 0; border: none; border-top: 1px solid #e2e8f0;">
             <div style="display: flex; justify-content: space-between;">
               <span style="color: #0f172a; font-weight: 600; font-size: 18px;">Total:</span>

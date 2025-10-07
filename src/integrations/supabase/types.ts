@@ -133,6 +133,10 @@ export type Database = {
           currency: string | null
           customer_email: string | null
           delivery_cost: number | null
+          embroidery_cost: number | null
+          embroidery_details: string | null
+          embroidery_requested: boolean | null
+          express_shipping: boolean | null
           id: string
           session_id: string | null
           shipping_address: Json | null
@@ -147,6 +151,10 @@ export type Database = {
           currency?: string | null
           customer_email?: string | null
           delivery_cost?: number | null
+          embroidery_cost?: number | null
+          embroidery_details?: string | null
+          embroidery_requested?: boolean | null
+          express_shipping?: boolean | null
           id?: string
           session_id?: string | null
           shipping_address?: Json | null
@@ -161,6 +169,10 @@ export type Database = {
           currency?: string | null
           customer_email?: string | null
           delivery_cost?: number | null
+          embroidery_cost?: number | null
+          embroidery_details?: string | null
+          embroidery_requested?: boolean | null
+          express_shipping?: boolean | null
           id?: string
           session_id?: string | null
           shipping_address?: Json | null

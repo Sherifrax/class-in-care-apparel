@@ -124,8 +124,13 @@ serve(async (req) => {
       return sum + (price * item.quantity);
     }, 0);
     
-    const deliveryCost = 25;
-    const totalAmount = subtotal + deliveryCost;
+    // Extract embroidery and shipping details from metadata
+    const embroideryRequested = session.metadata?.embroidery_requested === 'true';
+    const embroideryDetails = session.metadata?.embroidery_details || null;
+    const embroideryCost = parseFloat(session.metadata?.embroidery_cost || '0');
+    const expressShipping = session.metadata?.express_shipping === 'true';
+    const deliveryCost = parseFloat(session.metadata?.delivery_cost || '25');
+    const totalAmount = subtotal + deliveryCost + embroideryCost;
 
     // Create order
     const { data: order, error: orderError } = await supabaseAdmin
@@ -136,6 +141,10 @@ serve(async (req) => {
         total_amount: totalAmount,
         subtotal: subtotal,
         delivery_cost: deliveryCost,
+        embroidery_requested: embroideryRequested,
+        embroidery_details: embroideryDetails,
+        embroidery_cost: embroideryCost,
+        express_shipping: expressShipping,
         currency: 'AED',
         status: 'processing',
         customer_email: session.customer_email || session.customer_details?.email,
@@ -195,6 +204,10 @@ serve(async (req) => {
         })),
         subtotal: subtotal,
         delivery_cost: deliveryCost,
+        embroidery_requested: embroideryRequested,
+        embroidery_details: embroideryDetails,
+        embroidery_cost: embroideryCost,
+        express_shipping: expressShipping,
         total_amount: totalAmount,
         currency: 'AED',
         created_at: order.created_at,

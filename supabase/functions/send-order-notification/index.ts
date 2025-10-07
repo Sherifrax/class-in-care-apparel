@@ -22,6 +22,10 @@ interface OrderNotificationRequest {
   }>;
   subtotal: number;
   delivery_cost: number;
+  embroidery_requested?: boolean;
+  embroidery_details?: string;
+  embroidery_cost?: number;
+  express_shipping?: boolean;
   total_amount: number;
   currency: string;
   created_at: string;
@@ -104,9 +108,21 @@ const handler = async (req: Request): Promise<Response> => {
             <span>${orderData.currency} ${orderData.subtotal.toFixed(2)}</span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <span>Delivery:</span>
+            <span>Delivery ${orderData.express_shipping ? '(⚡ Express 3 days)' : '(Standard 5-7 days)'}:</span>
             <span>${orderData.currency} ${orderData.delivery_cost.toFixed(2)}</span>
           </div>
+          ${orderData.embroidery_requested ? `
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span>Custom Embroidery:</span>
+            <span>${orderData.currency} ${(orderData.embroidery_cost || 0).toFixed(2)}</span>
+          </div>
+          ${orderData.embroidery_details ? `
+          <div style="background-color: #dbeafe; padding: 12px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #3b82f6;">
+            <strong style="color: #1e40af; font-size: 13px;">Embroidery Text:</strong>
+            <p style="margin: 4px 0 0 0; color: #1e3a8a; font-weight: 600;">"${orderData.embroidery_details}"</p>
+          </div>
+          ` : ''}
+          ` : ''}
           <hr style="margin: 12px 0; border: none; border-top: 1px solid #e2e8f0;">
           <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; color: #2563eb;">
             <span>Total:</span>

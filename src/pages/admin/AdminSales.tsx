@@ -18,6 +18,10 @@ interface Order {
   total_amount: number;
   subtotal: number;
   delivery_cost: number;
+  embroidery_requested?: boolean;
+  embroidery_details?: string;
+  embroidery_cost?: number;
+  express_shipping?: boolean;
   currency: string;
   status: string;
   customer_email: string;
@@ -508,7 +512,18 @@ const AdminSalesContent: React.FC = () => {
                   <h4 className="font-semibold text-lg text-luxury-navy">Pricing Breakdown</h4>
                   <div className="space-y-2 text-sm bg-green-50 p-4 rounded-xl">
                     <p><strong>Subtotal:</strong> AED {selectedOrder.subtotal.toFixed(2)}</p>
-                    <p><strong>Delivery:</strong> AED {selectedOrder.delivery_cost.toFixed(2)}</p>
+                    <p><strong>Delivery {selectedOrder.express_shipping ? '(⚡ Express 3 days)' : '(Standard 5-7 days)'}:</strong> AED {selectedOrder.delivery_cost.toFixed(2)}</p>
+                    {selectedOrder.embroidery_requested && (
+                      <>
+                        <p><strong>Custom Embroidery:</strong> AED {(selectedOrder.embroidery_cost || 0).toFixed(2)}</p>
+                        {selectedOrder.embroidery_details && (
+                          <div className="bg-blue-100 border border-blue-300 rounded-lg p-2 mt-2">
+                            <p className="text-xs font-semibold text-blue-800">Embroidery Text:</p>
+                            <p className="text-sm font-medium text-blue-900">"{selectedOrder.embroidery_details}"</p>
+                          </div>
+                        )}
+                      </>
+                    )}
                     <div className="border-t pt-2 mt-2">
                       <p className="text-lg font-bold text-luxury-navy">
                         <strong>Total:</strong> AED {selectedOrder.total_amount.toFixed(2)}

@@ -29,6 +29,10 @@ interface Order {
   total_amount: number;
   subtotal: number;
   delivery_cost: number;
+  embroidery_requested?: boolean;
+  embroidery_details?: string;
+  embroidery_cost?: number;
+  express_shipping?: boolean;
   currency: string;
   status: string;
   customer_email: string;
@@ -248,7 +252,10 @@ const MyOrdersContent: React.FC = () => {
                         </div>
                         <div className="text-xs text-muted-foreground mt-2 space-y-1">
                           <div>Subtotal: AED {order.subtotal.toFixed(2)}</div>
-                          <div>Delivery: AED {order.delivery_cost.toFixed(2)}</div>
+                          <div>Delivery {order.express_shipping ? '(⚡ Express)' : '(Standard)'}: AED {order.delivery_cost.toFixed(2)}</div>
+                          {order.embroidery_requested && (
+                            <div>Embroidery: AED {(order.embroidery_cost || 0).toFixed(2)}</div>
+                          )}
                         </div>
                       </div>
                       
@@ -400,9 +407,23 @@ const MyOrdersContent: React.FC = () => {
                           <span className="text-lg font-semibold">AED {selectedOrder.subtotal.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between items-center py-2 text-sm">
-                          <span className="font-medium text-muted-foreground">Delivery Fee:</span>
+                          <span className="font-medium text-muted-foreground">Delivery {selectedOrder.express_shipping ? '(⚡ Express)' : '(Standard)'}:</span>
                           <span className="text-lg font-semibold">AED {selectedOrder.delivery_cost.toFixed(2)}</span>
                         </div>
+                        {selectedOrder.embroidery_requested && (
+                          <>
+                            <div className="flex justify-between items-center py-2 text-sm">
+                              <span className="font-medium text-muted-foreground">Custom Embroidery:</span>
+                              <span className="text-lg font-semibold">AED {(selectedOrder.embroidery_cost || 0).toFixed(2)}</span>
+                            </div>
+                            {selectedOrder.embroidery_details && (
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <div className="text-xs font-semibold text-blue-700">Embroidery Text:</div>
+                                <div className="text-sm font-medium text-blue-900 mt-1">"{selectedOrder.embroidery_details}"</div>
+                              </div>
+                            )}
+                          </>
+                        )}
                         <div className="border-t border-green-200 pt-4 mt-4">
                           <div className="flex justify-between items-center">
                             <span className="text-lg font-bold text-green-700">Total Amount:</span>
