@@ -12,7 +12,7 @@ const VideoReviews = () => {
       rating: 5,
       reviewer: "Dr. Sarah Ahmed",
       profession: "Emergency Medicine",
-      title: "Perfect for long shifts"
+      title: "Perfect for long shifts",
     },
     {
       id: 2,
@@ -20,7 +20,7 @@ const VideoReviews = () => {
       rating: 5,
       reviewer: "Nurse Fatima",
       profession: "ICU Nurse",
-      title: "Incredibly comfortable"
+      title: "Incredibly comfortable",
     },
     {
       id: 3,
@@ -28,8 +28,8 @@ const VideoReviews = () => {
       rating: 5,
       reviewer: "Dr. Ahmed Hassan",
       profession: "Surgeon",
-      title: "Professional and stylish"
-    }
+      title: "Professional and stylish",
+    },
   ];
 
   return (
@@ -37,15 +37,19 @@ const VideoReviews = () => {
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/5 w-36 h-36 bg-medical-blue/5 rounded-full animate-apple-float"></div>
-        <div className="absolute bottom-1/4 right-1/5 w-28 h-28 bg-medical-teal/5 rounded-full animate-apple-float" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-1/2 right-1/4 w-20 h-20 bg-accent-coral/5 rounded-full animate-apple-float" style={{animationDelay: '4s'}}></div>
+        <div
+          className="absolute bottom-1/4 right-1/5 w-28 h-28 bg-medical-teal/5 rounded-full animate-apple-float"
+          style={{ animationDelay: "2s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 right-1/4 w-20 h-20 bg-accent-coral/5 rounded-full animate-apple-float"
+          style={{ animationDelay: "4s" }}
+        ></div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-20 animate-apple-reveal">
-          <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
-            AURA in Action
-          </h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">AURA in Action</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             See real reviews from medical professionals who trust AURA uniforms for their daily work.
           </p>
@@ -53,14 +57,13 @@ const VideoReviews = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {reviews.map((review, index) => (
-            <Card key={review.id} className="p-8 shadow-xl hover:shadow-2xl transition-all duration-500 group animate-apple-reveal-stagger bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-sm border border-white/20 hover:border-medical-blue/30 rounded-3xl overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
+            <Card
+              key={review.id}
+              className="p-8 shadow-xl hover:shadow-2xl transition-all duration-500 group animate-apple-reveal-stagger bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-sm border border-white/20 hover:border-medical-blue/30 rounded-3xl overflow-hidden"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
               <div className="relative rounded-2xl overflow-hidden mb-8 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 group-hover:scale-105 transition-transform duration-500">
-                <video 
-                  className="w-full h-72 object-cover cursor-pointer"
-                  poster=""
-                  controls
-                  preload="metadata"
-                >
+                <video className="w-full h-72 object-cover cursor-pointer" poster="" controls preload="metadata">
                   <source src={review.video} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
@@ -69,7 +72,7 @@ const VideoReviews = () => {
                     <Play className="w-8 h-8 text-medical-blue ml-1" />
                   </div>
                 </div>
-                
+
                 {/* Floating badge */}
                 <div className="absolute top-4 left-4 animate-apple-float">
                   <div className="bg-white/90 text-luxury-navy px-3 py-1 rounded-full text-sm font-semibold backdrop-blur-sm">
@@ -78,24 +81,32 @@ const VideoReviews = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`w-5 h-5 ${i < review.rating ? 'fill-current text-yellow-500' : 'text-gray-300'}`} />
+                      <Star
+                        key={i}
+                        className={`w-5 h-5 ${i < review.rating ? "fill-current text-yellow-500" : "text-gray-300"}`}
+                      />
                     ))}
                   </div>
                   <div className="text-sm text-muted-foreground font-medium">Verified Review</div>
                 </div>
-                
-                <h3 className="text-2xl font-bold text-luxury-navy group-hover:text-medical-blue transition-colors">{review.title}</h3>
-                
+
+                <h3 className="text-2xl font-bold text-luxury-navy group-hover:text-medical-blue transition-colors">
+                  {review.title}
+                </h3>
+
                 <div className="pt-6 border-t border-medical-blue/10">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 bg-gradient-to-br from-medical-blue to-medical-teal rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                       <span className="text-white font-bold text-lg">
-                        {review.reviewer.split(' ').map(n => n[0]).join('')}
+                        {review.reviewer
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                       </span>
                     </div>
                     <div>
@@ -113,7 +124,10 @@ const VideoReviews = () => {
         <div className="text-center animate-apple-reveal-stagger animate-stagger-4">
           <div className="bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-3xl p-12 border border-medical-blue/10 shadow-xl backdrop-blur-sm max-w-4xl mx-auto">
             <h3 className="text-3xl font-bold text-luxury-navy mb-6">
-              Premium Quality, <span className="bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Accessible Pricing</span>
+              Premium Quality,{" "}
+              <span className="bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+                Accessible Pricing
+              </span>
             </h3>
             <div className="grid md:grid-cols-3 gap-8 mb-8">
               <div className="text-center">
@@ -130,8 +144,8 @@ const VideoReviews = () => {
               </div>
             </div>
             <p className="text-lg text-muted-foreground">
-              <span className="font-bold text-luxury-navy">Free exchanges</span> within 14 days • 
-              <span className="font-bold text-luxury-navy"> Premium materials</span> • 
+              <span className="font-bold text-luxury-navy">Free exchanges</span> within 7 days •
+              <span className="font-bold text-luxury-navy"> Premium materials</span> •
               <span className="font-bold text-luxury-navy"> Professional fit guarantee</span>
             </p>
           </div>
