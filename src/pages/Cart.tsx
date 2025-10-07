@@ -214,9 +214,6 @@ const Cart = () => {
                     </Button>
                   </div>
                   
-                  <div className="text-xs text-muted-foreground text-center pt-4 border-t border-medical-blue/10">
-                    Free delivery on orders over AED 200
-                  </div>
                 </CardContent>
               </Card>
             </div>

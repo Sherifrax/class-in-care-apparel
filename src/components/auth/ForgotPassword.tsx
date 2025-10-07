@@ -17,9 +17,10 @@ type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 interface ForgotPasswordProps {
   onBack: () => void;
+  onClose: () => void;
 }
 
-export const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
+export const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const { resetPassword } = useAuth();

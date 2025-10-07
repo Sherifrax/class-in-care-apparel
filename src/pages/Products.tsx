@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-import { Star, ShoppingCart, Heart, Eye, Plus, Minus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ShoppingCart, Heart, Eye, Plus, Minus, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -143,125 +143,143 @@ const Products = () => {
       {/* Products Grid */}
       <section className="py-16 bg-gradient-to-b from-background to-soft-gray/20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12 animate-fade-in">
+          <div className="text-center mb-16 animate-apple-reveal">
             <h2 className="text-3xl md:text-4xl font-bold text-luxury-navy mb-4">
-              Shop the <span className="text-gradient bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AURA Collection</span>
+              Shop the <span className="bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AURA Collection</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover our complete range of premium medical uniforms designed for the modern healthcare professional.
-            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {filteredProducts.map((product, index) => <Card key={product.id} className="p-4 sm:p-6 glass border-medical-blue/20 hover:shadow-luxury hover:border-medical-blue/40 transition-all duration-300 group animate-scale-in relative overflow-hidden rounded-2xl bg-gradient-to-b from-white/95 to-white/90" style={{
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {filteredProducts.map((product, index) => <Card key={product.id} className="p-6 sm:p-8 glass border-medical-blue/20 hover:shadow-2xl hover:border-medical-blue/40 transition-all duration-500 group animate-apple-reveal-stagger relative overflow-hidden rounded-3xl bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-sm hover:scale-[1.02] hover:-translate-y-2" style={{
             animationDelay: `${index * 0.1}s`
           }}>
-                {/* Badge */}
-                {product.badge && <Badge className="absolute top-3 left-3 z-10" variant={product.badge === "Best Seller" ? "default" : "secondary"}>
+                {/* Enhanced Badge */}
+                {product.badge && <Badge className="absolute top-4 left-4 z-10 bg-gradient-to-r from-medical-blue to-medical-teal text-white border-0 px-4 py-2 font-semibold shadow-lg animate-apple-glow" variant={product.badge === "Best Seller" ? "default" : "secondary"}>
+                    <Sparkles className="w-4 h-4 mr-2" />
                     {product.badge}
                   </Badge>}
                 
-                {/* Wishlist Button */}
-                <Button variant="ghost" size="sm" className={cn("absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-all bg-white/90 hover:bg-white", isFavorite(product.id) && "opacity-100 text-red-500")} onClick={e => handleToggleFavorite(product.id, e)}>
-                  <Heart className={cn("w-4 h-4", isFavorite(product.id) && "fill-current")} />
+                {/* Enhanced Wishlist Button */}
+                <Button variant="ghost" size="sm" className={cn("absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white/90 hover:bg-white rounded-2xl shadow-lg hover:shadow-xl hover:scale-110", isFavorite(product.id) && "opacity-100 text-red-500 bg-red-50")} onClick={e => handleToggleFavorite(product.id, e)}>
+                  <Heart className={cn("w-5 h-5", isFavorite(product.id) && "fill-current animate-apple-scale")} />
                 </Button>
 
-                <div className="rounded-2xl h-56 sm:h-64 mb-4 overflow-hidden relative shadow-soft">
-                  <img src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  {product.images && product.images.length > 1 && <Badge className="absolute top-3 left-3 bg-black/70 text-white">
+                <div className="rounded-3xl h-64 sm:h-72 mb-6 overflow-hidden relative shadow-xl group-hover:shadow-2xl transition-all duration-500">
+                  <img src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  {product.images && product.images.length > 1 && <Badge className="absolute top-4 left-4 bg-black/80 text-white border-0 px-3 py-1 font-semibold backdrop-blur-sm">
+                      <Eye className="w-4 h-4 mr-1" />
                       +{product.images.length - 1} more
                     </Badge>}
                   
-                  {/* Quick View Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-2xl flex items-center justify-center">
-                    <Button size="sm" className="gap-2 bg-white/95 text-medical-blue hover:bg-white shadow-luxury backdrop-blur-sm" onClick={() => openQuickView(product)}>
-                      <Eye className="w-4 h-4" />
-                      Quick View
-                    </Button>
+                  {/* Enhanced Quick View Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-3xl flex items-center justify-center">
+                    <div className="flex flex-col gap-3">
+                      <Button size="lg" className="gap-3 bg-white/95 text-medical-blue hover:bg-white shadow-2xl backdrop-blur-sm rounded-2xl px-6 py-3 font-semibold hover:scale-105 transition-all duration-300" onClick={() => openQuickView(product)}>
+                        <Eye className="w-5 h-5" />
+                        Quick View
+                      </Button>
+                    </div>
                   </div>
+
+                  {/* Floating decorative elements */}
+                  <div className="absolute top-4 right-4 w-3 h-3 bg-medical-blue/30 rounded-full animate-apple-float"></div>
+                  <div className="absolute bottom-4 left-4 w-2 h-2 bg-medical-teal/40 rounded-full animate-apple-float" style={{animationDelay: '1s'}}></div>
                 </div>
                 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-luxury-navy line-clamp-2">{product.name}</h3>
-                      <p className="text-muted-foreground text-sm mt-1 line-clamp-2">{product.description}</p>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-luxury-navy line-clamp-2 group-hover:text-medical-blue transition-colors">{product.name}</h3>
+                      <p className="text-muted-foreground text-sm mt-2 line-clamp-2 leading-relaxed">{product.description}</p>
                     </div>
                   </div>
                   
-                  {/* Features */}
-                  <div className="flex flex-wrap gap-1">
-                    {product.features.slice(0, 2).map((feature, i) => <Badge key={i} variant="outline" className="text-xs">
+                  {/* Enhanced Features */}
+                  <div className="flex flex-wrap gap-2">
+                    {product.features.slice(0, 2).map((feature, i) => <Badge key={i} variant="outline" className="text-xs px-3 py-1 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5 transition-colors">
                         {feature}
                       </Badge>)}
-                    {product.features.length > 2 && <Badge variant="outline" className="text-xs">
+                    {product.features.length > 2 && <Badge variant="outline" className="text-xs px-3 py-1 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5 transition-colors">
                         +{product.features.length - 2} more
                       </Badge>}
                   </div>
                   
-                  <div className="flex items-center gap-2">
+                  {/* Enhanced Rating */}
+                  <div className="flex items-center gap-3">
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => <Star key={i} className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-current text-yellow-500' : 'text-gray-300'}`} />)}
                     </div>
-                    <span className="text-sm text-muted-foreground">({product.reviews} reviews)</span>
+                    <span className="text-sm text-muted-foreground font-medium">({product.reviews} reviews)</span>
                   </div>
                   
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Colors:</span>
-                    <div className="flex gap-1">
+                  {/* Enhanced Colors */}
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-muted-foreground font-medium">Colors:</span>
+                    <div className="flex gap-2">
                       {product.colors.slice(0, 4).map((color, i) => <ColorSwatch key={i} color={color} size="sm" />)}
-                      {product.colors.length > 4 && <div className="text-xs text-muted-foreground">+{product.colors.length - 4}</div>}
+                      {product.colors.length > 4 && <div className="text-xs text-muted-foreground font-medium">+{product.colors.length - 4}</div>}
                     </div>
                   </div>
                   
-                  {/* Sizes */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Sizes:</span>
-                    <div className="flex gap-1">
-                      {product.sizes.slice(0, 4).map((size, i) => <Badge key={i} variant="outline" className="text-xs px-2 py-0 cursor-pointer hover:bg-medical-blue hover:text-white transition-colors">
+                  {/* Enhanced Sizes */}
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-muted-foreground font-medium">Sizes:</span>
+                    <div className="flex gap-2">
+                      {product.sizes.slice(0, 4).map((size, i) => <Badge key={i} variant="outline" className="text-xs px-3 py-1 cursor-pointer hover:bg-medical-blue hover:text-white hover:border-medical-blue transition-all duration-200 border-medical-blue/30">
                           {size}
                         </Badge>)}
-                      {product.sizes.length > 4 && <Badge variant="outline" className="text-xs px-2 py-0">
+                      {product.sizes.length > 4 && <Badge variant="outline" className="text-xs px-3 py-1 border-medical-blue/30">
                           +{product.sizes.length - 4}
                         </Badge>}
                     </div>
                   </div>
                   
-                  {/* Stock Status */}
-                  {product.track_stock && <div className="mb-3">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${product.stock_quantity === 0 ? 'bg-red-100 text-red-800' : product.stock_quantity <= product.low_stock_threshold ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'}`}>
+                  {/* Enhanced Stock Status */}
+                  {product.track_stock && <div className="mb-4">
+                      <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold ${product.stock_quantity === 0 ? 'bg-red-100 text-red-800' : product.stock_quantity <= product.low_stock_threshold ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'}`}>
                         {product.stock_quantity === 0 ? 'Out of Stock' : product.stock_quantity <= product.low_stock_threshold ? `Only ${product.stock_quantity} left` : 'In Stock'}
                       </span>
                     </div>}
                   
-                  <div className="flex items-center justify-between pt-3 border-t border-medical-blue/10">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                      <span className="text-xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AED {product.price}</span>
-                      {product.original_price && <span className="text-sm text-muted-foreground line-through">AED {product.original_price}</span>}
+                  {/* Enhanced Price and CTA */}
+                  <div className="flex items-center justify-between pt-4 border-t border-medical-blue/10">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <span className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AED {product.price}</span>
+                      {product.original_price && <span className="text-lg text-muted-foreground line-through">AED {product.original_price}</span>}
                     </div>
-                    <Button size="sm" className="gap-2 text-xs bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-xl" onClick={() => openProductDialog(product)} disabled={product.track_stock && product.stock_quantity === 0}>
-                      <ShoppingCart className="w-4 h-4" />
-                      {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add'}
+                    <Button size="lg" className="gap-3 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white shadow-xl hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-2xl px-6 py-3 font-semibold" onClick={() => openProductDialog(product)} disabled={product.track_stock && product.stock_quantity === 0}>
+                      <ShoppingCart className="w-5 h-5" />
+                      {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
                     </Button>
                   </div>
                 </div>
               </Card>)}
           </div>
 
-          <div className="bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-2xl p-8 text-center animate-fade-in-up">
-            <h3 className="text-2xl font-bold text-luxury-navy mb-4">Can't Find What You're Looking For?</h3>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+          <div className="bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-3xl p-12 text-center animate-apple-reveal-stagger animate-stagger-4 border border-medical-blue/10 shadow-xl backdrop-blur-sm">
+            <h3 className="text-3xl md:text-4xl font-bold text-luxury-navy mb-6">
+              Can't Find What You're <span className="bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Looking For</span>?
+            </h3>
+            <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
               Our team is here to help you find the perfect uniform for your specific needs. 
-              Get personalized recommendations from our experts.
+              Get personalized recommendations from our experts and discover the perfect fit for your professional wardrobe.
             </p>
-            <div className="flex flex-wrap gap-3 justify-center">
+            <div className="flex flex-wrap gap-4 justify-center">
               <Link to="/contact">
-                <Button size="lg">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal-light text-white px-8 py-4 text-lg font-semibold rounded-2xl shadow-xl hover:shadow-glow transition-all duration-300 hover:scale-105 border-0"
+                >
+                  <Sparkles className="w-5 h-5 mr-3" />
                   Contact Our Experts
                 </Button>
               </Link>
               <Link to="/features">
-                <Button variant="outline" size="lg">
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  className="border-2 border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/5 text-luxury-navy px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105"
+                >
                   Learn About Features
                 </Button>
               </Link>
@@ -627,7 +645,7 @@ const Products = () => {
                   </div>
                   <Button 
                     size="lg"
-                    className="w-full sm:w-auto gap-2 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]"
+                    className="px-8 gap-2 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]"
                     onClick={() => {
                       setQuickViewProduct(null);
                       openProductDialog(quickViewProduct);

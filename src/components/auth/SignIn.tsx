@@ -21,9 +21,10 @@ type SignInFormData = z.infer<typeof signInSchema>;
 interface SignInProps {
   onToggleMode: () => void;
   onForgotPassword: () => void;
+  onClose: () => void;
 }
 
-export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }) => {
+export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -49,6 +50,7 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }
       setIsSuccess(true);
       setTimeout(() => {
         setIsSuccess(false);
+        onClose(); // Close the dialog after successful sign in
       }, 2000);
     } catch (error) {
       // Error is handled in the auth context
@@ -59,6 +61,17 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }
 
   return (
     <Card className="w-full border-0 shadow-none bg-transparent relative overflow-hidden">
+      {/* Custom close button */}
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 z-50 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+        aria-label="Close"
+      >
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-medical-blue/5 via-transparent to-medical-teal/5 animate-pulse"></div>
       

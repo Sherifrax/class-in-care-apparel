@@ -53,9 +53,26 @@ export default {
         },
         'medical-blue': "hsl(var(--medical-blue))",
         'medical-blue-light': "hsl(var(--medical-blue-light))",
+        'medical-blue-dark': "hsl(var(--medical-blue-dark))",
+        'medical-blue-ultra-light': "hsl(var(--medical-blue-ultra-light))",
         'medical-teal': "hsl(var(--medical-teal))",
+        'medical-teal-light': "hsl(var(--medical-teal-light))",
+        'medical-teal-dark': "hsl(var(--medical-teal-dark))",
         'luxury-navy': "hsl(var(--luxury-navy))",
+        'luxury-navy-light': "hsl(var(--luxury-navy-light))",
         'soft-gray': "hsl(var(--soft-gray))",
+        'soft-gray-dark': "hsl(var(--soft-gray-dark))",
+        'luxury-gold': "hsl(var(--luxury-gold))",
+        'luxury-gold-light': "hsl(var(--luxury-gold-light))",
+        'luxury-gold-dark': "hsl(var(--luxury-gold-dark))",
+        'premium-silver': "hsl(var(--premium-silver))",
+        'premium-silver-light': "hsl(var(--premium-silver-light))",
+        'premium-charcoal': "hsl(var(--premium-charcoal))",
+        'premium-charcoal-light': "hsl(var(--premium-charcoal-light))",
+        'accent-coral': "hsl(var(--accent-coral))",
+        'accent-coral-light': "hsl(var(--accent-coral-light))",
+        'accent-mint': "hsl(var(--accent-mint))",
+        'accent-mint-light': "hsl(var(--accent-mint-light))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -203,6 +220,95 @@ export default {
         "morph": {
           "0%, 100%": { borderRadius: "20px" },
           "50%": { borderRadius: "50px" }
+        },
+        "apple-reveal": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(60px) scale(0.95)",
+            filter: "blur(10px)"
+          },
+          "50%": {
+            opacity: "0.8",
+            transform: "translateY(20px) scale(0.98)",
+            filter: "blur(2px)"
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0) scale(1)",
+            filter: "blur(0)"
+          }
+        },
+        "apple-scale": {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.05)" },
+          "100%": { transform: "scale(1)" }
+        },
+        "apple-glow": {
+          "0%, 100%": { 
+            boxShadow: "0 0 20px hsl(var(--medical-blue) / 0.2)" 
+          },
+          "50%": { 
+            boxShadow: "0 0 40px hsl(var(--medical-blue) / 0.4), 0 0 80px hsl(var(--medical-teal) / 0.2)" 
+          }
+        },
+        "apple-float": {
+          "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
+          "25%": { transform: "translateY(-8px) rotate(1deg)" },
+          "50%": { transform: "translateY(-12px) rotate(0deg)" },
+          "75%": { transform: "translateY(-8px) rotate(-1deg)" }
+        },
+        "apple-shimmer": {
+          "0%": { 
+            backgroundPosition: "-200% 0",
+            opacity: "0.8"
+          },
+          "50%": { opacity: "1" },
+          "100%": { 
+            backgroundPosition: "200% 0",
+            opacity: "0.8"
+          }
+        },
+        "apple-morph": {
+          "0%, 100%": { 
+            borderRadius: "20px",
+            transform: "scale(1)"
+          },
+          "25%": { 
+            borderRadius: "30px",
+            transform: "scale(1.02)"
+          },
+          "50%": { 
+            borderRadius: "40px",
+            transform: "scale(1.05)"
+          },
+          "75%": { 
+            borderRadius: "30px",
+            transform: "scale(1.02)"
+          }
+        },
+        "apple-parallax": {
+          "0%": { transform: "translateY(0) scale(1)" },
+          "50%": { transform: "translateY(-20px) scale(1.02)" },
+          "100%": { transform: "translateY(0) scale(1)" }
+        },
+        "apple-reveal-stagger": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(40px) scale(0.9)"
+          },
+          "60%": {
+            opacity: "0.8",
+            transform: "translateY(-5px) scale(1.02)"
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0) scale(1)"
+          }
+        },
+        "apple-magnetic": {
+          "0%": { transform: "translate(0, 0) scale(1)" },
+          "50%": { transform: "translate(2px, -2px) scale(1.01)" },
+          "100%": { transform: "translate(0, 0) scale(1)" }
         }
       },
       animation: {
@@ -222,6 +328,15 @@ export default {
         "parallax": "parallax 10s linear infinite",
         "breathe": "breathe 4s ease-in-out infinite",
         "morph": "morph 8s ease-in-out infinite",
+        "apple-reveal": "apple-reveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "apple-scale": "apple-scale 0.6s ease-in-out",
+        "apple-glow": "apple-glow 3s ease-in-out infinite",
+        "apple-float": "apple-float 6s ease-in-out infinite",
+        "apple-shimmer": "apple-shimmer 3s ease-in-out infinite",
+        "apple-morph": "apple-morph 8s ease-in-out infinite",
+        "apple-parallax": "apple-parallax 10s linear infinite",
+        "apple-reveal-stagger": "apple-reveal-stagger 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "apple-magnetic": "apple-magnetic 2s ease-in-out infinite",
       },
     },
   },

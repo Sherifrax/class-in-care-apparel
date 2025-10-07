@@ -29,18 +29,19 @@ export const Auth: React.FC<AuthProps> = ({ isOpen, onClose, defaultMode = 'sign
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-md sm:w-full border-0 p-0 max-h-[95vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-md sm:w-full border-0 p-0 max-h-[95vh] overflow-y-auto" showCloseButton={false}>
         {mode === 'signin' && (
           <SignIn 
             onToggleMode={handleToggleMode} 
             onForgotPassword={handleForgotPassword}
+            onClose={onClose}
           />
         )}
         {mode === 'signup' && (
-          <SignUp onToggleMode={handleToggleMode} />
+          <SignUp onToggleMode={handleToggleMode} onClose={onClose} />
         )}
         {mode === 'forgot-password' && (
-          <ForgotPassword onBack={handleBackToSignIn} />
+          <ForgotPassword onBack={handleBackToSignIn} onClose={onClose} />
         )}
       </DialogContent>
     </Dialog>

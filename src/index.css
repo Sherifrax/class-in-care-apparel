@@ -41,17 +41,34 @@
   --chart-4: 43 74% 66%;
   --chart-5: 27 87% 67%;
 
-  /* Premium Medical Color Palette */
+  /* Enhanced Premium Medical Color Palette */
   --medical-blue: 203 87% 45%;
   --medical-blue-light: 203 87% 65%;
   --medical-blue-dark: 203 87% 25%;
+  --medical-blue-ultra-light: 203 87% 85%;
   --medical-teal: 180 85% 40%;
   --medical-teal-light: 180 85% 60%;
+  --medical-teal-dark: 180 85% 25%;
   --luxury-navy: 220 40% 15%;
+  --luxury-navy-light: 220 40% 25%;
   --soft-gray: 220 14% 96%;
+  --soft-gray-dark: 220 14% 90%;
   --luxury-gold: 45 100% 60%;
+  --luxury-gold-light: 45 100% 70%;
+  --luxury-gold-dark: 45 100% 50%;
   --glass: 0 0% 100% / 0.1;
   --glass-border: 0 0% 100% / 0.2;
+  --glass-strong: 0 0% 100% / 0.2;
+  
+  /* New Premium Accent Colors */
+  --premium-silver: 210 20% 85%;
+  --premium-silver-light: 210 20% 95%;
+  --premium-charcoal: 220 15% 20%;
+  --premium-charcoal-light: 220 15% 30%;
+  --accent-coral: 15 85% 65%;
+  --accent-coral-light: 15 85% 75%;
+  --accent-mint: 160 85% 65%;
+  --accent-mint-light: 160 85% 75%;
 
   /* Sidebar colors */
   --sidebar-background: 0 0% 98%;
@@ -320,9 +337,109 @@
     }
   }
 
+  /* Enhanced Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .animate-apple-reveal {
+      animation-duration: 0.8s;
+    }
+    
+    .animate-apple-reveal-stagger {
+      animation-duration: 0.6s;
+    }
+    
+    .animate-apple-float {
+      animation-duration: 4s;
+    }
+    
+    /* Reduce motion for better mobile performance */
+    .animate-apple-parallax {
+      animation-duration: 8s;
+    }
+    
+    .animate-apple-morph {
+      animation-duration: 6s;
+    }
+  }
+
+  /* Touch-friendly interactions */
+  @media (hover: none) and (pointer: coarse) {
+    .hover-lift:hover {
+      transform: none;
+    }
+    
+    .hover-glow:hover {
+      box-shadow: none;
+    }
+    
+    .hover-scale:hover {
+      transform: none;
+    }
+    
+    .group:hover .group-hover\:scale-110 {
+      transform: none;
+    }
+  }
+
+  /* Reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-apple-reveal,
+    .animate-apple-reveal-stagger,
+    .animate-apple-float,
+    .animate-apple-parallax,
+    .animate-apple-morph,
+    .animate-apple-magnetic {
+      animation: none;
+    }
+    
+    .animate-apple-glow {
+      animation: none;
+      box-shadow: 0 0 20px hsl(var(--medical-blue) / 0.2);
+    }
+  }
+
   /* Smooth scrolling for better UX */
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Performance optimizations */
+  .animate-apple-reveal,
+  .animate-apple-reveal-stagger,
+  .animate-apple-float,
+  .animate-apple-parallax,
+  .animate-apple-morph,
+  .animate-apple-magnetic {
+    will-change: transform, opacity;
+  }
+
+  .animate-apple-glow {
+    will-change: box-shadow;
+  }
+
+  /* GPU acceleration for smooth animations */
+  .animate-apple-reveal,
+  .animate-apple-reveal-stagger,
+  .animate-apple-float,
+  .animate-apple-parallax,
+  .animate-apple-morph,
+  .animate-apple-magnetic,
+  .hover-lift,
+  .hover-scale,
+  .group-hover\:scale-110 {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Optimize animations for 60fps */
+  @media (min-width: 1024px) {
+    .animate-apple-float {
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .animate-apple-parallax {
+      animation-timing-function: linear;
+    }
   }
 
   /* Enhanced focus states for accessibility */
@@ -483,6 +600,133 @@
     }
   }
 
+  /* Apple-style Advanced Animations */
+  @keyframes apple-reveal {
+    0% {
+      opacity: 0;
+      transform: translateY(60px) scale(0.95);
+      filter: blur(10px);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translateY(20px) scale(0.98);
+      filter: blur(2px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes apple-scale {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes apple-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px hsl(var(--medical-blue) / 0.2);
+    }
+    50% {
+      box-shadow: 0 0 40px hsl(var(--medical-blue) / 0.4), 0 0 80px hsl(var(--medical-teal) / 0.2);
+    }
+  }
+
+  @keyframes apple-float {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-8px) rotate(1deg);
+    }
+    50% {
+      transform: translateY(-12px) rotate(0deg);
+    }
+    75% {
+      transform: translateY(-8px) rotate(-1deg);
+    }
+  }
+
+  @keyframes apple-shimmer {
+    0% {
+      background-position: -200% 0;
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      background-position: 200% 0;
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes apple-morph {
+    0%, 100% {
+      border-radius: 20px;
+      transform: scale(1);
+    }
+    25% {
+      border-radius: 30px;
+      transform: scale(1.02);
+    }
+    50% {
+      border-radius: 40px;
+      transform: scale(1.05);
+    }
+    75% {
+      border-radius: 30px;
+      transform: scale(1.02);
+    }
+  }
+
+  @keyframes apple-parallax {
+    0% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-20px) scale(1.02);
+    }
+    100% {
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes apple-reveal-stagger {
+    0% {
+      opacity: 0;
+      transform: translateY(40px) scale(0.9);
+    }
+    60% {
+      opacity: 0.8;
+      transform: translateY(-5px) scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes apple-magnetic {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(2px, -2px) scale(1.01);
+    }
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+  }
+
   /* Animation Classes */
   .animate-fade-in {
     animation: fade-in 0.6s ease-out forwards;
@@ -535,6 +779,53 @@
     transform: translate(-50%, -50%);
     animation: ripple 0.6s ease-out;
   }
+
+  /* Apple-style Animation Classes */
+  .animate-apple-reveal {
+    animation: apple-reveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .animate-apple-scale {
+    animation: apple-scale 0.6s ease-in-out;
+  }
+
+  .animate-apple-glow {
+    animation: apple-glow 3s ease-in-out infinite;
+  }
+
+  .animate-apple-float {
+    animation: apple-float 6s ease-in-out infinite;
+  }
+
+  .animate-apple-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    background-size: 200% 100%;
+    animation: apple-shimmer 3s ease-in-out infinite;
+  }
+
+  .animate-apple-morph {
+    animation: apple-morph 8s ease-in-out infinite;
+  }
+
+  .animate-apple-parallax {
+    animation: apple-parallax 10s linear infinite;
+  }
+
+  .animate-apple-reveal-stagger {
+    animation: apple-reveal-stagger 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .animate-apple-magnetic {
+    animation: apple-magnetic 2s ease-in-out infinite;
+  }
+
+  /* Staggered Animation Delays */
+  .animate-stagger-1 { animation-delay: 0.1s; }
+  .animate-stagger-2 { animation-delay: 0.2s; }
+  .animate-stagger-3 { animation-delay: 0.3s; }
+  .animate-stagger-4 { animation-delay: 0.4s; }
+  .animate-stagger-5 { animation-delay: 0.5s; }
+  .animate-stagger-6 { animation-delay: 0.6s; }
 
   /* Hover Effects */
   .hover-lift {
