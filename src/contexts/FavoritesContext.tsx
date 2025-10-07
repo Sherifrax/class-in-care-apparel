@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
-import { useEnhancedToast } from '@/hooks/useEnhancedToast';
+import { useToast } from '@/hooks/use-toast';
 
 interface Favorite {
   id: string;
@@ -32,7 +32,7 @@ export const useFavorites = () => {
 
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
-  const toast = useEnhancedToast();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   // Fetch favorites
@@ -73,11 +73,18 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites', user?.id] });
-      toast.favorites("Added to Favorites", "Product has been added to your favorites.");
+      toast({
+        title: "Added to Favorites",
+        description: "Product has been added to your favorites.",
+      });
     },
     onError: (error: any) => {
       console.error('Error adding to favorites:', error);
-      toast.error("Error", "Failed to add product to favorites.");
+      toast({
+        title: "Error",
+        description: "Failed to add product to favorites.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -96,11 +103,18 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites', user?.id] });
-      toast.info("Removed from Favorites", "Product has been removed from your favorites.");
+      toast({
+        title: "Removed from Favorites",
+        description: "Product has been removed from your favorites.",
+      });
     },
     onError: (error: any) => {
       console.error('Error removing from favorites:', error);
-      toast.error("Error", "Failed to remove product from favorites.");
+      toast({
+        title: "Error",
+        description: "Failed to remove product from favorites.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -131,7 +145,11 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const addToFavorites = async (productId: string) => {
     if (!user) {
-      toast.error("Authentication Required", "Please sign in to add items to favorites.");
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to add items to favorites.",
+        variant: "destructive",
+      });
       return;
     }
     await addMutation.mutateAsync(productId);
