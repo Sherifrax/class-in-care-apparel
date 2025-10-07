@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { useEnhancedToast } from '@/hooks/useEnhancedToast';
 
 interface CartItem {
   id: string;
@@ -41,7 +41,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-  const { toast } = useToast();
+  const toast = useEnhancedToast();
 
   useEffect(() => {
     if (user) {
@@ -68,11 +68,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setItems(data || []);
     } catch (error) {
       console.error('Error fetching cart items:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load cart items",
-        variant: "destructive",
-      });
+      toast.error("Error", "Failed to load cart items");
     } finally {
       setLoading(false);
     }
@@ -80,11 +76,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = async (productId: string, size: string, color?: string, quantity = 1) => {
     if (!user) {
-      toast({
-        title: "Sign in required",
-        description: "Please sign in to add items to your cart",
-        variant: "destructive",
-      });
+      toast.error("Sign in required", "Please sign in to add items to your cart");
       return;
     }
 
@@ -99,11 +91,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (productError) throw productError;
 
       if (product?.track_stock && product.stock_quantity < quantity) {
-        toast({
-          title: "Insufficient stock",
-          description: `Only ${product.stock_quantity} items available for ${product.name}`,
-          variant: "destructive",
-        });
+        toast.warning("Insufficient stock", `Only ${product.stock_quantity} items available for ${product.name}`);
         return;
       }
 
@@ -118,11 +106,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (existingItem) {
         const newQuantity = existingItem.quantity + quantity;
         if (product?.track_stock && product.stock_quantity < newQuantity) {
-          toast({
-            title: "Insufficient stock",
-            description: `Only ${product.stock_quantity} items available for ${product.name}`,
-            variant: "destructive",
-          });
+          toast.warning("Insufficient stock", `Only ${product.stock_quantity} items available for ${product.name}`);
           return;
         }
         await updateQuantity(existingItem.id, newQuantity);
@@ -139,20 +123,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (error) throw error;
 
-        toast({
-          title: "Added to cart",
-          description: "Item added to your cart successfully",
-        });
+        toast.cart("Added to cart", "Item added to your cart successfully");
 
         await fetchCartItems();
       }
     } catch (error) {
       console.error('Error adding to cart:', error);
-      toast({
-        title: "Error",
-        description: "Failed to add item to cart",
-        variant: "destructive",
-      });
+      toast.error("Error", "Failed to add item to cart");
     }
   };
 
@@ -174,11 +151,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await fetchCartItems();
     } catch (error) {
       console.error('Error updating quantity:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update item quantity",
-        variant: "destructive",
-      });
+      toast.error("Error", "Failed to update item quantity");
     }
   };
 
@@ -193,19 +166,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) throw error;
 
-      toast({
-        title: "Removed from cart",
-        description: "Item removed from your cart",
-      });
+      toast.info("Removed from cart", "Item removed from your cart");
 
       await fetchCartItems();
     } catch (error) {
       console.error('Error removing from cart:', error);
-      toast({
-        title: "Error",
-        description: "Failed to remove item from cart",
-        variant: "destructive",
-      });
+      toast.error("Error", "Failed to remove item from cart");
     }
   };
 
@@ -222,11 +188,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setItems([]);
     } catch (error) {
       console.error('Error clearing cart:', error);
-      toast({
-        title: "Error",
-        description: "Failed to clear cart",
-        variant: "destructive",
-      });
+      toast.error("Error", "Failed to clear cart");
     }
   };
 

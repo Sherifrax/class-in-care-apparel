@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useEnhancedToast } from '@/hooks/useEnhancedToast';
 
 interface Notification {
   id: string;
@@ -20,7 +20,7 @@ export const AdminNotifications: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const { toast } = useToast();
+  const toast = useEnhancedToast();
 
   useEffect(() => {
     const cleanup = setupRealtimeNotifications();
@@ -115,10 +115,9 @@ export const AdminNotifications: React.FC = () => {
 
     // Show toast for important notifications
     if (notification.type === 'new_order') {
-      toast({
-        title: notification.title,
-        description: notification.message,
-      });
+      toast.order(notification.title, notification.message);
+    } else if (notification.type === 'low_stock') {
+      toast.warning(notification.title, notification.message);
     }
   };
 

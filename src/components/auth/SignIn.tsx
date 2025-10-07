@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,6 +26,7 @@ interface SignInProps {
 export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const { signIn } = useAuth();
 
   const form = useForm<SignInFormData>({
@@ -38,8 +39,12 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }
 
   const onSubmit = async (data: SignInFormData) => {
     setLoading(true);
+    setSuccess(false);
     try {
       await signIn(data.email, data.password);
+      setSuccess(true);
+      // Brief success animation before redirect
+      setTimeout(() => setSuccess(false), 2000);
     } catch (error) {
       // Error is handled in the auth context
     } finally {
@@ -143,17 +148,29 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }
 
             <Button 
               type="submit" 
-              className="w-full h-10 sm:h-12 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base" 
-              disabled={loading}
+              className={`w-full h-10 sm:h-12 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-500 disabled:opacity-50 text-sm sm:text-base relative overflow-hidden ${
+                success ? 'scale-105 shadow-[0_0_30px_rgba(14,165,233,0.5)]' : 'hover:scale-[1.02]'
+              } ${loading ? 'cursor-wait' : ''}`}
+              disabled={loading || success}
             >
-              {loading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-                  Signing in...
-                </div>
-              ) : (
-                'Sign In'
-              )}
+              <div className={`absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 transition-transform duration-500 ${
+                success ? 'translate-x-0' : '-translate-x-full'
+              }`} />
+              <span className="relative z-10">
+                {loading ? (
+                  <div className="flex items-center gap-2 justify-center">
+                    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                    <span className="animate-pulse">Signing in...</span>
+                  </div>
+                ) : success ? (
+                  <div className="flex items-center gap-2 justify-center animate-in zoom-in-50 duration-300">
+                    <CheckCircle className="w-5 h-5" />
+                    Success!
+                  </div>
+                ) : (
+                  'Sign In'
+                )}
+              </span>
             </Button>
           </form>
         </Form>

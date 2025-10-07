@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -33,6 +33,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const { signUp } = useAuth();
 
   const form = useForm<SignUpFormData>({
@@ -47,8 +48,12 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
 
   const onSubmit = async (data: SignUpFormData) => {
     setLoading(true);
+    setSuccess(false);
     try {
       await signUp(data.email, data.password, data.fullName);
+      setSuccess(true);
+      // Brief success animation before redirect
+      setTimeout(() => setSuccess(false), 2000);
     } catch (error) {
       // Error is handled in the auth context
     } finally {
@@ -200,17 +205,29 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
             <div className="pt-2">
               <Button 
                 type="submit" 
-                className="w-full h-10 sm:h-12 bg-gradient-to-r from-medical-teal to-medical-blue hover:from-medical-teal-light hover:to-medical-blue-light text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base" 
-                disabled={loading}
+                className={`w-full h-10 sm:h-12 bg-gradient-to-r from-medical-teal to-medical-blue hover:from-medical-teal-light hover:to-medical-blue-light text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-500 disabled:opacity-50 text-sm sm:text-base relative overflow-hidden ${
+                  success ? 'scale-105 shadow-[0_0_30px_rgba(20,184,166,0.5)]' : 'hover:scale-[1.02]'
+                } ${loading ? 'cursor-wait' : ''}`}
+                disabled={loading || success}
               >
-                {loading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-                    Creating account...
-                  </div>
-                ) : (
-                  'Create Account'
-                )}
+                <div className={`absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 transition-transform duration-500 ${
+                  success ? 'translate-x-0' : '-translate-x-full'
+                }`} />
+                <span className="relative z-10">
+                  {loading ? (
+                    <div className="flex items-center gap-2 justify-center">
+                      <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                      <span className="animate-pulse">Creating account...</span>
+                    </div>
+                  ) : success ? (
+                    <div className="flex items-center gap-2 justify-center animate-in zoom-in-50 duration-300">
+                      <CheckCircle className="w-5 h-5" />
+                      Account Created!
+                    </div>
+                  ) : (
+                    'Create Account'
+                  )}
+                </span>
               </Button>
             </div>
           </form>
