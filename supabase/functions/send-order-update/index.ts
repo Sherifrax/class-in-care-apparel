@@ -25,6 +25,9 @@ interface OrderUpdateRequest {
   currency: string;
   created_at: string;
   tracking_number?: string;
+  express_shipping?: boolean;
+  embroidery_requested?: boolean;
+  embroidery_details?: string;
 }
 
 const getStatusInfo = (status: string) => {
@@ -49,7 +52,7 @@ const getStatusInfo = (status: string) => {
       nextSteps: [
         "Your order has been dispatched from our warehouse",
         "Track your package using the details below",
-        "Expected delivery: 3-5 business days",
+        "Expected delivery: {DELIVERY_TIME}",
         "You'll receive delivery confirmation once it arrives"
       ]
     },
@@ -102,6 +105,12 @@ const handler = async (req: Request): Promise<Response> => {
     const statusInfo = getStatusInfo(orderData.status);
     const customerName = orderData.customer_name || orderData.customer_email.split('@')[0];
     const orderNumber = orderData.order_id.slice(-8).toUpperCase();
+    const deliveryTime = orderData.express_shipping ? "3 business days (Express)" : "5-7 business days (Standard)";
+    
+    // Replace delivery time placeholder in next steps
+    statusInfo.nextSteps = statusInfo.nextSteps.map(step => 
+      step.replace("{DELIVERY_TIME}", deliveryTime)
+    );
 
     // Format order items summary
     const itemsSummary = orderData.order_items.slice(0, 3).map(item => 

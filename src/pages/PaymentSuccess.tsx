@@ -11,6 +11,7 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
   const { clearCart } = useCart();
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [expressShipping, setExpressShipping] = useState<boolean>(false);
 
   useEffect(() => {
     const session_id = searchParams.get('session_id');
@@ -33,6 +34,18 @@ const PaymentSuccess = () => {
         console.error('Error processing payment:', error);
       } else {
         console.log('Payment processed successfully:', data);
+        // Fetch order details to get shipping information
+        if (data?.order_id) {
+          const { data: orderData, error: orderError } = await supabase
+            .from('orders')
+            .select('express_shipping')
+            .eq('id', data.order_id)
+            .single();
+          
+          if (!orderError && orderData) {
+            setExpressShipping(orderData.express_shipping || false);
+          }
+        }
       }
     } catch (error) {
       console.error('Error processing payment:', error);
@@ -72,7 +85,7 @@ const PaymentSuccess = () => {
               <li>• You'll receive an email confirmation shortly</li>
               <li>• Your order will be processed within 24 hours</li>
               <li>• We'll send you tracking information once shipped</li>
-              <li>• Delivery typically takes 3-5 business days</li>
+              <li>• {expressShipping ? 'Express delivery: 3 business days ⚡' : 'Standard delivery: 5-7 business days'}</li>
             </ul>
           </div>
           
