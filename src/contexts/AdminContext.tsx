@@ -30,25 +30,20 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return;
     }
 
-    // Check if user email is the admin email
-    if (user.email === 'omarmaher929@gmail.com') {
-      setIsAdmin(true);
-      setLoading(false);
-      return;
-    }
-
     try {
+      // Check user_roles table using secure RLS-protected query
       const { data, error } = await supabase
-        .from('profiles')
+        .from('user_roles')
         .select('role')
-        .eq('id', user.id)
-        .single();
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .maybeSingle();
 
       if (error) {
         console.error('Error checking admin status:', error);
         setIsAdmin(false);
       } else {
-        setIsAdmin(data?.role === 'admin');
+        setIsAdmin(!!data);
       }
     } catch (error) {
       console.error('Error checking admin status:', error);
