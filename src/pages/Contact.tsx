@@ -88,36 +88,21 @@ const Contact = () => {
   const contactMethods = [
     {
       icon: <MessageCircle className="w-6 h-6" />,
-      title: "Live Chat",
-      subtitle: "Available 24/7",
-      description: "Get instant help from Dr. Bayan, our AI customer support specialist, available around the clock.",
-      action: "Start Chat Now",
-      highlight: true
-    },
-    {
-      icon: <MessageCircle className="w-6 h-6" />,
       title: "WhatsApp",
       subtitle: "Quick responses",
       description: "Chat with us on WhatsApp for fast, convenient support and order updates.",
       action: "Chat on WhatsApp: +971 56 898 8436",
-      highlight: false,
+      highlight: true,
       link: "https://wa.me/971568988436"
     },
-    {
-      icon: <Phone className="w-6 h-6" />,
-      title: "Phone Support",
-      subtitle: "Mon-Fri, 9 AM - 6 PM EST",
-      description: "Speak directly with our product specialists and sizing experts.",
-      action: "Call 1-800-AURA-MED",
-      highlight: false
-    }, 
     {
       icon: <Mail className="w-6 h-6" />,
       title: "Email Support",
       subtitle: "Response within 4 hours",
       description: "For detailed inquiries, sizing questions, or order support.",
       action: "Email auramedicaluniforms@hotmail.com",
-      highlight: false
+      highlight: false,
+      link: "mailto:auramedicaluniforms@hotmail.com"
     }
   ];
 
@@ -153,12 +138,12 @@ const Contact = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
             {contactMethods.map((method, index) => <Card key={index} className={`p-6 hover:shadow-xl transition-all duration-300 animate-scale-in ${method.highlight ? 'ring-2 ring-medical-blue/20 bg-gradient-to-br from-medical-blue/5 to-medical-teal/5' : ''}`} style={{
             animationDelay: `${index * 0.1}s`
           }}>
                 {method.highlight && <Badge className="absolute -top-2 left-4 bg-gradient-to-r from-medical-blue to-medical-teal">
-                    Most Popular
+                    Recommended
                   </Badge>}
                 <div className="flex items-center gap-4 mb-4">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center ${method.highlight ? 'bg-gradient-to-br from-medical-blue to-medical-teal text-white' : 'bg-medical-blue/10 text-medical-blue'}`}>
@@ -358,9 +343,19 @@ const Contact = () => {
             <p className="text-muted-foreground mb-6">
               Our team is here to help you with any questions or concerns.
             </p>
-            <Button size="lg">
-              Chat with Dr. Bayan
-            </Button>
+            <a 
+              href="https://wa.me/971568988436" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <Button 
+                size="lg"
+                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+              >
+                <MessageCircle className="w-5 h-5 mr-2" />
+                Chat with Dr. Bayan
+              </Button>
+            </a>
           </div>
         </div>
       </section>
