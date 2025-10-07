@@ -74,7 +74,7 @@ const getStatusInfo = (status: string) => {
       color: "#ef4444",
       icon: "❌",
       nextSteps: [
-        "Your payment will be refunded within 3-5 business days",
+        "Your payment will be refunded within 5-10 business days",
         "You'll receive a separate email confirmation of the refund",
         "If you have questions, please contact our support team",
         "We'd love to serve you again in the future"
