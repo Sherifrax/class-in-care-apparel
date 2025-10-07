@@ -35,7 +35,13 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Admin notification email not configured");
     }
 
-    const fromEmail = Deno.env.get("VERIFIED_EMAIL_FROM") || "AURA Medical Scrubs <orders@yourdomain.com>";
+    // Use verified domain or fallback to resend.dev for testing
+    const rawFrom = Deno.env.get("VERIFIED_EMAIL_FROM")?.trim();
+    const simpleEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const nameEmailRegex = /^[^<>]+<\s*[^\s@]+@[^\s@]+\.[^\s@]+\s*>$/;
+    const fromEmail = (rawFrom && (simpleEmailRegex.test(rawFrom) || nameEmailRegex.test(rawFrom)))
+      ? rawFrom
+      : "AURA Medical Scrubs <onboarding@resend.dev>";
 
     // Send notification email to admin
     const adminEmailHtml = `
