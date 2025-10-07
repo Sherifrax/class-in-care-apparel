@@ -22,10 +22,6 @@ interface CustomerReceiptRequest {
   }>;
   subtotal: number;
   delivery_cost: number;
-  embroidery_requested?: boolean;
-  embroidery_details?: string;
-  embroidery_cost?: number;
-  express_shipping?: boolean;
   total_amount: number;
   currency: string;
   created_at: string;
@@ -43,29 +39,35 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending customer receipt for order:", orderData.order_id);
 
     // Format order items for email
-    const orderItemsHtml = orderData.order_items.map(item => `
+    const orderItemsHtml = orderData.order_items
+      .map(
+        (item) => `
       <tr>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9;">${item.product_name}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.size}</td>
-        <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.color || '-'}</td>
+        <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.color || "-"}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">${item.quantity}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: right;">${orderData.currency} ${item.unit_price.toFixed(2)}</td>
         <td style="padding: 12px 8px; border-bottom: 1px solid #f1f5f9; text-align: right; font-weight: 600;">${orderData.currency} ${(item.quantity * item.unit_price).toFixed(2)}</td>
       </tr>
-    `).join('');
+    `,
+      )
+      .join("");
 
     // Format shipping address
-    const addressHtml = orderData.shipping_address ? `
+    const addressHtml = orderData.shipping_address
+      ? `
       <div style="background-color: #f8fafc; padding: 16px; border-radius: 8px; margin-top: 16px;">
         <h4 style="margin: 0 0 12px 0; color: #334155; font-size: 16px;">Shipping Address</h4>
         <p style="margin: 0; color: #64748b; line-height: 1.5;">
-          ${orderData.shipping_address.line1 || ''}<br>
-          ${orderData.shipping_address.line2 ? orderData.shipping_address.line2 + '<br>' : ''}
-          ${orderData.shipping_address.city || ''}, ${orderData.shipping_address.state || ''} ${orderData.shipping_address.postal_code || ''}<br>
-          ${orderData.shipping_address.country || ''}
+          ${orderData.shipping_address.line1 || ""}<br>
+          ${orderData.shipping_address.line2 ? orderData.shipping_address.line2 + "<br>" : ""}
+          ${orderData.shipping_address.city || ""}, ${orderData.shipping_address.state || ""} ${orderData.shipping_address.postal_code || ""}<br>
+          ${orderData.shipping_address.country || ""}
         </p>
       </div>
-    ` : `
+    `
+      : `
       <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 8px; margin-top: 16px;">
         <h4 style="margin: 0 0 8px 0; color: #92400e; font-size: 16px; font-weight: 600;">⚠️ Shipping Address Not Provided</h4>
         <p style="margin: 0; color: #78350f; line-height: 1.5; font-size: 14px;">
@@ -74,7 +76,7 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    const customerName = orderData.customer_name || orderData.customer_email.split('@')[0];
+    const customerName = orderData.customer_name || orderData.customer_email.split("@")[0];
     const orderNumber = orderData.order_id.slice(-8).toUpperCase();
 
     const emailHtml = `
@@ -100,12 +102,12 @@ const handler = async (req: Request): Promise<Response> => {
               <span style="background-color: #10b981; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Confirmed</span>
             </div>
             <p style="color: #64748b; margin: 0; font-size: 14px;">
-              Order Date: ${new Date(orderData.created_at).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+              Order Date: ${new Date(orderData.created_at).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
               })}
             </p>
           </div>
@@ -139,21 +141,9 @@ const handler = async (req: Request): Promise<Response> => {
               <span style="color: #374151; font-weight: 500;">${orderData.currency} ${orderData.subtotal.toFixed(2)}</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-              <span style="color: #64748b;">Delivery ${orderData.express_shipping ? '(Express 3 days)' : '(Standard 5-7 days)'}:</span>
+              <span style="color: #64748b;">Delivery:</span>
               <span style="color: #374151; font-weight: 500;">${orderData.currency} ${orderData.delivery_cost.toFixed(2)}</span>
             </div>
-            ${orderData.embroidery_requested ? `
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-              <span style="color: #64748b;">Custom Embroidery:</span>
-              <span style="color: #374151; font-weight: 500;">${orderData.currency} ${(orderData.embroidery_cost || 0).toFixed(2)}</span>
-            </div>
-            ${orderData.embroidery_details ? `
-            <div style="background-color: #f0f9ff; padding: 12px; border-radius: 6px; margin-bottom: 12px; border-left: 3px solid #0ea5e9;">
-              <span style="color: #0c4a6e; font-size: 12px; font-weight: 600;">Embroidery Text:</span>
-              <p style="margin: 4px 0 0 0; color: #0369a1; font-weight: 500;">"${orderData.embroidery_details}"</p>
-            </div>
-            ` : ''}
-            ` : ''}
             <hr style="margin: 16px 0; border: none; border-top: 1px solid #e2e8f0;">
             <div style="display: flex; justify-content: space-between;">
               <span style="color: #0f172a; font-weight: 600; font-size: 18px;">Total:</span>
@@ -169,7 +159,7 @@ const handler = async (req: Request): Promise<Response> => {
             <ul style="color: #0369a1; margin: 0; padding-left: 20px; line-height: 1.6;">
               <li>We'll process your order within 24 hours</li>
               <li>You'll receive shipping confirmation with tracking details</li>
-              <li>Standard delivery takes 3-5 business days</li>
+              <li>Standard delivery takes 5-7 business days</li>
               <li>Contact us if you have any questions</li>
             </ul>
           </div>
@@ -184,16 +174,11 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     // Use verified domain or fallback to resend.dev for testing
-    const rawFrom = Deno.env.get("VERIFIED_EMAIL_FROM")?.trim();
-    const simpleEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const nameEmailRegex = /^[^<>]+<\s*[^\s@]+@[^\s@]+\.[^\s@]+\s*>$/;
-    const fromAddress = (rawFrom && (simpleEmailRegex.test(rawFrom) || nameEmailRegex.test(rawFrom)))
-      ? rawFrom
-      : "AURA Medical Scrubs <onboarding@resend.dev>";
-    
+    const fromAddress = Deno.env.get("VERIFIED_EMAIL_FROM") || "AURA Medical Scrubs <onboarding@resend.dev>";
+
     // Customer receipts go to the actual customer email
     const recipientEmail = orderData.customer_email;
-    
+
     const emailResponse = await resend.emails.send({
       from: fromAddress,
       to: [recipientEmail],
@@ -206,17 +191,21 @@ const handler = async (req: Request): Promise<Response> => {
     // Check for domain verification error
     if (emailResponse.error && emailResponse.error.message?.includes("verify a domain")) {
       console.warn("Domain verification required. Please verify your domain at https://resend.com/domains");
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: "Email delivery requires domain verification. Please verify your domain at https://resend.com/domains and set VERIFIED_EMAIL_FROM environment variable.",
-        domain_verification_required: true 
-      }), {
-        status: 400,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error:
+            "Email delivery requires domain verification. Please verify your domain at https://resend.com/domains and set VERIFIED_EMAIL_FROM environment variable.",
+          domain_verification_required: true,
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+            ...corsHeaders,
+          },
         },
-      });
+      );
     }
 
     return new Response(JSON.stringify({ success: true, email_id: emailResponse.data?.id }), {
@@ -228,14 +217,11 @@ const handler = async (req: Request): Promise<Response> => {
     });
   } catch (error: any) {
     console.error("Error sending customer receipt email:", error);
-    
-    return new Response(
-      JSON.stringify({ error: error.message, success: false }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      }
-    );
+
+    return new Response(JSON.stringify({ error: error.message, success: false }), {
+      status: 500,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
   }
 };
 
