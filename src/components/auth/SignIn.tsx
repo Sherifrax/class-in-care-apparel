@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, CheckCircle, Sparkles, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,7 +26,13 @@ interface SignInProps {
 export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [animateLogo, setAnimateLogo] = useState(false);
   const { signIn } = useAuth();
+
+  useEffect(() => {
+    setAnimateLogo(true);
+  }, []);
 
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -40,6 +46,10 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }
     setLoading(true);
     try {
       await signIn(data.email, data.password);
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsSuccess(false);
+      }, 2000);
     } catch (error) {
       // Error is handled in the auth context
     } finally {
@@ -48,9 +58,19 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }
   };
 
   return (
-    <Card className="w-full border-0 shadow-none bg-transparent">
-      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6">
-        <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-glow">
+    <Card className="w-full border-0 shadow-none bg-transparent relative overflow-hidden">
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-medical-blue/5 via-transparent to-medical-teal/5 animate-pulse"></div>
+      
+      {/* Floating particles effect */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 w-2 h-2 bg-medical-blue/20 rounded-full animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
+        <div className="absolute top-20 right-16 w-1 h-1 bg-medical-teal/30 rounded-full animate-bounce" style={{ animationDelay: '1s', animationDuration: '4s' }}></div>
+        <div className="absolute bottom-20 left-16 w-1.5 h-1.5 bg-medical-blue/25 rounded-full animate-bounce" style={{ animationDelay: '2s', animationDuration: '3.5s' }}></div>
+      </div>
+
+      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6 relative z-10">
+        <div className={`mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-glow transition-all duration-1000 ${animateLogo ? 'scale-100 rotate-0' : 'scale-0 rotate-180'}`}>
           <img 
             src="/images/aura-logo.jpg" 
             alt="AURA Logo" 
@@ -58,15 +78,15 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }
           />
         </div>
         <div className="space-y-1 sm:space-y-2">
-          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent animate-fade-in">
             Welcome Back
           </CardTitle>
-          <CardDescription className="text-xs sm:text-sm lg:text-base text-muted-foreground">
+          <CardDescription className="text-xs sm:text-sm lg:text-base text-muted-foreground animate-fade-in-delay">
             Sign in to access your AURA account
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
+      <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6 relative z-10">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -143,7 +163,7 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }
 
             <Button 
               type="submit" 
-              className="w-full h-10 sm:h-12 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base" 
+              className={`w-full h-10 sm:h-12 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base relative overflow-hidden ${isSuccess ? 'bg-gradient-to-r from-green-500 to-green-600' : ''}`}
               disabled={loading}
             >
               {loading ? (
@@ -151,8 +171,21 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword }
                   <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                   Signing in...
                 </div>
+              ) : isSuccess ? (
+                <div className="flex items-center gap-2 animate-pulse">
+                  <CheckCircle className="w-5 h-5" />
+                  Welcome back!
+                </div>
               ) : (
-                'Sign In'
+                <div className="flex items-center gap-2">
+                  Sign In
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </div>
+              )}
+              
+              {/* Success animation overlay */}
+              {isSuccess && (
+                <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-600/20 animate-ping"></div>
               )}
             </Button>
           </form>

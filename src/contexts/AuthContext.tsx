@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useEnhancedToast } from '@/hooks/useEnhancedToast';
 
 interface AuthContextType {
   user: User | null;
@@ -28,6 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const enhancedToast = useEnhancedToast();
 
   useEffect(() => {
     // Get initial session
@@ -58,10 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       // Only show sign out message, as sign in messages will be handled by the sign in functions
       if (event === 'SIGNED_OUT') {
-        toast({
-          title: "Goodbye!",
-          description: "You have been signed out successfully.",
-        });
+        enhancedToast.logout("Goodbye!", "You have been signed out successfully.");
       }
     });
 
@@ -81,19 +80,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (error) {
-      toast({
-        title: "Sign Up Failed",
-        description: error.message,
-        variant: "destructive",
-      });
+      enhancedToast.error("Sign Up Failed", error.message);
       throw error;
     }
 
     if (data.user && !data.session) {
-      toast({
-        title: "Check your email",
-        description: "We've sent you a confirmation link to complete your registration.",
-      });
+      enhancedToast.signup("Check your email", "We've sent you a confirmation link to complete your registration.");
     }
   };
 
@@ -104,29 +96,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (error) {
-      toast({
-        title: "Sign In Failed",
-        description: error.message,
-        variant: "destructive",
-      });
+      enhancedToast.error("Sign In Failed", error.message);
       throw error;
     }
 
     // Show success message only for actual sign in actions
-    toast({
-      title: "Welcome!",
-      description: "You have been signed in successfully.",
-    });
+    enhancedToast.login("Welcome!", "You have been signed in successfully.");
   };
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      toast({
-        title: "Sign Out Failed",
-        description: error.message,
-        variant: "destructive",
-      });
+      enhancedToast.error("Sign Out Failed", error.message);
       throw error;
     }
   };
@@ -140,18 +121,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (error) {
-      toast({
-        title: "Reset Password Failed",
-        description: error.message,
-        variant: "destructive",
-      });
+      enhancedToast.error("Reset Password Failed", error.message);
       throw error;
     }
 
-    toast({
-      title: "Check your email",
-      description: "We've sent you a password reset link.",
-    });
+    enhancedToast.info("Check your email", "We've sent you a password reset link.");
   };
 
   const value = {

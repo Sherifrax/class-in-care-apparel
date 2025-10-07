@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Edit, Trash2, Upload, Image as ImageIcon, Package, Star, DollarSign, BarChart3, TrendingUp, RefreshCw } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Plus, Edit, Trash2, Upload, Image as ImageIcon, Package, Star, DollarSign, BarChart3, TrendingUp, RefreshCw, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminRoute } from '@/components/admin/AdminRoute';
 import { AdminLayout } from '@/components/admin/AdminLayout';
@@ -40,6 +41,7 @@ const AdminProductsContent: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -223,8 +225,8 @@ const AdminProductsContent: React.FC = () => {
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: `Product ${editingProduct ? 'updated' : 'created'} successfully`,
+        title: editingProduct ? "Product Updated" : "Product Created",
+        description: `"${formData.name}" has been ${editingProduct ? 'updated' : 'added to your catalog'} successfully.`,
       });
 
       setIsDialogOpen(false);
@@ -232,8 +234,8 @@ const AdminProductsContent: React.FC = () => {
     } catch (error) {
       console.error('Error saving product:', error);
       toast({
-        title: "Error",
-        description: `Failed to ${editingProduct ? 'update' : 'create'} product`,
+        title: editingProduct ? "Update Failed" : "Creation Failed",
+        description: `Failed to ${editingProduct ? 'update' : 'create'} "${formData.name}". Please try again.`,
         variant: "destructive",
       });
     } finally {
@@ -242,7 +244,8 @@ const AdminProductsContent: React.FC = () => {
   };
 
   const handleDelete = async (productId: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
 
     try {
       const { error } = await supabase
@@ -253,16 +256,16 @@ const AdminProductsContent: React.FC = () => {
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "Product deleted successfully",
+        title: "Product Deleted",
+        description: `"${product.name}" has been successfully removed from your catalog.`,
       });
 
       fetchProducts();
     } catch (error) {
       console.error('Error deleting product:', error);
       toast({
-        title: "Error",
-        description: "Failed to delete product",
+        title: "Delete Failed",
+        description: `Failed to delete "${product.name}". Please try again.`,
         variant: "destructive",
       });
     }
@@ -548,12 +551,20 @@ const AdminProductsContent: React.FC = () => {
                 </div>
                 
                 {/* Fixed Footer with Action Buttons */}
-                <div className="flex-shrink-0 border-t border-medical-blue/20 bg-white/90 backdrop-blur-sm px-6 py-4">
-                  <div className="flex gap-4">
+                <div className="flex-shrink-0 border-t border-medical-blue/20 bg-white/90 backdrop-blur-sm px-6 py-8">
+                  <div className="flex justify-end gap-6">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => setIsDialogOpen(false)}
+                      className="px-8 border-2 border-medical-blue/20 hover:border-medical-blue hover:bg-medical-blue/5 hover:text-medical-blue h-12 transition-all duration-200 font-medium"
+                    >
+                      Cancel
+                    </Button>
                     <Button 
                       type="submit" 
                       disabled={uploading}
-                      className="flex-1 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] h-11"
+                      className="px-8 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] h-12 disabled:opacity-50 disabled:hover:scale-100 font-medium"
                     >
                       {uploading ? (
                         <>
@@ -565,14 +576,6 @@ const AdminProductsContent: React.FC = () => {
                           {editingProduct ? 'Update Product' : 'Create Product'}
                         </>
                       )}
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => setIsDialogOpen(false)}
-                      className="px-8 border-2 border-medical-blue/20 hover:border-medical-blue h-11"
-                    >
-                      Cancel
                     </Button>
                   </div>
                 </div>
@@ -723,14 +726,44 @@ const AdminProductsContent: React.FC = () => {
                     <Edit className="w-4 h-4 mr-1" />
                     Edit
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDelete(product.id)}
-                    className="border-red-300 hover:border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-red-300 hover:border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="max-w-md glass border-red-200/50 bg-gradient-to-b from-white/95 to-red-50/20 backdrop-blur-xl">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-3 text-red-800">
+                          <div className="p-2 bg-red-100 rounded-full">
+                            <AlertTriangle className="w-5 h-5 text-red-600" />
+                          </div>
+                          Delete Product
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-base text-gray-700 mt-3">
+                          Are you sure you want to delete <strong>"{product.name}"</strong>?
+                          <br /><br />
+                          This action cannot be undone and will permanently remove the product from your catalog, including all associated images and inventory data.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter className="gap-4 mt-6">
+                        <AlertDialogCancel className="px-6 py-2 border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 hover:text-gray-800 text-gray-700">
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDelete(product.id)}
+                          className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white border-0 shadow-lg hover:shadow-red-200/50"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete Product
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </CardContent>
             </Card>

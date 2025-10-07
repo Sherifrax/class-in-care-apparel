@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-import { Star, ShoppingCart, Heart, Eye, Filter, Plus, Minus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ShoppingCart, Heart, Eye, Plus, Minus, ChevronLeft, ChevronRight } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -38,26 +38,12 @@ interface Product {
   low_stock_threshold: number;
   track_stock: boolean;
 }
-interface Category {
-  id: string;
-  name: string;
-  count: number;
-  active: boolean;
-}
 const Products = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>('All Collections');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
-  const [selectedFilters, setSelectedFilters] = useState({
-    sizes: [] as string[],
-    colors: [] as string[],
-    features: [] as string[],
-    priceRange: null as string | null
-  });
-  const [showFilters, setShowFilters] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const {
     addToCart
@@ -96,153 +82,13 @@ const Products = () => {
     }
   });
 
-  // Fetch categories from Supabase
-  const {
-    data: categories = [],
-    isLoading: categoriesLoading
-  } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      const {
-        data,
-        error
-      } = await supabase.from('product_categories').select('*').order('name', {
-        ascending: true
-      });
-      if (error) throw error;
-      return data as Category[];
-    }
-  });
 
-  // Apply all filters
-  const filteredProducts = products.filter(product => {
-    // Category filter - "All Collections" shows all products
-    if (selectedCategory !== null && selectedCategory !== 'All Collections') {
-      const productCategory = product.product_categories?.name || null;
-      if (productCategory !== selectedCategory) return false;
-    }
+  // Show all products without any filtering
+  const filteredProducts = products;
 
-    // Size filter
-    if (selectedFilters.sizes.length > 0) {
-      if (!selectedFilters.sizes.some(size => (product.sizes || []).includes(size))) return false;
-    }
 
-    // Color filter
-    if (selectedFilters.colors.length > 0) {
-      if (!selectedFilters.colors.some(color => (product.colors || []).includes(color))) return false;
-    }
-
-    // Features filter
-    if (selectedFilters.features.length > 0) {
-      if (!selectedFilters.features.some(feature => (product.features || []).includes(feature))) return false;
-    }
-
-    // Price range filter
-    if (selectedFilters.priceRange) {
-      const price = parseFloat(product.price);
-      switch (selectedFilters.priceRange) {
-        case "Under 200 AED":
-          if (price >= 200) return false;
-          break;
-        case "200-300 AED":
-          if (price < 200 || price > 300) return false;
-          break;
-        case "Over 300 AED":
-          if (price <= 300) return false;
-          break;
-      }
-    }
-    return true;
-  });
-
-  // Helper function to map filter group names to selectedFilters keys
-  const getFilterKey = (filterGroupName: string) => {
-    switch (filterGroupName.toLowerCase()) {
-      case 'size':
-        return 'sizes';
-      case 'color':
-        return 'colors';
-      case 'features':
-        return 'features';
-      case 'price range':
-        return 'priceRange';
-      default:
-        return filterGroupName.toLowerCase();
-    }
-  };
-
-  // De-duplicate categories by name and add dynamic counts
-  const uniqueCategories = categories.reduce((acc, category) => {
-    const existing = acc.find(c => c.name === category.name);
-    if (!existing) {
-      acc.push(category);
-    }
-    return acc;
-  }, [] as Category[]);
-
-  // Add "All Collections" if not present
-  if (!uniqueCategories.find(c => c.name === 'All Collections')) {
-    uniqueCategories.unshift({
-      id: 'all',
-      name: 'All Collections',
-      count: 0,
-      active: true
-    });
-  }
-
-  // Use unique categories with dynamic counts
-  const allCategories = uniqueCategories.map(category => ({
-    ...category,
-    count: category.name === 'All Collections' ? products.length : products.filter(p => p.product_categories?.name === category.name).length
-  }));
 
   // Get unique filter options from products
-  const filterOptions = [{
-    name: "Size",
-    options: [...new Set(products.flatMap(p => p.sizes || []))].filter(Boolean).sort()
-  }, {
-    name: "Color",
-    options: [...new Set(products.flatMap(p => p.colors || []))].filter(Boolean).sort()
-  }, {
-    name: "Features",
-    options: [...new Set(products.flatMap(p => p.features || []))].filter(Boolean).sort()
-  }, {
-    name: "Price Range",
-    options: ["Under 200 AED", "200-300 AED", "Over 300 AED"]
-  }];
-
-  // Clear all filters
-  const clearFilters = () => {
-    setSelectedFilters({
-      sizes: [],
-      colors: [],
-      features: [],
-      priceRange: null
-    });
-    setSelectedCategory('All Collections');
-  };
-
-  // Toggle filter option
-  const toggleFilterOption = (filterGroupName: string, option: string) => {
-    const filterKey = getFilterKey(filterGroupName);
-    if (filterKey === 'priceRange') {
-      setSelectedFilters(prev => ({
-        ...prev,
-        priceRange: prev.priceRange === option ? null : option
-      }));
-    } else {
-      setSelectedFilters(prev => {
-        const currentArray = prev[filterKey as keyof typeof prev] as string[];
-        return {
-          ...prev,
-          [filterKey]: (currentArray || []).includes(option) ? (currentArray || []).filter(item => item !== option) : [...(currentArray || []), option]
-        };
-      });
-    }
-  };
-
-  // Check if any filters are active
-  const hasActiveFilters = selectedCategory !== null && selectedCategory !== 'All Collections' || selectedFilters.sizes.length > 0 || selectedFilters.colors.length > 0 || selectedFilters.features.length > 0 || selectedFilters.priceRange !== null;
   const handleAddToCart = async () => {
     if (!selectedProduct || !selectedSize) return;
 
@@ -282,7 +128,7 @@ const Products = () => {
     setQuickViewProduct(product);
     setCurrentImageIndex(0);
   };
-  if (productsLoading || categoriesLoading) {
+  if (productsLoading) {
     return <div className="min-h-screen pt-20 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-medical-blue mx-auto mb-4"></div>
@@ -293,63 +139,6 @@ const Products = () => {
   return <div className="min-h-screen pt-20">
       <AuroraCollection />
       
-      {/* Optimized Filter Bar */}
-      <section className="bg-white border-b border-gray-200 sticky top-20 z-30 shadow-soft backdrop-blur-sm">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide flex-1">
-              {allCategories.map(category => <Button key={category.id} variant={selectedCategory === category.name ? "default" : "outline"} size="sm" onClick={() => setSelectedCategory(category.name)} className={cn("flex-shrink-0 transition-all duration-300 rounded-xl", selectedCategory === category.name ? "bg-gradient-to-r from-medical-blue to-medical-teal shadow-glow" : "hover:border-medical-blue hover:bg-medical-blue/5")}>
-                  {category.name}
-                  <Badge variant="secondary" className="ml-2 bg-white/20">
-                    {category.count}
-                  </Badge>
-                </Button>)}
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={() => setShowFilters(!showFilters)} className={cn("gap-2 flex-shrink-0 rounded-xl transition-all duration-300", showFilters ? "bg-medical-blue text-white hover:bg-medical-blue-light" : "hover:border-medical-blue hover:bg-medical-blue/5")}>
-                <Filter className="w-4 h-4" />
-                Filters
-                {hasActiveFilters && <Badge className="ml-1 bg-medical-teal text-white">
-                    Active
-                  </Badge>}
-              </Button>
-              
-              {hasActiveFilters && <Button variant="ghost" size="sm" onClick={clearFilters} className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl">
-                  Clear All
-                </Button>}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Advanced Filters Panel */}
-      {showFilters && <section className="py-6 bg-gradient-to-br from-medical-blue/5 to-medical-teal/5 border-b border-medical-blue/20 animate-fade-in">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {filterOptions.map(filterGroup => <div key={filterGroup.name} className="space-y-3">
-                  <h4 className="font-medium text-sm text-foreground">{filterGroup.name}</h4>
-                     <div className="space-y-2 max-h-40 overflow-y-auto">
-                       {filterGroup.options.map(option => {
-                const filterKey = getFilterKey(filterGroup.name);
-                const isSelected = filterKey === 'priceRange' ? selectedFilters.priceRange === option : (selectedFilters[filterKey as keyof typeof selectedFilters] as string[] || []).includes(option);
-                return <label key={option} className="flex items-center space-x-2 cursor-pointer group">
-                           <input type={filterGroup.name === 'Price Range' ? 'radio' : 'checkbox'} checked={isSelected} onChange={() => toggleFilterOption(filterGroup.name, option)} className="w-4 h-4 text-medical-blue border-gray-300 rounded focus:ring-medical-blue" />
-                           {filterGroup.name === 'Colors' ? <div className="flex items-center gap-2">
-                               <ColorSwatch color={option} size="sm" />
-                               <span className={cn("text-sm transition-colors", isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground")}>
-                                 {option}
-                               </span>
-                             </div> : <span className={cn("text-sm transition-colors", isSelected ? "text-medical-blue font-medium" : "text-muted-foreground group-hover:text-foreground")}>
-                               {option}
-                             </span>}
-                         </label>;
-              })}
-                   </div>
-                </div>)}
-            </div>
-          </div>
-        </section>}
       
       {/* Products Grid */}
       <section className="py-16 bg-gradient-to-b from-background to-soft-gray/20">

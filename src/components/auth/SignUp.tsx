@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, CheckCircle, Sparkles, ArrowRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -33,7 +33,13 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [animateLogo, setAnimateLogo] = useState(false);
   const { signUp } = useAuth();
+
+  useEffect(() => {
+    setAnimateLogo(true);
+  }, []);
 
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
@@ -49,6 +55,10 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
     setLoading(true);
     try {
       await signUp(data.email, data.password, data.fullName);
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsSuccess(false);
+      }, 3000);
     } catch (error) {
       // Error is handled in the auth context
     } finally {
@@ -57,9 +67,20 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
   };
 
   return (
-    <Card className="w-full border-0 shadow-none bg-transparent">
-      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6">
-        <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-glow">
+    <Card className="w-full border-0 shadow-none bg-transparent relative overflow-hidden">
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-medical-teal/5 via-transparent to-medical-blue/5 animate-pulse"></div>
+      
+      {/* Floating particles effect */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-8 right-12 w-2 h-2 bg-medical-teal/20 rounded-full animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
+        <div className="absolute top-16 left-12 w-1 h-1 bg-medical-blue/30 rounded-full animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '4s' }}></div>
+        <div className="absolute bottom-16 right-8 w-1.5 h-1.5 bg-medical-teal/25 rounded-full animate-bounce" style={{ animationDelay: '2.5s', animationDuration: '3.5s' }}></div>
+        <div className="absolute top-24 left-8 w-1 h-1 bg-medical-blue/20 rounded-full animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '5s' }}></div>
+      </div>
+
+      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6 relative z-10">
+        <div className={`mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-glow transition-all duration-1000 ${animateLogo ? 'scale-100 rotate-0' : 'scale-0 rotate-180'}`}>
           <img 
             src="/images/aura-logo.jpg" 
             alt="AURA Logo" 
@@ -67,15 +88,16 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
           />
         </div>
         <div className="space-y-1 sm:space-y-2">
-          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-medical-teal to-medical-blue bg-clip-text text-transparent">
+          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-medical-teal to-medical-blue bg-clip-text text-transparent animate-fade-in">
             Join AURA
+            <Sparkles className="inline-block w-5 h-5 ml-2 text-medical-teal animate-pulse" />
           </CardTitle>
-          <CardDescription className="text-xs sm:text-sm lg:text-base text-muted-foreground">
+          <CardDescription className="text-xs sm:text-sm lg:text-base text-muted-foreground animate-fade-in-delay">
             Create your account and discover premium medical apparel
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
+      <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6 relative z-10">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-5">
             <FormField
@@ -200,7 +222,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
             <div className="pt-2">
               <Button 
                 type="submit" 
-                className="w-full h-10 sm:h-12 bg-gradient-to-r from-medical-teal to-medical-blue hover:from-medical-teal-light hover:to-medical-blue-light text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base" 
+                className={`w-full h-10 sm:h-12 bg-gradient-to-r from-medical-teal to-medical-blue hover:from-medical-teal-light hover:to-medical-blue-light text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base relative overflow-hidden ${isSuccess ? 'bg-gradient-to-r from-green-500 to-green-600' : ''}`}
                 disabled={loading}
               >
                 {loading ? (
@@ -208,8 +230,23 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode }) => {
                     <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                     Creating account...
                   </div>
+                ) : isSuccess ? (
+                  <div className="flex items-center gap-2 animate-pulse">
+                    <CheckCircle className="w-5 h-5" />
+                    <Star className="w-4 h-4" />
+                    Welcome to AURA!
+                  </div>
                 ) : (
-                  'Create Account'
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    Create Account
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                )}
+                
+                {/* Success animation overlay */}
+                {isSuccess && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-600/20 animate-ping"></div>
                 )}
               </Button>
             </div>

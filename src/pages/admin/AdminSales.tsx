@@ -314,12 +314,12 @@ const AdminSalesContent: React.FC = () => {
           </div>
           
           <div className="flex flex-col lg:flex-row gap-6">
-            <div className="relative flex-1 lg:flex-[4]">
+            <div className="relative flex-1 lg:flex-[8]">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-medical-blue/60 h-5 w-5" />
               <Input placeholder="Search by customer email, order ID, or any details..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-12 h-12 bg-white/70 border-2 border-medical-blue/20 focus:border-medical-blue/50 focus:ring-4 focus:ring-medical-blue/10 backdrop-blur-sm text-base font-medium shadow-sm hover:shadow-md transition-all duration-200" />
             </div>
             
-            <div className="lg:flex-[2]">
+            <div className="lg:w-[180px] lg:flex-shrink-0">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="h-12 bg-white/70 border-2 border-medical-blue/20 focus:border-medical-blue/50 focus:ring-4 focus:ring-medical-blue/10 backdrop-blur-sm text-base font-medium shadow-sm hover:shadow-md transition-all duration-200">
                   <div className="flex items-center gap-2">

@@ -23,14 +23,19 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-2xl border backdrop-blur-md p-6 pr-8 shadow-luxury transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full data-[state=open]:animate-bounce-in",
+  "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-2xl border backdrop-blur-md p-6 pr-8 shadow-luxury transition-all duration-500 data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full data-[state=open]:animate-bounce-in",
   {
     variants: {
       variant: {
-        default: "border-white/20 bg-gradient-to-r from-white/90 to-white/80 text-foreground shadow-glow backdrop-blur-xl",
-        destructive: "destructive group border-red-200/50 bg-gradient-to-r from-red-50/90 to-red-100/80 text-red-800 shadow-lg backdrop-blur-xl",
-        success: "border-green-200/50 bg-gradient-to-r from-green-50/90 to-green-100/80 text-green-800 shadow-lg backdrop-blur-xl",
-        info: "border-blue-200/50 bg-gradient-to-r from-blue-50/90 to-blue-100/80 text-blue-800 shadow-lg backdrop-blur-xl",
+        default: "border-white/20 bg-gradient-to-r from-white/95 to-white/85 text-foreground shadow-glow backdrop-blur-xl hover:shadow-2xl",
+        destructive: "destructive group border-red-200/50 bg-gradient-to-r from-red-50/95 to-red-100/85 text-red-800 shadow-lg backdrop-blur-xl hover:shadow-red-200/50",
+        success: "border-green-200/50 bg-gradient-to-r from-green-50/95 to-green-100/85 text-green-800 shadow-lg backdrop-blur-xl hover:shadow-green-200/50",
+        info: "border-blue-200/50 bg-gradient-to-r from-blue-50/95 to-blue-100/85 text-blue-800 shadow-lg backdrop-blur-xl hover:shadow-blue-200/50",
+        cart: "border-medical-blue/30 bg-gradient-to-r from-medical-blue/10 to-medical-teal/10 text-medical-blue shadow-lg backdrop-blur-xl hover:shadow-medical-blue/20",
+        favorites: "border-pink-200/50 bg-gradient-to-r from-pink-50/95 to-rose-100/85 text-pink-800 shadow-lg backdrop-blur-xl hover:shadow-pink-200/50",
+        login: "border-green-200/50 bg-gradient-to-r from-green-50/95 to-emerald-100/85 text-green-800 shadow-lg backdrop-blur-xl hover:shadow-green-200/50",
+        logout: "border-orange-200/50 bg-gradient-to-r from-orange-50/95 to-amber-100/85 text-orange-800 shadow-lg backdrop-blur-xl hover:shadow-orange-200/50",
+        signup: "border-purple-200/50 bg-gradient-to-r from-purple-50/95 to-violet-100/85 text-purple-800 shadow-lg backdrop-blur-xl hover:shadow-purple-200/50",
       },
     },
     defaultVariants: {
