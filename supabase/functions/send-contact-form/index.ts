@@ -103,6 +103,8 @@ const handler = async (req: Request): Promise<Response> => {
       to: [adminEmail],
       subject: `New Contact Form: ${interest} - ${firstName} ${lastName}`,
       html: adminEmailHtml,
+      text: `New contact form submission\nName: ${firstName} ${lastName}\nEmail: ${email}\nPhone: ${phone || '-'}\nInterest: ${interest}\nSubscribed: ${subscribeToUpdates ? 'Yes' : 'No'}\n\nMessage:\n${message}`,
+      replyTo: email,
     });
 
     // Send confirmation email to customer
@@ -133,7 +135,7 @@ const handler = async (req: Request): Promise<Response> => {
             <p style="color: #2d3748; line-height: 1.6; margin-bottom: 15px;">
               Explore our collection of premium medical uniforms designed specifically for healthcare professionals who value both style and performance.
             </p>
-            <a href="https://auramedical.com/products" style="display: inline-block; background: #147db8; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Browse Our Collection</a>
+            <a href="https://auramedical.store/products" style="display: inline-block; background: #147db8; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Browse Our Collection</a>
           </div>
 
           <p style="color: #2d3748; line-height: 1.6;">
@@ -147,7 +149,7 @@ const handler = async (req: Request): Promise<Response> => {
             AURA Medical Uniforms - Elevating Healthcare Fashion
           </p>
           <p style="color: #a0aec0; margin: 0; font-size: 12px;">
-            Need immediate help? Chat with Dr. Bayan 24/7 at auramedical.com
+            Need immediate help? Chat with Dr. Bayan 24/7 at auramedical.store
           </p>
         </div>
       </div>
@@ -158,6 +160,8 @@ const handler = async (req: Request): Promise<Response> => {
       to: [email],
       subject: "We received your message - AURA Medical Uniforms",
       html: customerEmailHtml,
+      text: `Hi ${firstName},\n\nThanks for contacting AURA Medical Uniforms about ${interest}.\nWe'll review your inquiry and get back to you soon.\n\nIf you didn't initiate this request, you can safely ignore this email.\n\n— AURA Support`,
+      replyTo: 'support@orders.auramedical.store',
     });
 
     console.log("Contact form emails sent successfully");

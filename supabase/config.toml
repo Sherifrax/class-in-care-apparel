@@ -11,3 +11,15 @@ verify_jwt = false
 
 [functions.send-contact-form]
 verify_jwt = false
+
+[functions.send-customer-receipt]
+verify_jwt = false
+
+[functions.send-order-update]
+verify_jwt = false
+
+[functions.send-order-notification]
+verify_jwt = false
+
+[functions.send-email]
+verify_jwt = false

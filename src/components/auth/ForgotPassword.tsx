@@ -61,8 +61,8 @@ export const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack, onClose 
           </CardTitle>
           <CardDescription className="text-xs sm:text-sm lg:text-base text-muted-foreground">
             {emailSent 
-              ? 'We\'ve sent a password reset link to your email address' 
-              : 'Enter your email address and we\'ll send you a link to reset your password'
+              ? "If an account exists for that email, you'll receive a password reset link shortly. If you didn't request this, you can safely ignore this email."
+              : "Enter your email address. If it matches an existing account, we'll send you a reset link."
             }
           </CardDescription>
         </div>

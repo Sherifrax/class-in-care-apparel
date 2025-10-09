@@ -210,6 +210,8 @@ const handler = async (req: Request): Promise<Response> => {
       to: [recipientEmail],
       subject: `${statusInfo.icon} Order #${orderNumber} - ${statusInfo.title}`,
       html: emailHtml,
+      text: `${statusInfo.title}\n\nHi ${customerName}, ${statusInfo.message}\nOrder #${orderNumber} — Total: ${orderData.currency} ${orderData.total_amount.toFixed(2)}\nDelivery: ${deliveryTime}\n\nNext steps:\n${statusInfo.nextSteps.join('\n- ')}`,
+      replyTo: 'support@orders.auramedical.store',
     });
 
     console.log("Order update email sent successfully:", emailResponse);
