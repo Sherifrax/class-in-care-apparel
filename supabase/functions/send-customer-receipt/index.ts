@@ -183,11 +183,25 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Using from address for customer receipt:", fromAddress);
 
+    // Normalize away from 'no-reply' to 'support' for deliverability
+    let finalFrom = fromAddress;
+    try {
+      const emailMatch = fromAddress.match(/<\s*([^>]+)\s*>/);
+      const pureEmail = emailMatch ? emailMatch[1] : fromAddress;
+      const domain = (pureEmail.split("@")[1] || "").trim() || "orders.auramedical.store";
+      if (/no-reply@/i.test(pureEmail)) {
+        finalFrom = `AURA Support <support@${domain}>`;
+      } else if (!emailMatch) {
+        finalFrom = `AURA Medical Scrubs <${pureEmail}>`;
+      }
+    } catch (_) {}
+
+
     // Customer receipts go to the actual customer email
     const recipientEmail = orderData.customer_email;
 
     const emailResponse = await resend.emails.send({
-      from: fromAddress,
+      from: finalFrom,
       to: [recipientEmail],
       subject: `✅ Order Confirmation #${orderNumber} - ${orderData.currency} ${orderData.total_amount.toFixed(2)}`,
       html: emailHtml,

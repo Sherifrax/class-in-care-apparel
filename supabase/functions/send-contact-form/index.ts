@@ -43,6 +43,19 @@ const handler = async (req: Request): Promise<Response> => {
       ? rawFrom
       : "AURA Medical Scrubs <onboarding@resend.dev>";
 
+    // Normalize away from 'no-reply' to 'support' for deliverability
+    let finalFrom = fromEmail;
+    try {
+      const emailMatch = fromEmail.match(/<\s*([^>]+)\s*>/);
+      const pureEmail = emailMatch ? emailMatch[1] : fromEmail;
+      const domain = (pureEmail.split("@")[1] || "").trim() || "orders.auramedical.store";
+      if (/no-reply@/i.test(pureEmail)) {
+        finalFrom = `AURA Support <support@${domain}>`;
+      } else if (!emailMatch) {
+        finalFrom = `AURA Medical Scrubs <${pureEmail}>`;
+      }
+    } catch (_) {}
+
     // Send notification email to admin
     const adminEmailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -99,7 +112,7 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     await resend.emails.send({
-      from: fromEmail,
+      from: finalFrom,
       to: [adminEmail],
       subject: `New Contact Form: ${interest} - ${firstName} ${lastName}`,
       html: adminEmailHtml,
@@ -156,7 +169,7 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     await resend.emails.send({
-      from: fromEmail,
+      from: finalFrom,
       to: [email],
       subject: "We received your message - AURA Medical Uniforms",
       html: customerEmailHtml,
