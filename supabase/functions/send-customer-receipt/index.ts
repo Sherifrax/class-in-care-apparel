@@ -183,30 +183,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Using from address for customer receipt:", fromAddress);
 
-    // Normalize away from 'no-reply' to 'support' for deliverability
-    let finalFrom = fromAddress;
-    try {
-      const emailMatch = fromAddress.match(/<\s*([^>]+)\s*>/);
-      const pureEmail = emailMatch ? emailMatch[1] : fromAddress;
-      const domain = (pureEmail.split("@")[1] || "").trim() || "orders.auramedical.store";
-      if (/no-reply@/i.test(pureEmail)) {
-        finalFrom = `AURA Support <support@${domain}>`;
-      } else if (!emailMatch) {
-        finalFrom = `AURA Medical Scrubs <${pureEmail}>`;
-      }
-    } catch (_) {}
-
-
     // Customer receipts go to the actual customer email
     const recipientEmail = orderData.customer_email;
 
     const emailResponse = await resend.emails.send({
-      from: finalFrom,
+      from: fromAddress,
       to: [recipientEmail],
       subject: `✅ Order Confirmation #${orderNumber} - ${orderData.currency} ${orderData.total_amount.toFixed(2)}`,
       html: emailHtml,
-      text: `Thank you for your order, ${customerName}!\nOrder #${orderNumber}\nTotal: ${orderData.currency} ${orderData.total_amount.toFixed(2)}\nSubtotal: ${orderData.currency} ${orderData.subtotal.toFixed(2)}\nDelivery: ${orderData.currency} ${orderData.delivery_cost.toFixed(2)}\n\nItems:\n${orderData.order_items.map(i => `- ${i.product_name} (${i.size}${i.color ? ', ' + i.color : ''}) x${i.quantity} - ${orderData.currency} ${(i.unit_price).toFixed(2)}`).join('\n')}\n\nIf you have any questions, just reply to this email.`,
-      replyTo: 'support@orders.auramedical.store',
     });
 
     console.log("Customer receipt email sent successfully:", emailResponse);

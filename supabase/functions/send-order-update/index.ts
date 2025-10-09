@@ -201,29 +201,15 @@ const handler = async (req: Request): Promise<Response> => {
     const fromAddress = (rawFrom && (simpleEmailRegex.test(rawFrom) || nameEmailRegex.test(rawFrom)))
       ? rawFrom
       : "AURA Medical Scrubs <onboarding@resend.dev>";
-    // Normalize away from 'no-reply' to 'support' for deliverability
-    let finalFrom = fromAddress;
-    try {
-      const emailMatch = fromAddress.match(/<\s*([^>]+)\s*>/);
-      const pureEmail = emailMatch ? emailMatch[1] : fromAddress;
-      const domain = (pureEmail.split("@")[1] || "").trim() || "orders.auramedical.store";
-      if (/no-reply@/i.test(pureEmail)) {
-        finalFrom = `AURA Support <support@${domain}>`;
-      } else if (!emailMatch) {
-        finalFrom = `AURA Medical Scrubs <${pureEmail}>`;
-      }
-    } catch (_) {}
     
     // Customer updates go to the actual customer email
     const recipientEmail = orderData.customer_email;
     
     const emailResponse = await resend.emails.send({
-      from: finalFrom,
+      from: fromAddress,
       to: [recipientEmail],
       subject: `${statusInfo.icon} Order #${orderNumber} - ${statusInfo.title}`,
       html: emailHtml,
-      text: `${statusInfo.title}\n\nHi ${customerName}, ${statusInfo.message}\nOrder #${orderNumber} — Total: ${orderData.currency} ${orderData.total_amount.toFixed(2)}\nDelivery: ${deliveryTime}\n\nNext steps:\n${statusInfo.nextSteps.join('\n- ')}`,
-      replyTo: 'support@orders.auramedical.store',
     });
 
     console.log("Order update email sent successfully:", emailResponse);

@@ -166,8 +166,6 @@ const handler = async (req: Request): Promise<Response> => {
       to: [adminEmail],
       subject: `🛍️ New Order #${orderData.order_id.slice(-8)} - ${orderData.currency} ${orderData.total_amount.toFixed(2)}`,
       html: emailHtml,
-      text: `New order ${orderData.order_id}\nCustomer: ${orderData.customer_name || orderData.customer_email}\nTotal: ${orderData.currency} ${orderData.total_amount.toFixed(2)}\nExpress: ${orderData.express_shipping ? 'Yes' : 'No'}\n\nItems:\n${orderData.order_items.map(i => `- ${i.product_name} (${i.size}${i.color ? ', ' + i.color : ''}) x${i.quantity} - ${orderData.currency} ${i.unit_price.toFixed(2)}`).join('\n')}`,
-      replyTo: orderData.customer_email,
     });
 
     console.log("Order notification email sent successfully:", emailResponse);
