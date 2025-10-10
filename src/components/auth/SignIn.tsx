@@ -64,37 +64,40 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword, 
       {/* Custom close button */}
       <button
         onClick={onClose}
-        className="absolute right-4 top-4 z-50 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+        className="absolute right-4 top-4 z-50 rounded-full opacity-70 ring-offset-background transition-all duration-300 hover:opacity-100 hover:bg-medical-blue/10 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-medical-blue focus:ring-offset-2 disabled:pointer-events-none p-2"
         aria-label="Close"
       >
-        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        <svg className="h-5 w-5 text-luxury-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
       
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-medical-blue/5 via-transparent to-medical-teal/5 animate-pulse"></div>
+      {/* Enhanced animated background with mesh gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-medical-blue/10 via-medical-teal/5 to-accent-purple/10 opacity-50 animate-pulse"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(var(--medical-blue),0.08),transparent_50%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(var(--medical-teal),0.08),transparent_50%)]"></div>
       
-      {/* Floating particles effect */}
+      {/* Enhanced floating particles with glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-2 h-2 bg-medical-blue/20 rounded-full animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
-        <div className="absolute top-20 right-16 w-1 h-1 bg-medical-teal/30 rounded-full animate-bounce" style={{ animationDelay: '1s', animationDuration: '4s' }}></div>
-        <div className="absolute bottom-20 left-16 w-1.5 h-1.5 bg-medical-blue/25 rounded-full animate-bounce" style={{ animationDelay: '2s', animationDuration: '3.5s' }}></div>
+        <div className="absolute top-10 left-10 w-3 h-3 bg-medical-blue/30 rounded-full blur-sm animate-bounce shadow-[0_0_15px_rgba(var(--medical-blue),0.5)]" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
+        <div className="absolute top-20 right-16 w-2 h-2 bg-medical-teal/40 rounded-full blur-sm animate-bounce shadow-[0_0_10px_rgba(var(--medical-teal),0.5)]" style={{ animationDelay: '1s', animationDuration: '4s' }}></div>
+        <div className="absolute bottom-20 left-16 w-2.5 h-2.5 bg-accent-purple/30 rounded-full blur-sm animate-bounce shadow-[0_0_12px_rgba(var(--accent-purple),0.5)]" style={{ animationDelay: '2s', animationDuration: '3.5s' }}></div>
+        <div className="absolute top-1/2 right-8 w-1.5 h-1.5 bg-medical-blue/25 rounded-full blur-sm animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '5s' }}></div>
       </div>
 
-      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6 relative z-10">
-        <div className={`mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-glow transition-all duration-1000 ${animateLogo ? 'scale-100 rotate-0' : 'scale-0 rotate-180'}`}>
+      <CardHeader className="space-y-4 text-center px-4 sm:px-6 py-6 sm:py-8 relative z-10">
+        <div className={`mx-auto w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden shadow-[0_10px_40px_rgba(var(--medical-blue),0.3)] ring-4 ring-white/50 transition-all duration-1000 ${animateLogo ? 'scale-100 rotate-0' : 'scale-0 rotate-180'}`}>
           <img 
             src="/images/aura-logo.jpg" 
             alt="AURA Logo" 
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="space-y-1 sm:space-y-2">
-          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent animate-fade-in">
+        <div className="space-y-2 sm:space-y-3">
+          <CardTitle className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-medical-blue via-medical-teal to-accent-purple bg-clip-text text-transparent animate-fade-in">
             Welcome Back
           </CardTitle>
-          <CardDescription className="text-xs sm:text-sm lg:text-base text-muted-foreground animate-fade-in-delay">
+          <CardDescription className="text-sm sm:text-base lg:text-lg text-luxury-navy/70 font-medium animate-fade-in-delay">
             Sign in to access your AURA account
           </CardDescription>
         </div>
@@ -110,12 +113,12 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword, 
                   <FormLabel className="text-sm font-semibold text-luxury-navy">Email Address</FormLabel>
                   <FormControl>
                     <div className="relative group">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-medical-blue/60 group-focus-within:text-medical-blue transition-colors" />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-medical-blue/60 group-focus-within:text-medical-blue transition-all duration-300 group-focus-within:scale-110" />
                       <Input
                         {...field}
                         type="email"
                         placeholder="Enter your email address"
-                        className="pl-12 h-10 sm:h-12 border-2 border-medical-blue/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-blue focus:ring-2 focus:ring-medical-blue/20 transition-all duration-300 placeholder:text-muted-foreground/60 text-sm sm:text-base"
+                        className="pl-12 h-12 sm:h-14 border-2 border-medical-blue/20 bg-white/60 backdrop-blur-md rounded-2xl focus:border-medical-blue focus:ring-4 focus:ring-medical-blue/10 focus:bg-white/80 transition-all duration-300 placeholder:text-muted-foreground/60 text-sm sm:text-base shadow-sm hover:shadow-md font-medium"
                         disabled={loading}
                       />
                     </div>
@@ -133,26 +136,26 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword, 
                   <FormLabel className="text-sm font-semibold text-luxury-navy">Password</FormLabel>
                   <FormControl>
                     <div className="relative group">
-                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-medical-blue/60 group-focus-within:text-medical-blue transition-colors" />
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-medical-blue/60 group-focus-within:text-medical-blue transition-all duration-300 group-focus-within:scale-110" />
                       <Input
                         {...field}
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Enter your password"
-                        className="pl-12 pr-12 h-10 sm:h-12 border-2 border-medical-blue/20 bg-white/50 backdrop-blur-sm rounded-xl focus:border-medical-blue focus:ring-2 focus:ring-medical-blue/20 transition-all duration-300 placeholder:text-muted-foreground/60 text-sm sm:text-base"
+                        className="pl-12 pr-14 h-12 sm:h-14 border-2 border-medical-blue/20 bg-white/60 backdrop-blur-md rounded-2xl focus:border-medical-blue focus:ring-4 focus:ring-medical-blue/10 focus:bg-white/80 transition-all duration-300 placeholder:text-muted-foreground/60 text-sm sm:text-base shadow-sm hover:shadow-md font-medium"
                         disabled={loading}
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-medical-blue/10 rounded-lg transition-colors"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 hover:bg-medical-blue/10 rounded-xl transition-all duration-300 hover:scale-110"
                         onClick={() => setShowPassword(!showPassword)}
                         disabled={loading}
                       >
                         {showPassword ? (
-                          <EyeOff className="h-4 w-4 text-medical-blue/70" />
+                          <EyeOff className="h-5 w-5 text-medical-blue/70" />
                         ) : (
-                          <Eye className="h-4 w-4 text-medical-blue/70" />
+                          <Eye className="h-5 w-5 text-medical-blue/70" />
                         )}
                       </Button>
                     </div>
@@ -176,7 +179,7 @@ export const SignIn: React.FC<SignInProps> = ({ onToggleMode, onForgotPassword, 
 
             <Button 
               type="submit" 
-              className={`w-full h-10 sm:h-12 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base relative overflow-hidden ${isSuccess ? 'bg-gradient-to-r from-green-500 to-green-600' : ''}`}
+              className={`w-full h-12 sm:h-14 bg-gradient-to-r from-medical-blue via-medical-teal to-accent-purple hover:from-medical-blue-light hover:via-medical-teal hover:to-accent-purple-light text-white font-bold rounded-2xl shadow-[0_4px_20px_rgba(var(--medical-blue),0.4)] hover:shadow-[0_8px_30px_rgba(var(--medical-teal),0.5)] transition-all duration-300 hover:scale-[1.03] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:translate-y-0 text-sm sm:text-base relative overflow-hidden ${isSuccess ? 'bg-gradient-to-r from-green-500 to-green-600' : ''}`}
               disabled={loading}
             >
               {loading ? (

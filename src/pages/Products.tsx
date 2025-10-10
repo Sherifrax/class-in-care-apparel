@@ -290,7 +290,7 @@ const Products = () => {
       
       {/* Product Detail Dialog (Add to Cart) */}
       <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto glass border-medical-blue/20 backdrop-blur-2xl bg-gradient-to-br from-white/98 via-white/95 to-white/92 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
           {selectedProduct && <>
               <DialogHeader className="border-b border-medical-blue/20 pb-4">
                 <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">{selectedProduct.name}</DialogTitle>
@@ -513,7 +513,7 @@ const Products = () => {
 
       {/* Quick View Dialog (Image Gallery) */}
       <Dialog open={!!quickViewProduct} onOpenChange={() => setQuickViewProduct(null)}>
-        <DialogContent className="max-w-5xl max-h-[95vh] p-0 glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90 overflow-hidden">
+        <DialogContent className="max-w-5xl max-h-[95vh] p-0 glass border-medical-blue/20 backdrop-blur-2xl bg-gradient-to-br from-white/98 via-white/95 to-white/92 overflow-hidden rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
           {quickViewProduct && (
             <div className="flex flex-col h-full max-h-[95vh]">
               <DialogHeader className="border-b border-medical-blue/20 pb-4 px-6 pt-6 flex-shrink-0">

@@ -73,39 +73,41 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode, onClose }) => {
       {/* Custom close button */}
       <button
         onClick={onClose}
-        className="absolute right-4 top-4 z-50 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+        className="absolute right-4 top-4 z-50 rounded-full opacity-70 ring-offset-background transition-all duration-300 hover:opacity-100 hover:bg-medical-teal/10 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-medical-teal focus:ring-offset-2 disabled:pointer-events-none p-2"
         aria-label="Close"
       >
-        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        <svg className="h-5 w-5 text-luxury-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
       
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-medical-teal/5 via-transparent to-medical-blue/5 animate-pulse"></div>
+      {/* Enhanced animated background with mesh gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-medical-teal/10 via-accent-purple/5 to-medical-blue/10 opacity-50 animate-pulse"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(var(--medical-teal),0.08),transparent_50%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(var(--accent-purple),0.08),transparent_50%)]"></div>
       
-      {/* Floating particles effect */}
+      {/* Enhanced floating particles with glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-8 right-12 w-2 h-2 bg-medical-teal/20 rounded-full animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
-        <div className="absolute top-16 left-12 w-1 h-1 bg-medical-blue/30 rounded-full animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '4s' }}></div>
-        <div className="absolute bottom-16 right-8 w-1.5 h-1.5 bg-medical-teal/25 rounded-full animate-bounce" style={{ animationDelay: '2.5s', animationDuration: '3.5s' }}></div>
-        <div className="absolute top-24 left-8 w-1 h-1 bg-medical-blue/20 rounded-full animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '5s' }}></div>
+        <div className="absolute top-8 right-12 w-3 h-3 bg-medical-teal/30 rounded-full blur-sm animate-bounce shadow-[0_0_15px_rgba(var(--medical-teal),0.5)]" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
+        <div className="absolute top-16 left-12 w-2 h-2 bg-accent-purple/40 rounded-full blur-sm animate-bounce shadow-[0_0_10px_rgba(var(--accent-purple),0.5)]" style={{ animationDelay: '1.5s', animationDuration: '4s' }}></div>
+        <div className="absolute bottom-16 right-8 w-2.5 h-2.5 bg-medical-blue/30 rounded-full blur-sm animate-bounce shadow-[0_0_12px_rgba(var(--medical-blue),0.5)]" style={{ animationDelay: '2.5s', animationDuration: '3.5s' }}></div>
+        <div className="absolute top-24 left-8 w-1.5 h-1.5 bg-medical-teal/25 rounded-full blur-sm animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '5s' }}></div>
       </div>
 
-      <CardHeader className="space-y-3 text-center px-4 sm:px-6 py-4 sm:py-6 relative z-10">
-        <div className={`mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-glow transition-all duration-1000 ${animateLogo ? 'scale-100 rotate-0' : 'scale-0 rotate-180'}`}>
+      <CardHeader className="space-y-4 text-center px-4 sm:px-6 py-6 sm:py-8 relative z-10">
+        <div className={`mx-auto w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden shadow-[0_10px_40px_rgba(var(--medical-teal),0.3)] ring-4 ring-white/50 transition-all duration-1000 ${animateLogo ? 'scale-100 rotate-0' : 'scale-0 rotate-180'}`}>
           <img 
             src="/images/aura-logo.jpg" 
             alt="AURA Logo" 
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="space-y-1 sm:space-y-2">
-          <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-medical-teal to-medical-blue bg-clip-text text-transparent animate-fade-in">
+        <div className="space-y-2 sm:space-y-3">
+          <CardTitle className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-medical-teal via-accent-purple to-medical-blue bg-clip-text text-transparent animate-fade-in flex items-center justify-center gap-2">
             Join AURA
-            <Sparkles className="inline-block w-5 h-5 ml-2 text-medical-teal animate-pulse" />
+            <Sparkles className="inline-block w-6 h-6 text-medical-teal animate-pulse" />
           </CardTitle>
-          <CardDescription className="text-xs sm:text-sm lg:text-base text-muted-foreground animate-fade-in-delay">
+          <CardDescription className="text-sm sm:text-base lg:text-lg text-luxury-navy/70 font-medium animate-fade-in-delay">
             Create your account and discover premium medical apparel
           </CardDescription>
         </div>
@@ -235,7 +237,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggleMode, onClose }) => {
             <div className="pt-2">
               <Button 
                 type="submit" 
-                className={`w-full h-10 sm:h-12 bg-gradient-to-r from-medical-teal to-medical-blue hover:from-medical-teal-light hover:to-medical-blue-light text-white font-semibold rounded-xl shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base relative overflow-hidden ${isSuccess ? 'bg-gradient-to-r from-green-500 to-green-600' : ''}`}
+                className={`w-full h-12 sm:h-14 bg-gradient-to-r from-medical-teal via-accent-purple to-medical-blue hover:from-medical-teal-light hover:via-accent-purple-light hover:to-medical-blue-light text-white font-bold rounded-2xl shadow-[0_4px_20px_rgba(var(--medical-teal),0.4)] hover:shadow-[0_8px_30px_rgba(var(--accent-purple),0.5)] transition-all duration-300 hover:scale-[1.03] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:translate-y-0 text-sm sm:text-base relative overflow-hidden ${isSuccess ? 'bg-gradient-to-r from-green-500 to-green-600' : ''}`}
                 disabled={loading}
               >
                 {loading ? (
