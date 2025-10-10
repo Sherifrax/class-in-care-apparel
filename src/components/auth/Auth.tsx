@@ -29,23 +29,20 @@ export const Auth: React.FC<AuthProps> = ({ isOpen, onClose, defaultMode = 'sign
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-md sm:w-full border-0 p-0 max-h-[95vh] overflow-y-auto rounded-3xl bg-gradient-to-br from-white/95 via-white/90 to-white/85 backdrop-blur-2xl shadow-[0_8px_40px_rgb(0,0,0,0.12)] border border-medical-blue/20" showCloseButton={false}>
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-medical-blue/5 via-transparent to-medical-teal/5 pointer-events-none" />
-        <div className="relative z-10">
-          {mode === 'signin' && (
-            <SignIn 
-              onToggleMode={handleToggleMode} 
-              onForgotPassword={handleForgotPassword}
-              onClose={onClose}
-            />
-          )}
-          {mode === 'signup' && (
-            <SignUp onToggleMode={handleToggleMode} onClose={onClose} />
-          )}
-          {mode === 'forgot-password' && (
-            <ForgotPassword onBack={handleBackToSignIn} onClose={onClose} />
-          )}
-        </div>
+      <DialogContent className="w-[95vw] max-w-md sm:w-full border-0 p-0 max-h-[95vh] overflow-y-auto" showCloseButton={false}>
+        {mode === 'signin' && (
+          <SignIn 
+            onToggleMode={handleToggleMode} 
+            onForgotPassword={handleForgotPassword}
+            onClose={onClose}
+          />
+        )}
+        {mode === 'signup' && (
+          <SignUp onToggleMode={handleToggleMode} onClose={onClose} />
+        )}
+        {mode === 'forgot-password' && (
+          <ForgotPassword onBack={handleBackToSignIn} onClose={onClose} />
+        )}
       </DialogContent>
     </Dialog>
   );

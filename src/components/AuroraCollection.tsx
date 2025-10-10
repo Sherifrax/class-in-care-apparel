@@ -4,10 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles, Heart, Zap, Shield, Award } from "lucide-react";
 import fabricTexture from "@/assets/fabric-texture.jpg";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-
 const AuroraCollection = () => {
-  const { elementRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
   const features = [{
     icon: <Zap className="w-6 h-6" />,
     title: "Breathable Performance",
@@ -24,19 +21,22 @@ const AuroraCollection = () => {
     description: "Four-way stretch fabric adapts to your every movement",
     color: "from-accent-coral to-accent-coral-light"
   }];
-  return <section ref={elementRef} id="collection" className="py-20 bg-gradient-to-b from-background via-soft-gray/30 to-background relative overflow-hidden">
+  return <section id="collection" className="py-20 bg-gradient-to-b from-background via-soft-gray/30 to-background relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-medical-blue/5 rounded-full animate-float-slow blur-2xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-medical-teal/5 rounded-full animate-float-medium blur-2xl"></div>
-        <div className="absolute top-1/2 right-1/3 w-16 h-16 bg-accent-coral/5 rounded-full animate-float-fast blur-2xl"></div>
-        <div className="absolute top-1/3 left-1/6 w-20 h-20 bg-accent-mint/5 rounded-full animate-drift blur-2xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-medical-blue/5 rounded-full animate-apple-float"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-medical-teal/5 rounded-full animate-apple-float" style={{
+        animationDelay: '2s'
+      }}></div>
+        <div className="absolute top-1/2 right-1/3 w-16 h-16 bg-accent-coral/5 rounded-full animate-apple-float" style={{
+        animationDelay: '4s'
+      }}></div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Enhanced Header */}
-        <div className={`text-center mb-20 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <Badge className="mb-6 bg-gradient-to-r from-medical-blue to-medical-teal text-white border-0 px-6 py-2 text-sm font-semibold animate-pulse-glow">
+        <div className="text-center mb-20 animate-apple-reveal">
+          <Badge className="mb-6 bg-gradient-to-r from-medical-blue to-medical-teal text-white border-0 px-6 py-2 text-sm font-semibold animate-apple-glow">
             <Award className="w-4 h-4 mr-2" />
             Premium Collection
           </Badge>
@@ -52,20 +52,22 @@ const AuroraCollection = () => {
         {/* Enhanced Main Content */}
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
           {/* Enhanced Image Section */}
-          <div className={`relative group transition-all duration-1000 ${isVisible ? 'opacity-100 -translate-x-0' : 'opacity-0 -translate-x-10'}`}>
+          <div className="relative group animate-apple-reveal-stagger animate-stagger-1">
             <div className="relative overflow-hidden rounded-3xl shadow-2xl">
               <img src={fabricTexture} alt="Premium medical fabric texture" className="w-full h-[500px] object-cover group-hover:scale-110 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/20 via-transparent to-transparent"></div>
               
               {/* Floating badges */}
-              <div className="absolute top-6 left-6 animate-float-slow">
+              <div className="absolute top-6 left-6 animate-apple-float">
                 <Badge className="bg-white/90 text-luxury-navy border-0 px-4 py-2 font-semibold backdrop-blur-sm">
                   <Sparkles className="w-4 h-4 mr-2" />
                   Premium Quality
                 </Badge>
               </div>
               
-              <div className="absolute bottom-6 right-6 animate-float-medium">
+              <div className="absolute bottom-6 right-6 animate-apple-float" style={{
+              animationDelay: '1s'
+            }}>
                 <Badge className="bg-gradient-to-r from-medical-blue to-medical-teal text-white border-0 px-4 py-2 font-semibold">
                   <Heart className="w-4 h-4 mr-2" />
                   Loved by 50K+
@@ -74,12 +76,14 @@ const AuroraCollection = () => {
             </div>
             
             {/* Decorative elements */}
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-medical-blue/20 to-medical-teal/20 rounded-full animate-pulse-glow"></div>
-            <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-accent-coral/20 to-accent-mint/20 rounded-full animate-pulse-glow" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-medical-blue/20 to-medical-teal/20 rounded-full animate-apple-morph"></div>
+            <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-accent-coral/20 to-accent-mint/20 rounded-full animate-apple-morph" style={{
+            animationDelay: '2s'
+          }}></div>
           </div>
           
           {/* Enhanced Features Section */}
-          <div className={`space-y-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+          <div className="space-y-8 animate-apple-reveal-stagger animate-stagger-2">
             <div>
               <h3 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-4">
                 Engineered for <span className="bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Excellence</span>
@@ -91,8 +95,8 @@ const AuroraCollection = () => {
             </div>
             
             <div className="space-y-6">
-              {features.map((feature, index) => <div key={index} className="group flex items-start space-x-6 p-6 rounded-2xl bg-gradient-to-r from-white/50 to-white/30 backdrop-blur-sm border border-white/20 hover:border-medical-blue/30 transition-all duration-500 hover:shadow-lg hover:scale-105 hover:-translate-y-1">
-                  <div className={`w-14 h-14 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg animate-float-slow`}>
+              {features.map((feature, index) => <div key={index} className="group flex items-start space-x-6 p-6 rounded-2xl bg-gradient-to-r from-white/50 to-white/30 backdrop-blur-sm border border-white/20 hover:border-medical-blue/30 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
+                  <div className={`w-14 h-14 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
                     {feature.icon}
                   </div>
                   <div className="flex-1">
