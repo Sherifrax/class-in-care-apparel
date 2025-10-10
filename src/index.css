@@ -732,6 +732,66 @@
     }
   }
 
+  @keyframes float-slow {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px);
+    }
+    50% {
+      transform: translateY(-30px) translateX(10px);
+    }
+  }
+
+  @keyframes float-medium {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-20px) translateX(-10px) rotate(5deg);
+    }
+  }
+
+  @keyframes float-fast {
+    0%, 100% {
+      transform: translateY(0px) scale(1);
+    }
+    50% {
+      transform: translateY(-15px) scale(1.05);
+    }
+  }
+
+  @keyframes drift {
+    0%, 100% {
+      transform: translateX(0px) translateY(0px);
+    }
+    25% {
+      transform: translateX(20px) translateY(-20px);
+    }
+    50% {
+      transform: translateX(0px) translateY(-40px);
+    }
+    75% {
+      transform: translateX(-20px) translateY(-20px);
+    }
+  }
+
+  @keyframes rotate-slow {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes scale-pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
   /* Animation Classes */
   .animate-fade-in {
     animation: fade-in 0.6s ease-out forwards;
@@ -822,6 +882,34 @@
 
   .animate-apple-magnetic {
     animation: apple-magnetic 2s ease-in-out infinite;
+  }
+
+  .animate-float-slow {
+    animation: float-slow 6s ease-in-out infinite;
+  }
+
+  .animate-float-medium {
+    animation: float-medium 4s ease-in-out infinite;
+  }
+
+  .animate-float-fast {
+    animation: float-fast 3s ease-in-out infinite;
+  }
+
+  .animate-drift {
+    animation: drift 8s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-rotate-slow {
+    animation: rotate-slow 20s linear infinite;
+  }
+
+  .animate-scale-pulse {
+    animation: scale-pulse 3s ease-in-out infinite;
   }
 
   /* Staggered Animation Delays */

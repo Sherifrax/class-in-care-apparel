@@ -1,8 +1,18 @@
 import { Card } from "@/components/ui/card";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+
 const About = () => {
-  return <section id="about" className="py-20 bg-gradient-to-b from-background to-soft-gray">
-      <div className="container mx-auto px-6">
-        <div className="max-w-4xl mx-auto text-center mb-16">
+  const { elementRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
+
+  return <section ref={elementRef} id="about" className="py-20 bg-gradient-to-b from-background to-soft-gray relative overflow-hidden">
+      {/* Floating background elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/6 w-32 h-32 bg-medical-blue/10 rounded-full blur-3xl animate-float-slow"></div>
+        <div className="absolute bottom-1/4 right-1/6 w-40 h-40 bg-medical-teal/10 rounded-full blur-3xl animate-float-medium"></div>
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className={`max-w-4xl mx-auto text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
             Founded by Excellence, Led by Vision
           </h2>
@@ -10,7 +20,7 @@ const About = () => {
         </div>
         
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
+          <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <h3 className="text-3xl font-bold text-luxury-navy mb-6">Our Mission</h3>
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
               We create medical uniforms that are more than scrubs — they are a statement of professionalism, 
@@ -22,9 +32,9 @@ const About = () => {
             </p>
           </div>
           
-          <Card className="p-8 shadow-luxury">
+          <Card className={`p-8 shadow-luxury hover:shadow-elegant transition-all duration-700 hover:-translate-y-2 hover:scale-105 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto mb-6 flex items-center justify-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-teal rounded-full mx-auto mb-6 flex items-center justify-center animate-float-slow shadow-glow">
                 <span className="text-2xl font-bold text-white">A</span>
               </div>
               <h4 className="text-2xl font-bold text-luxury-navy mb-4">"CLASS to CARE"</h4>
