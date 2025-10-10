@@ -73,8 +73,6 @@ export default {
         'accent-coral-light': "hsl(var(--accent-coral-light))",
         'accent-mint': "hsl(var(--accent-mint))",
         'accent-mint-light': "hsl(var(--accent-mint-light))",
-        'accent-purple': "hsl(var(--accent-purple))",
-        'accent-purple-light': "hsl(var(--accent-purple-light))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

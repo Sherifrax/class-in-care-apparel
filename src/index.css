@@ -16,24 +16,24 @@
 
 :root {
   --background: 0 0% 100%;
-  --foreground: 220 20% 10%;
+  --foreground: 224 71.4% 4.1%;
   --card: 0 0% 100%;
-  --card-foreground: 220 20% 10%;
+  --card-foreground: 224 71.4% 4.1%;
   --popover: 0 0% 100%;
-  --popover-foreground: 220 20% 10%;
-  --primary: 212 95% 52%;
+  --popover-foreground: 224 71.4% 4.1%;
+  --primary: 203 87% 45%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 220 14% 96%;
-  --secondary-foreground: 220 20% 10%;
-  --muted: 220 14% 96%;
-  --muted-foreground: 220 10% 45%;
-  --accent: 172 80% 45%;
+  --secondary: 220 14.3% 95.9%;
+  --secondary-foreground: 220.9 39.3% 11%;
+  --muted: 220 14.3% 95.9%;
+  --muted-foreground: 220 8.9% 46.1%;
+  --accent: 180 85% 40%;
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 220 13% 88%;
-  --input: 220 13% 88%;
-  --ring: 212 95% 52%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 20% 98%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 203 87% 45%;
   --radius: 1rem;
   --chart-1: 12 76% 61%;
   --chart-2: 173 58% 39%;
@@ -41,36 +41,34 @@
   --chart-4: 43 74% 66%;
   --chart-5: 27 87% 67%;
 
-  /* Ultra Premium Medical Color Palette */
-  --medical-blue: 212 95% 52%;
-  --medical-blue-light: 212 95% 70%;
-  --medical-blue-dark: 212 85% 35%;
-  --medical-blue-ultra-light: 212 95% 90%;
-  --medical-teal: 172 80% 45%;
-  --medical-teal-light: 172 80% 65%;
-  --medical-teal-dark: 172 70% 30%;
-  --luxury-navy: 220 50% 12%;
-  --luxury-navy-light: 220 40% 20%;
-  --soft-gray: 220 14% 98%;
-  --soft-gray-dark: 220 14% 94%;
-  --luxury-gold: 45 95% 58%;
-  --luxury-gold-light: 45 95% 68%;
-  --luxury-gold-dark: 45 90% 48%;
+  /* Enhanced Premium Medical Color Palette */
+  --medical-blue: 203 87% 45%;
+  --medical-blue-light: 203 87% 65%;
+  --medical-blue-dark: 203 87% 25%;
+  --medical-blue-ultra-light: 203 87% 85%;
+  --medical-teal: 180 85% 40%;
+  --medical-teal-light: 180 85% 60%;
+  --medical-teal-dark: 180 85% 25%;
+  --luxury-navy: 220 40% 15%;
+  --luxury-navy-light: 220 40% 25%;
+  --soft-gray: 220 14% 96%;
+  --soft-gray-dark: 220 14% 90%;
+  --luxury-gold: 45 100% 60%;
+  --luxury-gold-light: 45 100% 70%;
+  --luxury-gold-dark: 45 100% 50%;
   --glass: 0 0% 100% / 0.1;
   --glass-border: 0 0% 100% / 0.2;
   --glass-strong: 0 0% 100% / 0.2;
   
-  /* Ultra Premium Accent Colors */
-  --premium-silver: 210 20% 88%;
-  --premium-silver-light: 210 15% 96%;
-  --premium-charcoal: 220 20% 18%;
-  --premium-charcoal-light: 220 18% 28%;
-  --accent-coral: 15 88% 62%;
-  --accent-coral-light: 15 88% 75%;
-  --accent-mint: 160 82% 60%;
-  --accent-mint-light: 160 82% 75%;
-  --accent-purple: 270 75% 65%;
-  --accent-purple-light: 270 75% 80%;
+  /* New Premium Accent Colors */
+  --premium-silver: 210 20% 85%;
+  --premium-silver-light: 210 20% 95%;
+  --premium-charcoal: 220 15% 20%;
+  --premium-charcoal-light: 220 15% 30%;
+  --accent-coral: 15 85% 65%;
+  --accent-coral-light: 15 85% 75%;
+  --accent-mint: 160 85% 65%;
+  --accent-mint-light: 160 85% 75%;
 
   /* Sidebar colors */
   --sidebar-background: 0 0% 98%;
@@ -82,23 +80,20 @@
   --sidebar-border: 220 13% 91%;
   --sidebar-ring: 217.2 91.2% 59.8%;
 
-  /* Ultra Premium Gradients */
+  /* Premium Gradients */
   --gradient-primary: linear-gradient(135deg, hsl(var(--medical-blue)) 0%, hsl(var(--medical-teal)) 100%);
   --gradient-secondary: linear-gradient(135deg, hsl(var(--medical-blue-light)) 0%, hsl(var(--medical-teal-light)) 100%);
-  --gradient-luxury: linear-gradient(135deg, hsl(var(--luxury-navy)) 0%, hsl(var(--medical-blue-dark)) 50%, hsl(var(--medical-teal-dark)) 100%);
+  --gradient-luxury: linear-gradient(135deg, hsl(var(--luxury-navy)) 0%, hsl(var(--medical-blue-dark)) 100%);
   --gradient-soft: linear-gradient(135deg, hsl(var(--soft-gray)) 0%, hsl(var(--background)) 100%);
-  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-  --gradient-accent: linear-gradient(135deg, hsl(var(--accent-coral)) 0%, hsl(var(--accent-mint)) 100%);
-  --gradient-hero: linear-gradient(135deg, hsl(var(--luxury-navy)) 0%, hsl(var(--medical-blue-dark)) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
 
-  /* Ultra Premium Shadows */
-  --shadow-soft: 0 2px 20px -4px hsl(var(--medical-blue) / 0.12);
-  --shadow-medium: 0 8px 32px -8px hsl(var(--medical-blue) / 0.18);
-  --shadow-large: 0 20px 60px -12px hsl(var(--medical-blue) / 0.25);
-  --shadow-luxury: 0 30px 90px -20px hsl(var(--luxury-navy) / 0.4);
-  --shadow-glow: 0 0 50px hsl(var(--medical-blue) / 0.5);
-  --shadow-card: 0 4px 28px -6px hsl(var(--medical-blue) / 0.15);
-  --shadow-premium: 0 15px 60px -15px hsl(var(--medical-blue) / 0.3);
+  /* Premium Shadows */
+  --shadow-soft: 0 2px 20px -4px hsl(var(--medical-blue) / 0.1);
+  --shadow-medium: 0 8px 30px -8px hsl(var(--medical-blue) / 0.15);
+  --shadow-large: 0 20px 60px -12px hsl(var(--medical-blue) / 0.2);
+  --shadow-luxury: 0 25px 80px -20px hsl(var(--luxury-navy) / 0.3);
+  --shadow-glow: 0 0 40px hsl(var(--medical-blue) / 0.4);
+  --shadow-card: 0 4px 24px -6px hsl(var(--medical-blue) / 0.12);
 
   /* Smooth Transitions */
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
