@@ -22,9 +22,14 @@ interface CustomerReceiptRequest {
   }>;
   subtotal: number;
   delivery_cost: number;
+  embroidery_cost?: number;
+  embroidery_requested?: boolean;
+  embroidery_details?: string;
+  express_shipping?: boolean;
   total_amount: number;
   currency: string;
   created_at: string;
+  payment_method?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -78,6 +83,48 @@ const handler = async (req: Request): Promise<Response> => {
 
     const customerName = orderData.customer_name || orderData.customer_email.split("@")[0];
     const orderNumber = orderData.order_id.slice(-8).toUpperCase();
+    const isBankTransfer = orderData.payment_method === 'bank_transfer';
+
+    // Bank transfer details section
+    const bankTransferSection = isBankTransfer ? `
+      <div style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 24px; margin: 24px 0;">
+        <h3 style="color: #92400e; margin: 0 0 16px 0; font-size: 20px; font-weight: 600;">💳 Complete Your Payment</h3>
+        <p style="color: #78350f; margin: 0 0 20px 0; line-height: 1.6;">
+          Please transfer <strong style="color: #92400e; font-size: 18px;">${orderData.currency} ${orderData.total_amount.toFixed(2)}</strong> to the following bank account:
+        </p>
+        
+        <div style="background-color: white; border-radius: 8px; padding: 20px; margin-bottom: 16px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Cardholder Name:</td>
+              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right;">Bayan Hares</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Account Name (Bank):</td>
+              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right;">ADIB</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Card Number:</td>
+              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right; font-family: monospace;">4333 6776 0854 5914</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Account Number:</td>
+              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right; font-family: monospace;">28645581</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; color: #2563eb; font-weight: 700;">IBAN:</td>
+              <td style="padding: 12px 0; color: #2563eb; font-weight: 700; text-align: right; font-family: monospace; font-size: 16px;">AE510500000000028645581</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="background-color: #dbeafe; border-left: 4px solid #2563eb; padding: 16px; border-radius: 8px;">
+          <p style="color: #1e40af; margin: 0; font-size: 14px; line-height: 1.6;">
+            <strong>Important:</strong> Please include your order reference <strong>#${orderNumber}</strong> in the transfer notes for faster processing.
+          </p>
+        </div>
+      </div>
+    ` : '';
 
     const emailHtml = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; background-color: #ffffff;">
@@ -99,7 +146,9 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
               <h3 style="color: #334155; margin: 0; font-size: 18px; font-weight: 600;">Order #${orderNumber}</h3>
-              <span style="background-color: #10b981; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Confirmed</span>
+              <span style="background-color: ${isBankTransfer ? '#f59e0b' : '#10b981'}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                ${isBankTransfer ? 'Awaiting Payment' : 'Confirmed'}
+              </span>
             </div>
             <p style="color: #64748b; margin: 0; font-size: 14px;">
               Order Date: ${new Date(orderData.created_at).toLocaleDateString("en-US", {
@@ -111,6 +160,8 @@ const handler = async (req: Request): Promise<Response> => {
               })}
             </p>
           </div>
+
+          ${bankTransferSection}
 
           <!-- Order Items -->
           <div style="margin-bottom: 24px;">
@@ -141,9 +192,21 @@ const handler = async (req: Request): Promise<Response> => {
               <span style="color: #374151; font-weight: 500;">${orderData.currency} ${orderData.subtotal.toFixed(2)}</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-              <span style="color: #64748b;">Delivery:</span>
+              <span style="color: #64748b;">Delivery ${orderData.express_shipping ? '(⚡ Express)' : '(Standard)'}:</span>
               <span style="color: #374151; font-weight: 500;">${orderData.currency} ${orderData.delivery_cost.toFixed(2)}</span>
             </div>
+            ${orderData.embroidery_requested ? `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+              <span style="color: #64748b;">Custom Embroidery:</span>
+              <span style="color: #374151; font-weight: 500;">${orderData.currency} ${(orderData.embroidery_cost || 0).toFixed(2)}</span>
+            </div>
+            ${orderData.embroidery_details ? `
+            <div style="background-color: #dbeafe; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+              <strong style="color: #1e40af; font-size: 13px;">Embroidery Text:</strong>
+              <p style="margin: 4px 0 0 0; color: #1e3a8a; font-weight: 600;">"${orderData.embroidery_details}"</p>
+            </div>
+            ` : ''}
+            ` : ''}
             <hr style="margin: 16px 0; border: none; border-top: 1px solid #e2e8f0;">
             <div style="display: flex; justify-content: space-between;">
               <span style="color: #0f172a; font-weight: 600; font-size: 18px;">Total:</span>
@@ -157,9 +220,16 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 20px; margin-top: 24px;">
             <h4 style="color: #0c4a6e; margin: 0 0 12px 0; font-size: 16px; font-weight: 600;">What's Next?</h4>
             <ul style="color: #0369a1; margin: 0; padding-left: 20px; line-height: 1.6;">
+              ${isBankTransfer ? `
+              <li>Complete the bank transfer using the details above</li>
+              <li>We'll verify your payment within 1-2 business days</li>
+              <li>You'll receive a confirmation email once payment is verified</li>
+              <li>We'll process and ship your order within 24 hours of payment confirmation</li>
+              ` : `
               <li>We'll process your order within 24 hours</li>
               <li>You'll receive shipping confirmation with tracking details</li>
-              <li>Standard delivery takes 5-7 business days</li>
+              <li>${orderData.express_shipping ? 'Express delivery takes 2-3 business days' : 'Standard delivery takes 5-7 business days'}</li>
+              `}
               <li>Contact us if you have any questions</li>
             </ul>
           </div>

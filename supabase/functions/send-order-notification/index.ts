@@ -29,6 +29,7 @@ interface OrderNotificationRequest {
   total_amount: number;
   currency: string;
   created_at: string;
+  payment_method?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -64,6 +65,20 @@ const handler = async (req: Request): Promise<Response> => {
       </p>
     ` : '<p><strong>Shipping Address:</strong> <span style="color: #f59e0b; font-weight: 600;">⚠️ Not provided - Customer needs to be contacted</span></p>';
 
+    const isBankTransfer = orderData.payment_method === 'bank_transfer';
+    
+    const paymentStatusHtml = isBankTransfer ? `
+      <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 8px; margin: 20px 0;">
+        <h4 style="margin: 0 0 8px 0; color: #92400e; font-size: 16px; font-weight: 600;">💳 Bank Transfer Payment</h4>
+        <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.5;">
+          This order is awaiting bank transfer payment. <strong>Do not process or ship this order until payment is confirmed.</strong>
+        </p>
+        <p style="margin: 8px 0 0 0; color: #78350f; font-size: 13px;">
+          Customer has been sent bank account details. Verify payment before updating order status to "processing".
+        </p>
+      </div>
+    ` : '';
+
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h1 style="color: #2563eb; margin-bottom: 20px;">🛍️ New Order Received!</h1>
@@ -80,7 +95,10 @@ const handler = async (req: Request): Promise<Response> => {
           })}</p>
           <p><strong>Customer Email:</strong> ${orderData.customer_email}</p>
           ${orderData.customer_name ? `<p><strong>Customer Name:</strong> ${orderData.customer_name}</p>` : ''}
+          <p><strong>Payment Method:</strong> <span style="color: ${isBankTransfer ? '#f59e0b' : '#10b981'}; font-weight: 600;">${isBankTransfer ? 'Bank Transfer (Pending)' : 'Card Payment (Completed)'}</span></p>
         </div>
+
+        ${paymentStatusHtml}
 
         <div style="margin-bottom: 20px;">
           <h3 style="color: #334155;">Order Items</h3>

@@ -125,6 +125,7 @@ const MyOrdersContent: React.FC = () => {
   const getStatusBadge = (status: string) => {
     const statusMap = {
       pending: { variant: 'secondary' as const, label: 'Pending', icon: Clock, color: 'bg-yellow-100 text-yellow-800' },
+      pending_payment: { variant: 'secondary' as const, label: 'Awaiting Payment', icon: DollarSign, color: 'bg-amber-100 text-amber-800' },
       processing: { variant: 'default' as const, label: 'Processing', icon: Package, color: 'bg-blue-100 text-blue-800' },
       shipped: { variant: 'outline' as const, label: 'Shipped', icon: Truck, color: 'bg-purple-100 text-purple-800' },
       delivered: { variant: 'default' as const, label: 'Delivered', icon: CheckCircle, color: 'bg-green-100 text-green-800' },
@@ -145,6 +146,7 @@ const MyOrdersContent: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'border-yellow-200 bg-gradient-to-r from-yellow-50 to-yellow-100';
+      case 'pending_payment': return 'border-amber-200 bg-gradient-to-r from-amber-50 to-amber-100';
       case 'processing': return 'border-blue-200 bg-gradient-to-r from-blue-50 to-blue-100';
       case 'shipped': return 'border-purple-200 bg-gradient-to-r from-purple-50 to-purple-100';
       case 'delivered': return 'border-green-200 bg-gradient-to-r from-green-50 to-green-100';
