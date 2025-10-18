@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { ShieldCheck, ArrowRight, Truck, Zap } from 'lucide-react';
+import { ShieldCheck, ArrowRight, Truck, Zap, Building2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useSizeGuide } from '@/contexts/SizeGuideContext';
 import PaymentMethodsInfo from '@/components/PaymentMethodsInfo';
+import BankTransferInfo from '@/components/BankTransferInfo';
 
 const CheckoutContent = () => {
   const { items, getTotalPrice } = useCart();
@@ -52,11 +53,78 @@ const CheckoutContent = () => {
   const embroideryCost = embroideryRequested ? EMBROIDERY_COST : 0;
   const finalTotal = getTotalPrice() + shippingCost + embroideryCost;
   
+  // STRIPE PAYMENT - TEMPORARILY DISABLED
+  // Keeping this code intact for easy re-enablement once Stripe documents are approved
+  /*
   const handleProceedToCheckout = async () => {
-    // Validate confirmations
     if (!shippingConfirmed) {
       toast({
-        title: "Shipping Confirmation Required",
+        title: "Confirmation Required",
+        description: "Please confirm that your shipping address is correct.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!sizeGuideConfirmed) {
+      toast({
+        title: "Confirmation Required",
+        description: "Please confirm that you have reviewed the size guide.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      for (const item of items) {
+        const { data: isAvailable } = await supabase.rpc('check_stock_availability', {
+          p_product_id: item.product_id,
+          p_quantity: item.quantity
+        });
+
+        if (!isAvailable) {
+          throw new Error(`${item.name} is currently out of stock or doesn't have sufficient quantity available.`);
+        }
+      }
+
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: {
+          currency: 'AED',
+          cartItems: items,
+          subtotal: getTotalPrice(),
+          deliveryCost: shippingCost,
+          embroideryCost: embroideryCost,
+          embroideryRequested,
+          embroideryDetails,
+          expressShipping,
+          totalAmount: finalTotal
+        }
+      });
+
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to initiate checkout. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  */
+
+  // BANK TRANSFER PAYMENT - TEMPORARY IMPLEMENTATION
+  const handleProceedToCheckout = async () => {
+    if (!shippingConfirmed) {
+      toast({
+        title: "Confirmation Required",
         description: "Please confirm you will pay for shipping to proceed.",
         variant: "destructive",
       });
@@ -65,7 +133,7 @@ const CheckoutContent = () => {
 
     if (!sizeGuideConfirmed) {
       toast({
-        title: "Size Confirmation Required",
+        title: "Confirmation Required",
         description: "Please confirm you have selected sizes according to our size guide.",
         variant: "destructive",
       });
@@ -89,10 +157,11 @@ const CheckoutContent = () => {
       });
       return;
     }
+
     setLoading(true);
 
     try {
-      // Check stock availability before redirecting to payment
+      // Check stock availability
       for (const item of items) {
         const { data: product, error } = await supabase
           .from('products')
@@ -109,35 +178,38 @@ const CheckoutContent = () => {
         }
       }
 
-      const { data, error } = await supabase.functions.invoke('create-payment', {
+      // Create bank transfer order
+      const { data, error } = await supabase.functions.invoke('create-bank-transfer-order', {
         body: {
-          currency: 'aed',
-          cart_items: items.map(item => ({
-            ...item,
-            product_id: item.product_id || item.id
+          cartItems: items.map(item => ({
+            product_id: item.product_id || item.id,
+            name: item.product.name,
+            price: item.product.price,
+            size: item.size,
+            color: item.color,
+            quantity: item.quantity
           })),
-          embroidery_requested: embroideryRequested,
-          embroidery_details: embroideryRequested ? embroideryDetails.trim() : null,
-          express_shipping: expressShipping,
-          shipping_cost: shippingCost
+          subtotal: getTotalPrice(),
+          deliveryCost: shippingCost,
+          embroideryCost: embroideryCost,
+          embroideryRequested,
+          embroideryDetails: embroideryRequested ? embroideryDetails.trim() : null,
+          expressShipping,
+          totalAmount: finalTotal,
+          currency: 'AED'
         }
       });
 
-      if (error) {
-        throw new Error(error.message);
-      }
+      if (error) throw error;
 
-      if (data?.url) {
-        // Open Stripe checkout in the same window
-        window.location.href = data.url;
-      } else {
-        throw new Error('No checkout URL received');
-      }
+      // Navigate to success page with order details
+      navigate(`/payment-success?order_id=${data.order_id}&payment_method=bank_transfer`);
+      
     } catch (error: any) {
-      console.error('Payment error:', error);
+      console.error('Checkout error:', error);
       toast({
-        title: "Payment Failed",
-        description: error.message || "An unexpected error occurred. Please try again.",
+        title: "Error",
+        description: error.message || "Failed to create order. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -154,15 +226,15 @@ const CheckoutContent = () => {
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Checkout Info */}
             <div className="space-y-6">
-              {/* Security Notice */}
-              <Card className="border-green-200 bg-green-50">
+              {/* Bank Transfer Notice */}
+              <Card className="border-amber-200 bg-amber-50">
                 <CardContent className="p-6">
-                  <div className="flex items-center gap-3 text-green-800">
-                    <ShieldCheck className="w-6 h-6" />
+                  <div className="flex items-center gap-3 text-amber-800">
+                    <Building2 className="w-6 h-6" />
                     <div>
-                      <h3 className="font-semibold">Secure Payment Processing</h3>
-                      <p className="text-sm text-green-700 mt-1">
-                        You'll be redirected to Stripe's secure checkout where you can enter your payment and shipping details safely.
+                      <h3 className="font-semibold">Bank Transfer Payment</h3>
+                      <p className="text-sm text-amber-700 mt-1">
+                        After placing your order, you'll receive bank account details to complete your payment. Your order will be processed once we confirm the transfer.
                       </p>
                     </div>
                   </div>
@@ -281,19 +353,19 @@ const CheckoutContent = () => {
                 <CardContent className="p-6">
                   <Button 
                     onClick={handleProceedToCheckout}
-                    className="w-full" 
+                    className="w-full bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal" 
                     size="lg"
                     disabled={loading || !shippingConfirmed || !sizeGuideConfirmed}
                   >
                     {loading ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Checking availability...
+                        Processing Order...
                       </>
                     ) : (
                       <>
-                        Proceed to Secure Checkout
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                        <Building2 className="w-4 h-4 mr-2" />
+                        Place Order (Bank Transfer)
                       </>
                     )}
                   </Button>
@@ -311,6 +383,9 @@ const CheckoutContent = () => {
               </Card>
               
               <PaymentMethodsInfo />
+              
+              {/* Bank Transfer Details Preview */}
+              <BankTransferInfo />
             </div>
             
             {/* Order Summary */}
