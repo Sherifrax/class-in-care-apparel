@@ -17,7 +17,8 @@ import {
   ArrowLeft,
   DollarSign,
   Upload,
-  FileCheck
+  FileCheck,
+  AlertCircle
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -43,6 +44,7 @@ interface Order {
   created_at: string;
   updated_at: string;
   payment_receipt_url?: string;
+  payment_deadline?: string;
   order_items?: OrderItem[];
 }
 
@@ -60,9 +62,24 @@ const MyOrdersContent: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
+  const [currentTime, setCurrentTime] = useState(Date.now());
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Helper function to calculate time remaining
+  const getTimeRemaining = (deadline: string) => {
+    const now = currentTime;
+    const deadlineTime = new Date(deadline).getTime();
+    const remaining = deadlineTime - now;
+    
+    if (remaining <= 0) return { expired: true, hours: 0, minutes: 0 };
+    
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    
+    return { expired: false, hours, minutes };
+  };
 
   useEffect(() => {
     if (user) {
@@ -70,6 +87,15 @@ const MyOrdersContent: React.FC = () => {
       setupRealtimeSubscription();
     }
   }, [user]);
+
+  // Update current time every minute to refresh countdown
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 60000); // 60 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchOrders = async () => {
     try {
@@ -338,8 +364,25 @@ const MyOrdersContent: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex-shrink-0">
+                      <div className="flex-shrink-0 flex flex-col gap-2">
                         {getStatusBadge(order.status)}
+                        {order.status === 'pending_payment' && order.payment_deadline && (
+                          <Badge 
+                            variant="outline" 
+                            className={`${
+                              getTimeRemaining(order.payment_deadline).hours < 6 
+                                ? 'bg-red-50 text-red-700 border-red-300 animate-pulse' 
+                                : 'bg-amber-50 text-amber-700 border-amber-300'
+                            } font-mono text-xs`}
+                          >
+                            <Clock className="w-3 h-3 mr-1" />
+                            {(() => {
+                              const { expired, hours, minutes } = getTimeRemaining(order.payment_deadline);
+                              if (expired) return 'EXPIRED';
+                              return `${hours}h ${minutes}m`;
+                            })()}
+                          </Badge>
+                        )}
                       </div>
                     </div>
                     
@@ -421,6 +464,46 @@ const MyOrdersContent: React.FC = () => {
                       )}
                     </div>
                     
+                    {/* Payment Deadline Warning */}
+                    {order.status === 'pending_payment' && order.payment_deadline && (
+                      <div className={`${
+                        getTimeRemaining(order.payment_deadline).hours < 6 
+                          ? 'bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-300' 
+                          : 'bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-300'
+                      } rounded-xl p-4`}>
+                        <div className="flex items-start gap-3">
+                          <Clock className={`w-5 h-5 ${
+                            getTimeRemaining(order.payment_deadline).hours < 6 
+                              ? 'text-red-600' 
+                              : 'text-amber-600'
+                          } flex-shrink-0 mt-0.5`} />
+                          <div className="flex-1">
+                            <h4 className={`font-semibold ${
+                              getTimeRemaining(order.payment_deadline).hours < 6 
+                                ? 'text-red-900' 
+                                : 'text-amber-900'
+                            } mb-1`}>Payment Deadline</h4>
+                            <p className={`text-sm ${
+                              getTimeRemaining(order.payment_deadline).hours < 6 
+                                ? 'text-red-800' 
+                                : 'text-amber-800'
+                            }`}>
+                              {(() => {
+                                const { expired, hours, minutes } = getTimeRemaining(order.payment_deadline);
+                                if (expired) {
+                                  return '⚠️ This order has expired and will be cancelled automatically.';
+                                } else if (hours < 6) {
+                                  return `⚠️ Urgent! Only ${hours}h ${minutes}m left to complete payment before this order is automatically cancelled.`;
+                                } else {
+                                  return `Complete payment within ${hours}h ${minutes}m to secure your order.`;
+                                }
+                              })()}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
                     {/* Action Buttons Section */}
                     <div className="flex flex-col sm:flex-row gap-3 items-stretch">
                       <Button
@@ -458,12 +541,12 @@ const MyOrdersContent: React.FC = () => {
                                 size="sm"
                                 variant="outline"
                                 disabled={uploadingReceipt}
-                                className="w-full px-6 border-2 border-amber-300 hover:border-amber-400 hover:bg-amber-50 rounded-xl font-medium"
+                                className="w-full px-4 border-2 border-amber-300 hover:border-amber-400 hover:bg-amber-50 rounded-xl font-medium"
                                 asChild
                               >
                                 <span>
                                   <Upload className="w-4 h-4 mr-2" />
-                                  {uploadingReceipt ? 'Uploading...' : 'Upload Payment Proof'}
+                                  {uploadingReceipt ? 'Uploading...' : 'Upload Receipt'}
                                 </span>
                               </Button>
                             </label>
