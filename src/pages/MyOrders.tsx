@@ -198,15 +198,13 @@ const MyOrdersContent: React.FC = () => {
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('payment-receipts')
-        .getPublicUrl(fileName);
+      // Save file path (private bucket). We'll generate signed URL when viewing
+      const receiptPath = fileName;
 
-      // Update order with receipt URL
+      // Update order with receipt path
       const { error: updateError } = await supabase
         .from('orders')
-        .update({ payment_receipt_url: publicUrl })
+        .update({ payment_receipt_url: receiptPath })
         .eq('id', orderId);
 
       if (updateError) throw updateError;
@@ -385,10 +383,10 @@ const MyOrdersContent: React.FC = () => {
                       </div>
                       {order.shipping_address ? (
                         <div className="text-sm text-muted-foreground leading-relaxed">
-                          {order.shipping_address.line1}
-                          {order.shipping_address.line2 && `, ${order.shipping_address.line2}`}
+                          {order.shipping_address.street_address_1 || order.shipping_address.line1}
+                          {(order.shipping_address.street_address_2 || order.shipping_address.line2) && `, ${order.shipping_address.street_address_2 || order.shipping_address.line2}`}
                           <br />
-                          {order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.postal_code}
+                          {order.shipping_address.city}, {order.shipping_address.emirate || order.shipping_address.state}{order.shipping_address.postal_code ? ` ${order.shipping_address.postal_code}` : ''}
                           <br />
                           {order.shipping_address.country}
                         </div>
@@ -567,11 +565,11 @@ const MyOrdersContent: React.FC = () => {
                     {selectedOrder.shipping_address ? (
                       <div className="p-4 bg-white/50 rounded-xl text-sm leading-relaxed border border-medical-teal/10">
                         <div className="font-medium text-luxury-navy">
-                          {selectedOrder.shipping_address.line1}
-                          {selectedOrder.shipping_address.line2 && <>, {selectedOrder.shipping_address.line2}</>}
+                          {(selectedOrder.shipping_address.street_address_1 || selectedOrder.shipping_address.line1)}
+                          {(selectedOrder.shipping_address.street_address_2 || selectedOrder.shipping_address.line2) && <>, {(selectedOrder.shipping_address.street_address_2 || selectedOrder.shipping_address.line2)}</>}
                         </div>
                         <div className="text-muted-foreground mt-1">
-                          {selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.state} {selectedOrder.shipping_address.postal_code}
+                          {selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.emirate || selectedOrder.shipping_address.state}{selectedOrder.shipping_address.postal_code ? ` ${selectedOrder.shipping_address.postal_code}` : ''}
                         </div>
                         <div className="text-muted-foreground">
                           {selectedOrder.shipping_address.country}

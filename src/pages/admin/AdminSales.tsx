@@ -654,7 +654,26 @@ const AdminSalesContent: React.FC = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => window.open(selectedOrder.payment_receipt_url!, '_blank')}
+                           onClick={async () => {
+                            try {
+                              let path = selectedOrder.payment_receipt_url!;
+                              const marker = '/payment-receipts/';
+                              if (path.startsWith('http') && path.includes(marker)) {
+                                path = path.substring(path.indexOf(marker) + marker.length);
+                              }
+                              const { data, error } = await supabase.storage
+                                .from('payment-receipts')
+                                .createSignedUrl(path, 60 * 60);
+                              if (error || !data?.signedUrl) throw error || new Error('Unable to create signed URL');
+                              window.open(data.signedUrl, '_blank');
+                            } catch (err) {
+                              toast({
+                                title: 'Unable to open receipt',
+                                description: 'The receipt could not be accessed. Please ask the customer to re-upload.',
+                                variant: 'destructive',
+                              });
+                            }
+                          }}
                           className="border-green-300 hover:bg-green-50"
                         >
                           <Eye className="w-4 h-4 mr-1" />
@@ -697,9 +716,14 @@ const AdminSalesContent: React.FC = () => {
                     Shipping Address
                   </h4>
                   <div className="p-4 bg-medical-teal/5 rounded-xl text-sm border border-medical-teal/20">
-                    <p className="font-medium text-luxury-navy">{selectedOrder.shipping_address.line1}</p>
-                    {selectedOrder.shipping_address.line2 && <p className="text-muted-foreground">{selectedOrder.shipping_address.line2}</p>}
-                    <p className="text-muted-foreground">{selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.state} {selectedOrder.shipping_address.postal_code}</p>
+                    <p className="font-medium text-luxury-navy">{selectedOrder.shipping_address.street_address_1 || selectedOrder.shipping_address.line1}</p>
+                    {(selectedOrder.shipping_address.street_address_2 || selectedOrder.shipping_address.line2) && (
+                      <p className="text-muted-foreground">{selectedOrder.shipping_address.street_address_2 || selectedOrder.shipping_address.line2}</p>
+                    )}
+                    <p className="text-muted-foreground">
+                      {selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.emirate || selectedOrder.shipping_address.state}
+                      {selectedOrder.shipping_address.postal_code ? ` ${selectedOrder.shipping_address.postal_code}` : ''}
+                    </p>
                     <p className="text-muted-foreground">{selectedOrder.shipping_address.country}</p>
                   </div>
                 </div> : <div className="space-y-3">
