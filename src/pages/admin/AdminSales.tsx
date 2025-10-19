@@ -30,7 +30,6 @@ interface Order {
   shipping_address: any;
   created_at: string;
   updated_at: string;
-  payment_deadline?: string;
   order_items?: OrderItem[];
 }
 interface OrderItem {
@@ -412,19 +411,11 @@ const AdminSalesContent: React.FC = () => {
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div className="flex-1 space-y-3">
                       <div className="flex items-start justify-between gap-3">
-                       <div>
+                      <div>
                         <h3 className="font-bold text-lg text-luxury-navy">Order #{order.order_reference || order.id.slice(0, 8)}</h3>
                         <p className="text-sm text-muted-foreground">
                           {order.customer_email} • {new Date(order.created_at).toLocaleDateString()}
                         </p>
-                        {order.status === 'pending_payment' && order.payment_deadline && (
-                          <div className="text-xs text-muted-foreground mt-1">
-                            Payment deadline: {new Date(order.payment_deadline).toLocaleString()}
-                            {new Date(order.payment_deadline) < new Date() && (
-                              <Badge variant="destructive" className="ml-2 text-xs">EXPIRED</Badge>
-                            )}
-                          </div>
-                        )}
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         {getStatusBadge(order.status)}

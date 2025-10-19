@@ -51,6 +51,7 @@ const CheckoutContent = () => {
     phone: '',
     street1: '',
     street2: '',
+    city: '',
     emirate: '',
     country: 'United Arab Emirates'
   });
@@ -171,6 +172,15 @@ const CheckoutContent = () => {
       return;
     }
 
+    if (!shippingAddress.city.trim()) {
+      toast({
+        title: "City Required",
+        description: "Please enter your city.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!shippingAddress.emirate.trim()) {
       toast({
         title: "Emirate Required",
@@ -260,6 +270,7 @@ const CheckoutContent = () => {
             phone: shippingAddress.phone,
             street_address_1: shippingAddress.street1,
             street_address_2: shippingAddress.street2,
+            city: shippingAddress.city,
             emirate: shippingAddress.emirate,
             country: shippingAddress.country
           }
@@ -350,26 +361,40 @@ const CheckoutContent = () => {
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="emirate" className="text-sm font-medium mb-2 block">
-                      Emirate <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      id="emirate"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      value={shippingAddress.emirate}
-                      onChange={(e) => setShippingAddress({ ...shippingAddress, emirate: e.target.value })}
-                      required
-                    >
-                      <option value="">Select Emirate</option>
-                      <option value="Abu Dhabi">Abu Dhabi</option>
-                      <option value="Dubai">Dubai</option>
-                      <option value="Sharjah">Sharjah</option>
-                      <option value="Ajman">Ajman</option>
-                      <option value="Umm Al Quwain">Umm Al Quwain</option>
-                      <option value="Ras Al Khaimah">Ras Al Khaimah</option>
-                      <option value="Fujairah">Fujairah</option>
-                    </select>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="city" className="text-sm font-medium mb-2 block">
+                        City <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        id="city"
+                        placeholder="e.g., Dubai, Abu Dhabi"
+                        value={shippingAddress.city}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="emirate" className="text-sm font-medium mb-2 block">
+                        Emirate <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="emirate"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        value={shippingAddress.emirate}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, emirate: e.target.value })}
+                        required
+                      >
+                        <option value="">Select Emirate</option>
+                        <option value="Abu Dhabi">Abu Dhabi</option>
+                        <option value="Dubai">Dubai</option>
+                        <option value="Sharjah">Sharjah</option>
+                        <option value="Ajman">Ajman</option>
+                        <option value="Umm Al Quwain">Umm Al Quwain</option>
+                        <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                        <option value="Fujairah">Fujairah</option>
+                      </select>
+                    </div>
                   </div>
 
                   <div>

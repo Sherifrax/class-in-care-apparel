@@ -139,7 +139,6 @@ export type Database = {
           express_shipping: boolean | null
           id: string
           order_reference: string | null
-          payment_deadline: string | null
           payment_receipt_url: string | null
           payment_reminder_sent_at: string | null
           session_id: string | null
@@ -161,7 +160,6 @@ export type Database = {
           express_shipping?: boolean | null
           id?: string
           order_reference?: string | null
-          payment_deadline?: string | null
           payment_receipt_url?: string | null
           payment_reminder_sent_at?: string | null
           session_id?: string | null
@@ -183,7 +181,6 @@ export type Database = {
           express_shipping?: boolean | null
           id?: string
           order_reference?: string | null
-          payment_deadline?: string | null
           payment_receipt_url?: string | null
           payment_reminder_sent_at?: string | null
           session_id?: string | null
