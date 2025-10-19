@@ -209,6 +209,29 @@ const MyOrdersContent: React.FC = () => {
 
       if (updateError) throw updateError;
 
+      // Get the order details to send notification
+      const order = orders.find(o => o.id === orderId);
+      
+      // Send notification to admin
+      if (order) {
+        try {
+          await supabase.functions.invoke('send-receipt-uploaded-notification', {
+            body: {
+              order_id: orderId,
+              order_reference: order.order_reference || orderId.slice(0, 8),
+              customer_email: order.customer_email,
+              total_amount: order.total_amount,
+              currency: order.currency,
+              created_at: order.created_at,
+            }
+          });
+          console.log('Admin notification sent successfully');
+        } catch (notifError) {
+          console.error('Failed to send admin notification:', notifError);
+          // Don't fail the upload if notification fails
+        }
+      }
+
       toast({
         title: "Receipt Uploaded",
         description: "Your payment proof has been submitted successfully. We'll verify it shortly.",

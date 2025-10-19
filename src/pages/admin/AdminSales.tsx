@@ -88,10 +88,19 @@ const AdminSalesContent: React.FC = () => {
           description: `New order received from ${payload.new.customer_email}`
         });
       } else if (payload.eventType === 'UPDATE') {
-        toast({
-          title: "Order Updated",
-          description: `Order ${payload.new.id.slice(0, 8)} status changed to ${payload.new.status}`
-        });
+        // Check if payment receipt was just uploaded
+        if (payload.new.payment_receipt_url && !payload.old.payment_receipt_url) {
+          toast({
+            title: "💰 Payment Receipt Uploaded!",
+            description: `Customer uploaded proof for Order ${payload.new.order_reference || payload.new.id.slice(0, 8)}`,
+            duration: 10000,
+          });
+        } else {
+          toast({
+            title: "Order Updated",
+            description: `Order ${payload.new.id.slice(0, 8)} status changed to ${payload.new.status}`
+          });
+        }
       }
     }).subscribe();
     return () => {
@@ -394,18 +403,43 @@ const AdminSalesContent: React.FC = () => {
             </CardContent>
           </Card> : (
             <>
-              {filteredOrders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(order => <Card key={order.id} className="glass border-medical-blue/20 bg-gradient-to-r from-white/90 to-white/80 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01]">
+              {filteredOrders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(order => {
+                const daysWaiting = Math.floor((Date.now() - new Date(order.created_at).getTime()) / (1000 * 60 * 60 * 24));
+                
+                return <Card key={order.id} className="glass border-medical-blue/20 bg-gradient-to-r from-white/90 to-white/80 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01]">
                 <CardContent className="p-6">
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div className="flex-1 space-y-3">
-                      <div className="flex items-start justify-between">
+                      <div className="flex items-start justify-between gap-3">
                       <div>
                         <h3 className="font-bold text-lg text-luxury-navy">Order #{order.order_reference || order.id.slice(0, 8)}</h3>
                         <p className="text-sm text-muted-foreground">
                           {order.customer_email} • {new Date(order.created_at).toLocaleDateString()}
                         </p>
                       </div>
+                      <div className="flex flex-col items-end gap-2">
                         {getStatusBadge(order.status)}
+                        
+                        {/* Receipt Status Badges */}
+                        {order.status === 'pending_payment' && !order.payment_receipt_url && (
+                          <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300 whitespace-nowrap">
+                            ⏳ Awaiting Receipt
+                          </Badge>
+                        )}
+                        
+                        {order.payment_receipt_url && (
+                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300 whitespace-nowrap">
+                            ✅ Receipt Submitted
+                          </Badge>
+                        )}
+                        
+                        {/* Days Waiting Warning */}
+                        {order.status === 'pending_payment' && daysWaiting > 2 && (
+                          <span className="text-red-600 text-xs font-semibold bg-red-50 px-2 py-1 rounded border border-red-200">
+                            ⚠️ {daysWaiting} days waiting
+                          </span>
+                        )}
+                      </div>
                       </div>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
@@ -451,7 +485,8 @@ const AdminSalesContent: React.FC = () => {
                     </div>
                   </div>
                 </CardContent>
-              </Card>)}
+              </Card>
+              })}
               
               {/* Pagination */}
               {filteredOrders.length > itemsPerPage && (
@@ -654,19 +689,28 @@ const AdminSalesContent: React.FC = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                           onClick={async () => {
+                          onClick={async () => {
                             try {
-                              let path = selectedOrder.payment_receipt_url!;
-                              const marker = '/payment-receipts/';
-                              if (path.startsWith('http') && path.includes(marker)) {
-                                path = path.substring(path.indexOf(marker) + marker.length);
+                              const receiptUrl = selectedOrder.payment_receipt_url!;
+                              
+                              // If it's already a public URL, open directly
+                              if (receiptUrl.startsWith('http')) {
+                                window.open(receiptUrl, '_blank');
+                                return;
                               }
+                              
+                              // Otherwise, it's a private path - generate signed URL
                               const { data, error } = await supabase.storage
                                 .from('payment-receipts')
-                                .createSignedUrl(path, 60 * 60);
-                              if (error || !data?.signedUrl) throw error || new Error('Unable to create signed URL');
+                                .createSignedUrl(receiptUrl, 60 * 60);
+                              
+                              if (error || !data?.signedUrl) {
+                                throw error || new Error('Unable to create signed URL');
+                              }
+                              
                               window.open(data.signedUrl, '_blank');
                             } catch (err) {
+                              console.error('Receipt view error:', err);
                               toast({
                                 title: 'Unable to open receipt',
                                 description: 'The receipt could not be accessed. Please ask the customer to re-upload.',
