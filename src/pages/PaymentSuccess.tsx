@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, ArrowRight, Clock, Building2 } from 'lucide-react';
+import { CheckCircle, ArrowRight, Clock, Building2, MessageCircle } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { supabase } from '@/integrations/supabase/client';
 import BankTransferInfo from '@/components/BankTransferInfo';
@@ -161,6 +161,23 @@ const PaymentSuccess = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-5 mb-6">
+            <div className="flex items-center gap-3 mb-3">
+              <MessageCircle className="w-5 h-5 text-green-700" />
+              <h4 className="font-semibold text-green-900">Questions about your order?</h4>
+            </div>
+            <p className="text-sm text-green-800 mb-4">
+              Contact us on WhatsApp for instant support and order updates
+            </p>
+            <Button
+              onClick={() => window.open(`https://wa.me/971568988436?text=Hello, I'd like to follow up on my order ${orderId ? orderId.slice(0, 8).toUpperCase() : ''}`, '_blank')}
+              className="w-full h-12 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg rounded-xl"
+            >
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Chat on WhatsApp: +971 56 898 8436
+            </Button>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-6">
