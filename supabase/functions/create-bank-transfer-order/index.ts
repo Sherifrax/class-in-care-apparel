@@ -62,8 +62,8 @@ serve(async (req) => {
     const { data: orderReference } = await supabase
       .rpc('generate_order_reference');
 
-    // Set payment deadline to 24 hours from now
-    const paymentDeadline = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    // Set payment deadline to 3 minutes from now (testing)
+    const paymentDeadline = new Date(Date.now() + 3 * 60 * 1000);
 
     // Create order with pending_payment status
     const { data: order, error: orderError } = await supabase
