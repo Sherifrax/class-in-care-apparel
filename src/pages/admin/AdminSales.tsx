@@ -15,6 +15,8 @@ import { ColorSwatch } from '@/components/ColorSwatch';
 interface Order {
   id: string;
   session_id: string;
+  order_reference?: string;
+  payment_receipt_url?: string;
   total_amount: number;
   subtotal: number;
   delivery_cost: number;
@@ -195,6 +197,11 @@ const AdminSalesContent: React.FC = () => {
   };
   const getStatusBadge = (status: string) => {
     const statusMap = {
+      pending_payment: {
+        variant: 'secondary' as const,
+        label: 'Pending Payment',
+        color: 'bg-amber-100 text-amber-800'
+      },
       pending: {
         variant: 'secondary' as const,
         label: 'Pending',
@@ -246,6 +253,26 @@ const AdminSalesContent: React.FC = () => {
             Export
           </Button>
         </div>
+      </div>
+
+      {/* Quick Filters for Pending Payments */}
+      <div className="flex flex-wrap gap-3">
+        <Button
+          variant={statusFilter === 'pending_payment' ? 'default' : 'outline'}
+          onClick={() => setStatusFilter(statusFilter === 'pending_payment' ? 'all' : 'pending_payment')}
+          className={statusFilter === 'pending_payment' 
+            ? 'bg-amber-600 hover:bg-amber-700' 
+            : 'border-amber-300 hover:border-amber-500 hover:bg-amber-50'
+          }
+        >
+          <AlertCircle className="w-4 h-4 mr-2" />
+          Pending Payments
+          {orders.filter(o => o.status === 'pending_payment').length > 0 && (
+            <Badge variant="secondary" className="ml-2 bg-amber-100 text-amber-800">
+              {orders.filter(o => o.status === 'pending_payment').length}
+            </Badge>
+          )}
+        </Button>
       </div>
 
       {/* Stats Cards */}
@@ -333,6 +360,7 @@ const AdminSalesContent: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent className="bg-white/95 backdrop-blur-md border-medical-blue/20">
                   <SelectItem value="all" className="hover:bg-medical-blue/5">All Orders</SelectItem>
+                  <SelectItem value="pending_payment" className="hover:bg-amber-50">🟠 Pending Payment</SelectItem>
                   <SelectItem value="pending" className="hover:bg-yellow-50">🟡 Pending</SelectItem>
                   <SelectItem value="processing" className="hover:bg-blue-50">🔵 Processing</SelectItem>
                   <SelectItem value="shipped" className="hover:bg-purple-50">🟣 Shipped</SelectItem>
@@ -371,12 +399,12 @@ const AdminSalesContent: React.FC = () => {
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div className="flex-1 space-y-3">
                       <div className="flex items-start justify-between">
-                        <div>
-                          <h3 className="font-bold text-lg text-luxury-navy">Order #{order.id.slice(0, 8)}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {order.customer_email} • {new Date(order.created_at).toLocaleDateString()}
-                          </p>
-                        </div>
+                      <div>
+                        <h3 className="font-bold text-lg text-luxury-navy">Order #{order.order_reference || order.id.slice(0, 8)}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {order.customer_email} • {new Date(order.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
                         {getStatusBadge(order.status)}
                       </div>
                       
@@ -406,6 +434,7 @@ const AdminSalesContent: React.FC = () => {
                               </div> : <SelectValue />}
                           </SelectTrigger>
                           <SelectContent className="bg-white/95 backdrop-blur-md">
+                            <SelectItem value="pending_payment" className="hover:bg-amber-50">🟠 Pending Payment</SelectItem>
                             <SelectItem value="pending" className="hover:bg-yellow-50">🟡 Pending</SelectItem>
                             <SelectItem value="processing" className="hover:bg-blue-50">🔵 Processing</SelectItem>
                             <SelectItem value="shipped" className="hover:bg-purple-50">🟣 Shipped</SelectItem>
@@ -491,7 +520,7 @@ const AdminSalesContent: React.FC = () => {
           <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto glass border-medical-blue/20 bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-xl animate-scale-in">
             <CardHeader className="sticky top-0 bg-white/90 backdrop-blur-sm z-10 border-b border-medical-blue/20">
               <CardTitle className="flex items-center justify-between text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
-                Order Details - #{selectedOrder.id.slice(0, 8)}
+                Order {selectedOrder.order_reference || `#${selectedOrder.id.slice(0, 8)}`}
                 {getStatusBadge(selectedOrder.status)}
               </CardTitle>
             </CardHeader>
@@ -500,8 +529,8 @@ const AdminSalesContent: React.FC = () => {
                 <div className="space-y-4">
                   <h4 className="font-semibold text-lg text-luxury-navy">Order Information</h4>
                   <div className="space-y-2 text-sm bg-medical-blue/5 p-4 rounded-xl">
+                    <p><strong>Order Reference:</strong> {selectedOrder.order_reference || selectedOrder.id.slice(0, 8)}</p>
                     <p><strong>Order ID:</strong> {selectedOrder.id}</p>
-                    
                     <p><strong>Customer:</strong> {selectedOrder.customer_email}</p>
                     <p><strong>Date:</strong> {new Date(selectedOrder.created_at).toLocaleString()}</p>
                     <p><strong>Last Updated:</strong> {new Date(selectedOrder.updated_at).toLocaleString()}</p>
@@ -532,6 +561,135 @@ const AdminSalesContent: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Customer Contact Information */}
+              {selectedOrder.shipping_address && (
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">
+                    <Users className="w-5 h-5 text-medical-blue" />
+                    Customer Contact
+                  </h4>
+                  <div className="p-4 bg-medical-blue/5 rounded-xl text-sm border border-medical-blue/20">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-xs text-muted-foreground">Full Name</p>
+                        <p className="font-medium">{selectedOrder.shipping_address.full_name || 'Not provided'}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Phone Number</p>
+                        <p className="font-medium">
+                          {selectedOrder.shipping_address.phone ? (
+                            <a 
+                              href={`https://wa.me/${selectedOrder.shipping_address.phone.replace(/[^0-9+]/g, '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-green-600 hover:text-green-700 flex items-center gap-1"
+                            >
+                              {selectedOrder.shipping_address.phone}
+                              <span className="text-xs">📱 WhatsApp</span>
+                            </a>
+                          ) : 'Not provided'}
+                        </p>
+                      </div>
+                      <div className="md:col-span-2">
+                        <p className="text-xs text-muted-foreground">Email</p>
+                        <p className="font-medium">{selectedOrder.customer_email}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Shipping Address */}
+              {selectedOrder.shipping_address ? (
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-medical-teal" />
+                    Delivery Address
+                  </h4>
+                  <div className="p-4 bg-medical-teal/5 rounded-xl text-sm border border-medical-teal/20">
+                    {selectedOrder.shipping_address.full_name && (
+                      <p className="font-semibold text-luxury-navy mb-1">{selectedOrder.shipping_address.full_name}</p>
+                    )}
+                    <p className="font-medium">{selectedOrder.shipping_address.street_address_1 || selectedOrder.shipping_address.line1}</p>
+                    {(selectedOrder.shipping_address.street_address_2 || selectedOrder.shipping_address.line2) && (
+                      <p className="text-muted-foreground">{selectedOrder.shipping_address.street_address_2 || selectedOrder.shipping_address.line2}</p>
+                    )}
+                    <p className="text-muted-foreground">
+                      {selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.emirate || selectedOrder.shipping_address.state}
+                      {selectedOrder.shipping_address.postal_code && ` ${selectedOrder.shipping_address.postal_code}`}
+                    </p>
+                    <p className="text-muted-foreground">{selectedOrder.shipping_address.country}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-amber-600" />
+                    Delivery Address
+                  </h4>
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                    <p className="text-sm text-amber-800 font-medium flex items-center gap-2">
+                      <span className="text-lg">⚠️</span>
+                      Shipping address not provided - Contact customer for delivery details
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Payment Receipt */}
+              {selectedOrder.status === 'pending_payment' && (
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">
+                    <DollarSign className="w-5 h-5 text-green-600" />
+                    Payment Proof
+                  </h4>
+                  {selectedOrder.payment_receipt_url ? (
+                    <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+                      <p className="text-sm text-green-800 mb-3 flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4" />
+                        Payment receipt uploaded by customer
+                      </p>
+                      <div className="flex gap-3">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(selectedOrder.payment_receipt_url!, '_blank')}
+                          className="border-green-300 hover:bg-green-50"
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          View Receipt
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => updateOrderStatus(selectedOrder.id, 'processing')}
+                          disabled={updatingStatus === selectedOrder.id}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          {updatingStatus === selectedOrder.id ? (
+                            <>
+                              <RefreshCw className="w-4 h-4 mr-1 animate-spin" />
+                              Verifying...
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle className="w-4 h-4 mr-1" />
+                              Mark as Paid
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                      <p className="text-sm text-amber-800 font-medium flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4" />
+                        Awaiting payment proof from customer
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {selectedOrder.shipping_address ? <div className="space-y-3">
                   <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">

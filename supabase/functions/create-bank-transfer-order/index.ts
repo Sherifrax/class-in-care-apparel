@@ -35,7 +35,8 @@ serve(async (req) => {
       embroideryDetails,
       expressShipping,
       totalAmount,
-      currency = "AED"
+      currency = "AED",
+      shippingAddress
     } = await req.json();
 
     console.log("Creating bank transfer order for user:", user.id);
@@ -77,7 +78,8 @@ serve(async (req) => {
         currency,
         status: 'pending_payment', // Awaiting bank transfer
         session_id: `bank_transfer_${Date.now()}_${user.id.slice(0, 8)}`, // Unique reference
-        order_reference: orderReference // Human-friendly reference
+        order_reference: orderReference, // Human-friendly reference
+        shipping_address: shippingAddress // Store delivery address
       })
       .select()
       .single();

@@ -45,6 +45,17 @@ const CheckoutContent = () => {
   const [expressShipping, setExpressShipping] = useState(false);
   const { openSizeGuide } = useSizeGuide();
 
+  // Shipping address state
+  const [shippingAddress, setShippingAddress] = useState({
+    fullName: '',
+    phone: '',
+    street1: '',
+    street2: '',
+    city: '',
+    emirate: '',
+    country: 'United Arab Emirates'
+  });
+
   const STANDARD_SHIPPING = 25;
   const EXPRESS_SHIPPING = 50;
   const EMBROIDERY_COST = 25;
@@ -122,6 +133,63 @@ const CheckoutContent = () => {
 
   // BANK TRANSFER PAYMENT - TEMPORARY IMPLEMENTATION
   const handleProceedToCheckout = async () => {
+    // Validate shipping address
+    if (!shippingAddress.fullName.trim()) {
+      toast({
+        title: "Shipping Address Required",
+        description: "Please enter your full name.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!shippingAddress.phone.trim()) {
+      toast({
+        title: "Contact Number Required",
+        description: "Please enter your phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate UAE phone format
+    const phoneRegex = /^(\+971|00971|0)?[1-9][0-9]{7,8}$/;
+    if (!phoneRegex.test(shippingAddress.phone.replace(/[\s-]/g, ''))) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid UAE phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!shippingAddress.street1.trim()) {
+      toast({
+        title: "Address Required",
+        description: "Please enter your street address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!shippingAddress.city.trim()) {
+      toast({
+        title: "City Required",
+        description: "Please enter your city.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!shippingAddress.emirate.trim()) {
+      toast({
+        title: "Emirate Required",
+        description: "Please select your emirate.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!shippingConfirmed) {
       toast({
         title: "Confirmation Required",
@@ -196,7 +264,16 @@ const CheckoutContent = () => {
           embroideryDetails: embroideryRequested ? embroideryDetails.trim() : null,
           expressShipping,
           totalAmount: finalTotal,
-          currency: 'AED'
+          currency: 'AED',
+          shippingAddress: {
+            full_name: shippingAddress.fullName,
+            phone: shippingAddress.phone,
+            street_address_1: shippingAddress.street1,
+            street_address_2: shippingAddress.street2,
+            city: shippingAddress.city,
+            emirate: shippingAddress.emirate,
+            country: shippingAddress.country
+          }
         }
       });
 
@@ -226,6 +303,114 @@ const CheckoutContent = () => {
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Checkout Info */}
             <div className="space-y-6">
+              {/* Shipping Address Form */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Delivery Address</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="fullName" className="text-sm font-medium mb-2 block">
+                        Full Name <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        id="fullName"
+                        placeholder="Enter your full name"
+                        value={shippingAddress.fullName}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, fullName: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="phone" className="text-sm font-medium mb-2 block">
+                        Phone Number <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        id="phone"
+                        placeholder="+971 XX XXX XXXX"
+                        value={shippingAddress.phone}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="street1" className="text-sm font-medium mb-2 block">
+                      Street Address <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      id="street1"
+                      placeholder="House/Flat number, Street name"
+                      value={shippingAddress.street1}
+                      onChange={(e) => setShippingAddress({ ...shippingAddress, street1: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="street2" className="text-sm font-medium mb-2 block">
+                      Apartment, suite, etc. (optional)
+                    </label>
+                    <Input
+                      id="street2"
+                      placeholder="Additional address details"
+                      value={shippingAddress.street2}
+                      onChange={(e) => setShippingAddress({ ...shippingAddress, street2: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="city" className="text-sm font-medium mb-2 block">
+                        City <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        id="city"
+                        placeholder="e.g., Dubai, Abu Dhabi"
+                        value={shippingAddress.city}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="emirate" className="text-sm font-medium mb-2 block">
+                        Emirate <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="emirate"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        value={shippingAddress.emirate}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, emirate: e.target.value })}
+                        required
+                      >
+                        <option value="">Select Emirate</option>
+                        <option value="Abu Dhabi">Abu Dhabi</option>
+                        <option value="Dubai">Dubai</option>
+                        <option value="Sharjah">Sharjah</option>
+                        <option value="Ajman">Ajman</option>
+                        <option value="Umm Al Quwain">Umm Al Quwain</option>
+                        <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                        <option value="Fujairah">Fujairah</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="country" className="text-sm font-medium mb-2 block">
+                      Country
+                    </label>
+                    <Input
+                      id="country"
+                      value={shippingAddress.country}
+                      readOnly
+                      className="bg-muted"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Bank Transfer Notice */}
               <Card className="border-amber-200 bg-amber-50">
                 <CardContent className="p-6">
