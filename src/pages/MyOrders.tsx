@@ -233,8 +233,9 @@ const MyOrdersContent: React.FC = () => {
       }
 
       toast({
-        title: "Receipt Uploaded",
-        description: "Your payment proof has been submitted successfully. We'll verify it shortly.",
+        title: "✅ Receipt Uploaded Successfully!",
+        description: `Your payment proof has been submitted for Order ${order.order_reference || orderId.slice(0, 8)}. Admin has been notified and will verify within 24-48 hours.`,
+        duration: 8000,
       });
 
       // Refresh orders

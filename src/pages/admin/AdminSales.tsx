@@ -673,56 +673,60 @@ const AdminSalesContent: React.FC = () => {
               )}
 
               {/* Payment Receipt */}
-              {selectedOrder.status === 'pending_payment' && (
+              {selectedOrder.payment_receipt_url && (
                 <div className="space-y-3">
                   <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">
                     <DollarSign className="w-5 h-5 text-green-600" />
                     Payment Proof
                   </h4>
-                  {selectedOrder.payment_receipt_url ? (
-                    <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
-                      <p className="text-sm text-green-800 mb-3 flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4" />
-                        Payment receipt uploaded by customer
-                      </p>
-                      <div className="flex gap-3">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={async () => {
-                            try {
-                              const receiptUrl = selectedOrder.payment_receipt_url!;
-                              
-                              // If it's already a public URL, open directly
-                              if (receiptUrl.startsWith('http')) {
-                                window.open(receiptUrl, '_blank');
-                                return;
-                              }
-                              
-                              // Otherwise, it's a private path - generate signed URL
-                              const { data, error } = await supabase.storage
-                                .from('payment-receipts')
-                                .createSignedUrl(receiptUrl, 60 * 60);
-                              
-                              if (error || !data?.signedUrl) {
-                                throw error || new Error('Unable to create signed URL');
-                              }
-                              
-                              window.open(data.signedUrl, '_blank');
-                            } catch (err) {
-                              console.error('Receipt view error:', err);
-                              toast({
-                                title: 'Unable to open receipt',
-                                description: 'The receipt could not be accessed. Please ask the customer to re-upload.',
-                                variant: 'destructive',
-                              });
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+                    <p className="text-sm text-green-800 mb-3 flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4" />
+                      {selectedOrder.status === 'pending_payment' 
+                        ? 'Payment receipt uploaded by customer' 
+                        : 'Payment receipt verified'}
+                    </p>
+                    <div className="flex gap-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={async () => {
+                          try {
+                            const receiptUrl = selectedOrder.payment_receipt_url!;
+                            
+                            // If it's already a public URL, open directly
+                            if (receiptUrl.startsWith('http')) {
+                              window.open(receiptUrl, '_blank');
+                              return;
                             }
-                          }}
-                          className="border-green-300 hover:bg-green-50"
-                        >
-                          <Eye className="w-4 h-4 mr-1" />
-                          View Receipt
-                        </Button>
+                            
+                            // Otherwise, it's a private path - generate signed URL
+                            const { data, error } = await supabase.storage
+                              .from('payment-receipts')
+                              .createSignedUrl(receiptUrl, 60 * 60);
+                            
+                            if (error || !data?.signedUrl) {
+                              throw error || new Error('Unable to create signed URL');
+                            }
+                            
+                            window.open(data.signedUrl, '_blank');
+                          } catch (err) {
+                            console.error('Receipt view error:', err);
+                            toast({
+                              title: 'Unable to open receipt',
+                              description: 'The receipt could not be accessed. Please ask the customer to re-upload.',
+                              variant: 'destructive',
+                            });
+                          }
+                        }}
+                        className="border-green-300 hover:bg-green-50"
+                      >
+                        <Eye className="w-4 h-4 mr-1" />
+                        View Receipt
+                      </Button>
+                      
+                      {/* Only show "Mark as Paid" button if still pending payment */}
+                      {selectedOrder.status === 'pending_payment' && (
                         <Button
                           size="sm"
                           onClick={() => updateOrderStatus(selectedOrder.id, 'processing')}
@@ -741,47 +745,19 @@ const AdminSalesContent: React.FC = () => {
                             </>
                           )}
                         </Button>
-                      </div>
+                      )}
                     </div>
-                  ) : (
-                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                      <p className="text-sm text-amber-800 font-medium flex items-center gap-2">
-                        <AlertCircle className="w-4 h-4" />
-                        Awaiting payment proof from customer
+                    
+                    {/* Show verification timestamp if already verified */}
+                    {selectedOrder.payment_receipt_url && selectedOrder.status !== 'pending_payment' && (
+                      <p className="text-xs text-muted-foreground mt-3">
+                        ✅ Payment verified on {new Date(selectedOrder.updated_at).toLocaleDateString()} at {new Date(selectedOrder.updated_at).toLocaleTimeString()}
                       </p>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               )}
 
-              {selectedOrder.shipping_address ? <div className="space-y-3">
-                  <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-medical-teal" />
-                    Shipping Address
-                  </h4>
-                  <div className="p-4 bg-medical-teal/5 rounded-xl text-sm border border-medical-teal/20">
-                    <p className="font-medium text-luxury-navy">{selectedOrder.shipping_address.street_address_1 || selectedOrder.shipping_address.line1}</p>
-                    {(selectedOrder.shipping_address.street_address_2 || selectedOrder.shipping_address.line2) && (
-                      <p className="text-muted-foreground">{selectedOrder.shipping_address.street_address_2 || selectedOrder.shipping_address.line2}</p>
-                    )}
-                    <p className="text-muted-foreground">
-                      {selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.emirate || selectedOrder.shipping_address.state}
-                      {selectedOrder.shipping_address.postal_code ? ` ${selectedOrder.shipping_address.postal_code}` : ''}
-                    </p>
-                    <p className="text-muted-foreground">{selectedOrder.shipping_address.country}</p>
-                  </div>
-                </div> : <div className="space-y-3">
-                  <h4 className="font-semibold text-lg text-luxury-navy flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-amber-600" />
-                    Shipping Address
-                  </h4>
-                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                    <p className="text-sm text-amber-800 font-medium flex items-center gap-2">
-                      <span className="text-lg">⚠️</span>
-                      Shipping address not provided - Contact customer for delivery details
-                    </p>
-                  </div>
-                </div>}
 
               <div className="space-y-3">
                 <h4 className="font-semibold text-lg text-luxury-navy">Order Items</h4>
