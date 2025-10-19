@@ -15,7 +15,9 @@ import {
   Eye,
   RefreshCw,
   ArrowLeft,
-  DollarSign
+  DollarSign,
+  Upload,
+  FileCheck
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -26,6 +28,7 @@ import { useNavigate } from 'react-router-dom';
 interface Order {
   id: string;
   session_id: string;
+  order_reference?: string;
   total_amount: number;
   subtotal: number;
   delivery_cost: number;
@@ -39,6 +42,7 @@ interface Order {
   shipping_address: any;
   created_at: string;
   updated_at: string;
+  payment_receipt_url?: string;
   order_items?: OrderItem[];
 }
 
@@ -55,6 +59,7 @@ const MyOrdersContent: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [uploadingReceipt, setUploadingReceipt] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -155,6 +160,76 @@ const MyOrdersContent: React.FC = () => {
     }
   };
 
+  const handleUploadReceipt = async (orderId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+    if (!validTypes.includes(file.type)) {
+      toast({
+        title: "Invalid File Type",
+        description: "Please upload a JPG, PNG, or PDF file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File Too Large",
+        description: "Please upload a file smaller than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadingReceipt(true);
+
+    try {
+      // Upload to Supabase storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${orderId}_${Date.now()}.${fileExt}`;
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('payment-receipts')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('payment-receipts')
+        .getPublicUrl(fileName);
+
+      // Update order with receipt URL
+      const { error: updateError } = await supabase
+        .from('orders')
+        .update({ payment_receipt_url: publicUrl })
+        .eq('id', orderId);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "Receipt Uploaded",
+        description: "Your payment proof has been submitted successfully. We'll verify it shortly.",
+      });
+
+      // Refresh orders
+      fetchOrders();
+    } catch (error) {
+      console.error('Error uploading receipt:', error);
+      toast({
+        title: "Upload Failed",
+        description: "Failed to upload payment proof. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingReceipt(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -226,7 +301,9 @@ const MyOrdersContent: React.FC = () => {
                           <Package className="w-7 h-7 text-medical-blue" />
                         </div>
                         <div className="min-w-0">
-                          <h3 className="font-bold text-xl text-luxury-navy">Order #{order.id.slice(0, 8)}</h3>
+                          <h3 className="font-bold text-xl text-luxury-navy">
+                            {order.order_reference ? `Order #${order.order_reference}` : `Order #${order.id.slice(0, 8)}`}
+                          </h3>
                           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mt-2">
                             <div className="flex items-center gap-1.5">
                               <Calendar className="w-4 h-4 flex-shrink-0" />
@@ -332,6 +409,46 @@ const MyOrdersContent: React.FC = () => {
                         <Eye className="w-4 h-4 mr-2" />
                         View Details
                       </Button>
+                      
+                      {/* Payment Receipt Upload for Pending Payment Orders */}
+                      {order.status === 'pending_payment' && (
+                        <div className="flex-1">
+                          {order.payment_receipt_url ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled
+                              className="w-full px-6 border-2 border-green-300 bg-green-50 text-green-700 rounded-xl font-medium"
+                            >
+                              <FileCheck className="w-4 h-4 mr-2" />
+                              Receipt Submitted
+                            </Button>
+                          ) : (
+                            <label className="w-full">
+                              <input
+                                type="file"
+                                accept="image/*,.pdf"
+                                className="hidden"
+                                onChange={(e) => handleUploadReceipt(order.id, e)}
+                                disabled={uploadingReceipt}
+                              />
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                disabled={uploadingReceipt}
+                                className="w-full px-6 border-2 border-amber-300 hover:border-amber-400 hover:bg-amber-50 rounded-xl font-medium"
+                                asChild
+                              >
+                                <span>
+                                  <Upload className="w-4 h-4 mr-2" />
+                                  {uploadingReceipt ? 'Uploading...' : 'Upload Payment Proof'}
+                                </span>
+                              </Button>
+                            </label>
+                          )}
+                        </div>
+                      )}
+                      
                       <div className="hidden lg:flex items-center justify-center px-4 text-xs text-muted-foreground bg-gradient-to-br from-white/60 to-white/40 rounded-xl border border-medical-blue/10">
                         Updated: {new Date(order.updated_at).toLocaleDateString()}
                       </div>

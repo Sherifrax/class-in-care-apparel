@@ -57,6 +57,10 @@ serve(async (req) => {
       }
     }
 
+    // Generate order reference
+    const { data: orderReference } = await supabase
+      .rpc('generate_order_reference');
+
     // Create order with pending_payment status
     const { data: order, error: orderError } = await supabase
       .from('orders')
@@ -72,7 +76,8 @@ serve(async (req) => {
         total_amount: totalAmount,
         currency,
         status: 'pending_payment', // Awaiting bank transfer
-        session_id: `bank_transfer_${Date.now()}_${user.id.slice(0, 8)}` // Unique reference
+        session_id: `bank_transfer_${Date.now()}_${user.id.slice(0, 8)}`, // Unique reference
+        order_reference: orderReference // Human-friendly reference
       })
       .select()
       .single();
@@ -163,7 +168,7 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         order_id: order.id,
-        order_reference: order.session_id
+        order_reference: order.order_reference || order.session_id
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

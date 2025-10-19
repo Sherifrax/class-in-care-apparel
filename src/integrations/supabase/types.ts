@@ -138,6 +138,9 @@ export type Database = {
           embroidery_requested: boolean | null
           express_shipping: boolean | null
           id: string
+          order_reference: string | null
+          payment_receipt_url: string | null
+          payment_reminder_sent_at: string | null
           session_id: string | null
           shipping_address: Json | null
           status: string | null
@@ -156,6 +159,9 @@ export type Database = {
           embroidery_requested?: boolean | null
           express_shipping?: boolean | null
           id?: string
+          order_reference?: string | null
+          payment_receipt_url?: string | null
+          payment_reminder_sent_at?: string | null
           session_id?: string | null
           shipping_address?: Json | null
           status?: string | null
@@ -174,6 +180,9 @@ export type Database = {
           embroidery_requested?: boolean | null
           express_shipping?: boolean | null
           id?: string
+          order_reference?: string | null
+          payment_receipt_url?: string | null
+          payment_reminder_sent_at?: string | null
           session_id?: string | null
           shipping_address?: Json | null
           status?: string | null
@@ -374,6 +383,10 @@ export type Database = {
       check_stock_availability: {
         Args: { p_product_id: string; p_quantity: number }
         Returns: boolean
+      }
+      generate_order_reference: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       has_role: {
         Args: {

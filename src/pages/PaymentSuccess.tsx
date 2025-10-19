@@ -12,6 +12,7 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
   const { clearCart } = useCart();
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [orderReference, setOrderReference] = useState<string>('');
   const [expressShipping, setExpressShipping] = useState<boolean>(false);
   const paymentMethod = searchParams.get('payment_method');
   const isBankTransfer = paymentMethod === 'bank_transfer';
@@ -41,12 +42,13 @@ const PaymentSuccess = () => {
     try {
       const { data: order, error } = await supabase
         .from('orders')
-        .select('express_shipping')
+        .select('express_shipping, order_reference')
         .eq('id', orderId)
         .single();
 
       if (!error && order) {
         setExpressShipping(order.express_shipping || false);
+        setOrderReference(order.order_reference || '');
       }
     } catch (error) {
       console.error('Error fetching order details:', error);
@@ -70,6 +72,7 @@ const PaymentSuccess = () => {
       
       if (data?.order_id) {
         setOrderId(data.order_id);
+        setOrderReference(data.orderReference || '');
       }
     } catch (error) {
       console.error('Error processing payment:', error);
@@ -91,8 +94,8 @@ const PaymentSuccess = () => {
           {orderId && (
             <div className="bg-gradient-to-br from-medical-blue/5 to-medical-teal/5 rounded-2xl p-4 border border-medical-blue/20 text-center">
               <p className="text-sm text-muted-foreground">Order Reference</p>
-              <p className="font-mono text-sm text-luxury-navy font-medium">
-                {orderId.slice(0, 8).toUpperCase()}
+              <p className="font-mono text-lg text-luxury-navy font-bold tracking-wider">
+                {orderReference || orderId.slice(0, 8).toUpperCase()}
               </p>
             </div>
           )}
@@ -172,7 +175,7 @@ const PaymentSuccess = () => {
               Contact us on WhatsApp for instant support and order updates
             </p>
             <Button
-              onClick={() => window.open(`https://wa.me/971568988436?text=Hello, I'd like to follow up on my order ${orderId ? orderId.slice(0, 8).toUpperCase() : ''}`, '_blank')}
+              onClick={() => window.open(`https://wa.me/971568988436?text=Hello, I'd like to follow up on my order ${orderReference || (orderId ? orderId.slice(0, 8).toUpperCase() : '')}`, '_blank')}
               className="w-full h-12 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg rounded-xl"
             >
               <MessageCircle className="w-4 h-4 mr-2" />
