@@ -313,11 +313,11 @@ const MyOrdersContent: React.FC = () => {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <Card key={order.id} className={`glass ${getStatusColor(order.status)} border-2 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01] overflow-hidden rounded-2xl backdrop-blur-xl`}>
-                <CardContent className="p-6">
+              <Card key={order.id} className={`glass ${getStatusColor(order.status)} border-2 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01] overflow-hidden break-words rounded-2xl backdrop-blur-xl`}>
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex flex-col gap-6">
                     {/* Header Section */}
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                       <div className="flex items-center gap-4 flex-1">
                         <div className="p-4 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-2xl shadow-soft border border-medical-blue/20 flex-shrink-0">
                           <Package className="w-7 h-7 text-medical-blue" />
@@ -344,7 +344,7 @@ const MyOrdersContent: React.FC = () => {
                     </div>
                     
                     {/* Content Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                       {/* Total Amount */}
                       <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
                         <div className="text-sm font-medium text-muted-foreground mb-2">Total Amount</div>
@@ -364,7 +364,7 @@ const MyOrdersContent: React.FC = () => {
                       {order.order_items && order.order_items.length > 0 && (
                         <div className="lg:col-span-2 bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
                           <div className="text-sm font-medium text-muted-foreground mb-3">Order Items:</div>
-                          <div className="space-y-2 max-h-24 overflow-y-auto">
+                          <div className="space-y-2 max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-medical-blue/20 scrollbar-track-transparent">
                             {order.order_items.slice(0, 3).map((item) => (
                               <div key={item.id} className="text-sm flex justify-between items-center gap-3">
                                 <div className="flex-1 min-w-0">
@@ -463,7 +463,12 @@ const MyOrdersContent: React.FC = () => {
                               >
                                 <span>
                                   <Upload className="w-4 h-4 mr-2" />
-                                  {uploadingReceipt ? 'Uploading...' : 'Upload Payment Proof'}
+                                  <span className="hidden sm:inline">
+                                    {uploadingReceipt ? 'Uploading...' : 'Upload Payment Proof'}
+                                  </span>
+                                  <span className="sm:hidden">
+                                    {uploadingReceipt ? 'Uploading...' : 'Upload Receipt'}
+                                  </span>
                                 </span>
                               </Button>
                             </label>
