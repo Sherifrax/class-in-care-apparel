@@ -55,15 +55,15 @@ const VideoReviews = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12 sm:mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {reviews.map((review, index) => (
             <Card
               key={review.id}
-              className="p-4 sm:p-6 md:p-8 shadow-xl hover:shadow-2xl transition-all duration-500 group animate-apple-reveal-stagger bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-sm border border-white/20 hover:border-medical-blue/30 rounded-3xl overflow-hidden break-words"
+              className="p-8 shadow-xl hover:shadow-2xl transition-all duration-500 group animate-apple-reveal-stagger bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-sm border border-white/20 hover:border-medical-blue/30 rounded-3xl overflow-hidden"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="relative rounded-2xl overflow-hidden mb-6 sm:mb-8 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 group-hover:scale-105 transition-transform duration-500">
-                <video className="w-full h-56 sm:h-64 md:h-72 object-cover cursor-pointer" poster="" controls preload="metadata">
+              <div className="relative rounded-2xl overflow-hidden mb-8 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 group-hover:scale-105 transition-transform duration-500">
+                <video className="w-full h-72 object-cover cursor-pointer" poster="" controls preload="metadata">
                   <source src={review.video} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
@@ -95,23 +95,23 @@ const VideoReviews = () => {
                   <div className="text-sm text-muted-foreground font-medium">Verified Review</div>
                 </div>
 
-                <h3 className="text-xl sm:text-2xl font-bold text-luxury-navy group-hover:text-medical-blue transition-colors break-words">
+                <h3 className="text-2xl font-bold text-luxury-navy group-hover:text-medical-blue transition-colors">
                   {review.title}
                 </h3>
 
-                <div className="pt-4 sm:pt-6 border-t border-medical-blue/10">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-medical-blue to-medical-teal rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                      <span className="text-white font-bold text-base sm:text-lg">
+                <div className="pt-6 border-t border-medical-blue/10">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-gradient-to-br from-medical-blue to-medical-teal rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-white font-bold text-lg">
                         {review.reviewer
                           .split(" ")
                           .map((n) => n[0])
                           .join("")}
                       </span>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="font-bold text-luxury-navy text-base sm:text-lg truncate">{review.reviewer}</p>
-                      <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate">{review.profession}</p>
+                    <div>
+                      <p className="font-bold text-luxury-navy text-lg">{review.reviewer}</p>
+                      <p className="text-sm text-muted-foreground font-medium">{review.profession}</p>
                     </div>
                   </div>
                 </div>
@@ -122,28 +122,28 @@ const VideoReviews = () => {
 
         {/* Enhanced Pricing Section */}
         <div className="text-center animate-apple-reveal-stagger animate-stagger-4">
-          <div className="bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-3xl p-6 sm:p-8 md:p-12 border border-medical-blue/10 shadow-xl backdrop-blur-sm max-w-4xl mx-auto overflow-hidden">
-            <h3 className="text-2xl sm:text-3xl font-bold text-luxury-navy mb-4 sm:mb-6 break-words">
+          <div className="bg-gradient-to-r from-medical-blue/5 to-medical-teal/5 rounded-3xl p-12 border border-medical-blue/10 shadow-xl backdrop-blur-sm max-w-4xl mx-auto">
+            <h3 className="text-3xl font-bold text-luxury-navy mb-6">
               Premium Quality,{" "}
               <span className="bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
                 Accessible Pricing
               </span>
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-6 sm:mb-8">
+            <div className="grid md:grid-cols-3 gap-8 mb-8">
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-luxury-navy mb-2 break-words">250-275 AED</div>
-                <div className="text-base sm:text-lg text-muted-foreground">Scrubs</div>
+                <div className="text-4xl font-bold text-luxury-navy mb-2">250-275 AED</div>
+                <div className="text-lg text-muted-foreground">Scrubs</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-luxury-navy mb-2 break-words">300 AED</div>
-                <div className="text-base sm:text-lg text-muted-foreground">Lab Coats</div>
+                <div className="text-4xl font-bold text-luxury-navy mb-2">300 AED</div>
+                <div className="text-lg text-muted-foreground">Lab Coats</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-luxury-navy mb-2 break-words">+25 AED</div>
-                <div className="text-base sm:text-lg text-muted-foreground">Shipping</div>
+                <div className="text-4xl font-bold text-luxury-navy mb-2">+25 AED</div>
+                <div className="text-lg text-muted-foreground">Shipping</div>
               </div>
             </div>
-            <p className="text-base sm:text-lg text-muted-foreground break-words">
+            <p className="text-lg text-muted-foreground">
               <span className="font-bold text-luxury-navy">Free exchanges</span> within 7 days •
               <span className="font-bold text-luxury-navy"> Premium materials</span> •
               <span className="font-bold text-luxury-navy"> Professional fit guarantee</span>

@@ -28,7 +28,7 @@ const CheckoutContent = () => {
             <p className="text-muted-foreground mb-4">
               Add some items to your cart first
             </p>
-            <Button onClick={() => navigate('/products')} className="w-full sm:w-auto">
+            <Button onClick={() => navigate('/products')}>
               Shop Now
             </Button>
           </CardContent>
@@ -298,7 +298,7 @@ const CheckoutContent = () => {
                   <CardTitle>Delivery Address</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="fullName" className="text-sm font-medium mb-2 block">
                         Full Name <span className="text-red-500">*</span>
@@ -356,7 +356,7 @@ const CheckoutContent = () => {
                     </label>
                     <select
                       id="emirate"
-                      className="flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       value={shippingAddress.emirate}
                       onChange={(e) => setShippingAddress({ ...shippingAddress, emirate: e.target.value })}
                       required
@@ -390,10 +390,10 @@ const CheckoutContent = () => {
               <Card className="border-amber-200 bg-amber-50">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3 text-amber-800">
-                    <Building2 className="w-6 h-6 shrink-0" />
-                    <div className="min-w-0">
-                      <h3 className="font-semibold break-words">Bank Transfer Payment</h3>
-                      <p className="text-sm text-amber-700 mt-1 break-words">
+                    <Building2 className="w-6 h-6" />
+                    <div>
+                      <h3 className="font-semibold">Bank Transfer Payment</h3>
+                      <p className="text-sm text-amber-700 mt-1">
                         After placing your order, you'll receive bank account details to complete your payment. Your order will be processed once we confirm the transfer.
                       </p>
                     </div>
@@ -413,9 +413,8 @@ const CheckoutContent = () => {
                       id="shipping-confirm" 
                       checked={shippingConfirmed}
                       onCheckedChange={(checked) => setShippingConfirmed(checked as boolean)}
-                      className="shrink-0"
                     />
-                    <label htmlFor="shipping-confirm" className="text-sm cursor-pointer break-words">
+                    <label htmlFor="shipping-confirm" className="text-sm cursor-pointer">
                       I confirm I will pay for shipping (AED {shippingCost.toFixed(2)} {expressShipping ? 'express' : 'standard'})
                     </label>
                   </div>
@@ -426,9 +425,8 @@ const CheckoutContent = () => {
                       id="size-confirm" 
                       checked={sizeGuideConfirmed}
                       onCheckedChange={(checked) => setSizeGuideConfirmed(checked as boolean)}
-                      className="shrink-0"
                     />
-                    <label htmlFor="size-confirm" className="text-sm cursor-pointer break-words">
+                    <label htmlFor="size-confirm" className="text-sm cursor-pointer">
                       I confirm I have selected my product according to the{' '}
                       <button 
                         type="button"

@@ -113,12 +113,12 @@ const Cart = () => {
                         <img
                           src={item.product.image}
                           alt={item.product.name}
-                          className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-20 h-20 sm:w-24 sm:h-24 object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                       
-                      <div className="flex-1 min-w-0 space-y-2">
-                        <h3 className="font-bold text-lg text-luxury-navy group-hover:text-medical-blue transition-colors break-anywhere">
+                      <div className="flex-1 space-y-2">
+                        <h3 className="font-bold text-lg text-luxury-navy group-hover:text-medical-blue transition-colors">
                           {item.product.name}
                         </h3>
                       <p className="text-muted-foreground">Size: {item.size}</p>
@@ -138,7 +138,7 @@ const Cart = () => {
                             size="icon"
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             disabled={item.quantity <= 1}
-                            className="h-11 w-11 sm:h-8 sm:w-8 hover:bg-medical-blue/20 rounded-lg transition-all"
+                            className="h-8 w-8 hover:bg-medical-blue/20 rounded-lg transition-all"
                           >
                             <Minus className="w-4 h-4" />
                           </Button>
@@ -147,7 +147,7 @@ const Cart = () => {
                             variant="ghost"
                             size="icon"
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="h-11 w-11 sm:h-8 sm:w-8 hover:bg-medical-blue/20 rounded-lg transition-all"
+                            className="h-8 w-8 hover:bg-medical-blue/20 rounded-lg transition-all"
                           >
                             <Plus className="w-4 h-4" />
                           </Button>
@@ -170,7 +170,7 @@ const Cart = () => {
             
             {/* Cart Summary */}
             <div className="lg:col-span-1">
-              <Card className="lg:sticky lg:top-24 glass border-medical-blue/20 shadow-luxury backdrop-blur-xl bg-gradient-to-b from-white/90 to-white/80">
+              <Card className="sticky top-24 glass border-medical-blue/20 shadow-luxury backdrop-blur-xl bg-gradient-to-b from-white/90 to-white/80">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
                     Order Summary

@@ -149,8 +149,8 @@ const Products = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
-            {filteredProducts.map((product, index) => <Card key={product.id} className="p-4 sm:p-6 md:p-8 glass border-medical-blue/20 hover:shadow-2xl hover:border-medical-blue/40 transition-all duration-500 group animate-apple-reveal-stagger relative overflow-hidden rounded-3xl bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-sm hover:scale-[1.02] hover:-translate-y-2" style={{
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {filteredProducts.map((product, index) => <Card key={product.id} className="p-6 sm:p-8 glass border-medical-blue/20 hover:shadow-2xl hover:border-medical-blue/40 transition-all duration-500 group animate-apple-reveal-stagger relative overflow-hidden rounded-3xl bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-sm hover:scale-[1.02] hover:-translate-y-2" style={{
             animationDelay: `${index * 0.1}s`
           }}>
                 {/* Enhanced Badge */}
@@ -164,7 +164,7 @@ const Products = () => {
                   <Heart className={cn("w-5 h-5", isFavorite(product.id) && "fill-current animate-apple-scale")} />
                 </Button>
 
-                <div className="rounded-3xl h-80 sm:h-72 mb-6 overflow-hidden relative shadow-xl group-hover:shadow-2xl transition-all duration-500">
+                <div className="rounded-3xl h-64 sm:h-72 mb-6 overflow-hidden relative shadow-xl group-hover:shadow-2xl transition-all duration-500">
                   <img src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   {product.images && product.images.length > 1 && <Badge className="absolute top-4 left-4 bg-black/80 text-white border-0 px-3 py-1 font-semibold backdrop-blur-sm">
                       <Eye className="w-4 h-4 mr-1" />
@@ -174,7 +174,7 @@ const Products = () => {
                   {/* Enhanced Quick View Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-3xl flex items-center justify-center">
                     <div className="flex flex-col gap-3">
-                      <Button size="lg" className="gap-3 bg-white/95 text-medical-blue hover:bg-white shadow-2xl backdrop-blur-sm rounded-2xl px-8 py-4 text-base font-semibold hover:scale-105 transition-all duration-300" onClick={() => openQuickView(product)}>
+                      <Button size="lg" className="gap-3 bg-white/95 text-medical-blue hover:bg-white shadow-2xl backdrop-blur-sm rounded-2xl px-6 py-3 font-semibold hover:scale-105 transition-all duration-300" onClick={() => openQuickView(product)}>
                         <Eye className="w-5 h-5" />
                         Quick View
                       </Button>
@@ -188,9 +188,9 @@ const Products = () => {
                 
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-xl font-bold text-luxury-navy line-clamp-2 break-anywhere group-hover:text-medical-blue transition-colors">{product.name}</h3>
-                      <p className="text-muted-foreground text-sm mt-2 line-clamp-2 leading-relaxed break-anywhere">{product.description}</p>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-luxury-navy line-clamp-2 group-hover:text-medical-blue transition-colors">{product.name}</h3>
+                      <p className="text-muted-foreground text-sm mt-2 line-clamp-2 leading-relaxed">{product.description}</p>
                     </div>
                   </div>
                   
@@ -216,7 +216,7 @@ const Products = () => {
                   <div className="flex items-center gap-3">
                     <span className="text-sm text-muted-foreground font-medium">Colors:</span>
                     <div className="flex gap-2">
-                      {product.colors.slice(0, 4).map((color, i) => <ColorSwatch key={i} color={color} size="md" className="w-8 h-8 sm:w-6 sm:h-6" />)}
+                      {product.colors.slice(0, 4).map((color, i) => <ColorSwatch key={i} color={color} size="sm" />)}
                       {product.colors.length > 4 && <div className="text-xs text-muted-foreground font-medium">+{product.colors.length - 4}</div>}
                     </div>
                   </div>
@@ -242,15 +242,14 @@ const Products = () => {
                     </div>}
                   
                   {/* Enhanced Price and CTA */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-medical-blue/10">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 min-w-0">
+                  <div className="flex items-center justify-between pt-4 border-t border-medical-blue/10">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                       <span className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AED {product.price}</span>
-                      {product.original_price && <span className="text-lg text-muted-foreground line-through truncate">AED {product.original_price}</span>}
+                      {product.original_price && <span className="text-lg text-muted-foreground line-through">AED {product.original_price}</span>}
                     </div>
-                    <Button size="lg" className="gap-2 sm:gap-3 w-full sm:w-auto bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white shadow-xl hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-2xl px-4 sm:px-6 py-3 font-semibold shrink-0" onClick={() => openProductDialog(product)} disabled={product.track_stock && product.stock_quantity === 0}>
+                    <Button size="lg" className="gap-3 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white shadow-xl hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-2xl px-6 py-3 font-semibold" onClick={() => openProductDialog(product)} disabled={product.track_stock && product.stock_quantity === 0}>
                       <ShoppingCart className="w-5 h-5" />
-                      <span className="hidden sm:inline">{product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}</span>
-                      <span className="sm:hidden">{product.track_stock && product.stock_quantity === 0 ? 'Out' : 'Add'}</span>
+                      {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
                     </Button>
                   </div>
                 </div>
@@ -294,9 +293,7 @@ const Products = () => {
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90">
           {selectedProduct && <>
               <DialogHeader className="border-b border-medical-blue/20 pb-4">
-                <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent break-anywhere line-clamp-2 pr-8">
-                  {selectedProduct.name}
-                </DialogTitle>
+                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">{selectedProduct.name}</DialogTitle>
               </DialogHeader>
               
               <div className="space-y-6">
@@ -498,7 +495,7 @@ const Products = () => {
                     </div>
 
                     <Button 
-                      className="w-full sm:w-auto h-14 text-lg bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-semibold" 
+                      className="w-full h-14 text-lg bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-semibold" 
                       onClick={handleAddToCart} 
                       disabled={!selectedSize || (selectedProduct.track_stock && (selectedProduct.stock_quantity === 0 || quantity > selectedProduct.stock_quantity))}
                     >
@@ -519,13 +516,13 @@ const Products = () => {
         <DialogContent className="max-w-5xl max-h-[95vh] p-0 glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90 overflow-hidden">
           {quickViewProduct && (
             <div className="flex flex-col h-full max-h-[95vh]">
-              <DialogHeader className="border-b border-medical-blue/20 pb-4 px-4 sm:px-6 pt-4 sm:pt-6 flex-shrink-0">
-                <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent break-anywhere line-clamp-2 pr-8">
+              <DialogHeader className="border-b border-medical-blue/20 pb-4 px-6 pt-6 flex-shrink-0">
+                <DialogTitle className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
                   {quickViewProduct.name}
                 </DialogTitle>
               </DialogHeader>
               
-              <div className="overflow-y-auto flex-1 px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+              <div className="overflow-y-auto flex-1 px-6 py-6 space-y-6">
                 {/* Large Image Carousel */}
                 {quickViewProduct.images && quickViewProduct.images.length > 0 ? (
                   <div className="relative animate-fade-in">
@@ -646,9 +643,9 @@ const Products = () => {
                       </span>
                     </div>
                   </div>
-                  <Button
+                  <Button 
                     size="lg"
-                    className="w-full sm:w-auto px-8 gap-2 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]"
+                    className="px-8 gap-2 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]"
                     onClick={() => {
                       setQuickViewProduct(null);
                       openProductDialog(quickViewProduct);

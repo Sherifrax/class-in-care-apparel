@@ -189,18 +189,18 @@ const Contact = () => {
                   <div>
                     <label className="block text-sm font-medium text-luxury-navy mb-2">First Name *</label>
                     <Input placeholder="Your first name" {...register("firstName")} className={errors.firstName ? "border-destructive" : ""} />
-                    {errors.firstName && <p className="text-sm text-destructive mt-1 break-words">{errors.firstName.message}</p>}
+                    {errors.firstName && <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-luxury-navy mb-2">Last Name *</label>
                     <Input placeholder="Your last name" {...register("lastName")} className={errors.lastName ? "border-destructive" : ""} />
-                    {errors.lastName && <p className="text-sm text-destructive mt-1 break-words">{errors.lastName.message}</p>}
+                    {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>}
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-luxury-navy mb-2">Email *</label>
                   <Input type="email" placeholder="your.email@example.com" {...register("email")} className={errors.email ? "border-destructive" : ""} />
-                  {errors.email && <p className="text-sm text-destructive mt-1 break-words">{errors.email.message}</p>}
+                  {errors.email && <p className="text-sm text-destructive mt-1">{errors.email.message}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-luxury-navy mb-2">Phone (Optional)</label>
@@ -216,12 +216,12 @@ const Contact = () => {
                     <option value="Custom Solutions">Custom Solutions</option>
                     <option value="Partnership Opportunities">Partnership Opportunities</option>
                   </select>
-                  {errors.interest && <p className="text-sm text-destructive mt-1 break-words">{errors.interest.message}</p>}
+                  {errors.interest && <p className="text-sm text-destructive mt-1">{errors.interest.message}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-luxury-navy mb-2">Message *</label>
                   <Textarea placeholder="Tell us about your needs, questions, or feedback..." className={`min-h-[120px] ${errors.message ? "border-destructive" : ""}`} {...register("message")} />
-                  {errors.message && <p className="text-sm text-destructive mt-1 break-words">{errors.message.message}</p>}
+                  {errors.message && <p className="text-sm text-destructive mt-1">{errors.message.message}</p>}
                 </div>
                 <div className="flex items-start gap-3">
                   <input type="checkbox" className="mt-1" {...register("subscribeToUpdates")} />
@@ -232,8 +232,7 @@ const Contact = () => {
                 <Button size="lg" className="w-full" type="submit" disabled={isSubmitting}>
                   {isSubmitting ? <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      <span className="hidden sm:inline">Sending Message...</span>
-                      <span className="sm:hidden">Sending...</span>
+                      Sending Message...
                     </> : "Send Message"}
                 </Button>
               </form>
@@ -351,11 +350,10 @@ const Contact = () => {
             >
               <Button 
                 size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
-                <span className="hidden sm:inline">Chat with Dr. Bayan</span>
-                <span className="sm:hidden">Chat Now</span>
+                Chat with Dr. Bayan
               </Button>
             </a>
           </div>

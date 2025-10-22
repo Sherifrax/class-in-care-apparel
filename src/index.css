@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  overflow-x: hidden;
-}
-
 @font-face {
   font-family: 'Posterama';
   src: url('/fonts/Posterama_1913_W01_Bold.ttf') format('truetype');
@@ -154,17 +149,6 @@ body {
 }
 
 @layer utilities {
-  /* Overflow control */
-  .break-anywhere {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    hyphens: auto;
-  }
-
-  .text-balance {
-    text-wrap: balance;
-  }
-
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
