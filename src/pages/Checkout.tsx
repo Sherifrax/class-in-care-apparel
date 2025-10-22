@@ -298,7 +298,7 @@ const CheckoutContent = () => {
                   <CardTitle>Delivery Address</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label htmlFor="fullName" className="text-sm font-medium mb-2 block">
                         Full Name <span className="text-red-500">*</span>
@@ -356,7 +356,7 @@ const CheckoutContent = () => {
                     </label>
                     <select
                       id="emirate"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      className="flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       value={shippingAddress.emirate}
                       onChange={(e) => setShippingAddress({ ...shippingAddress, emirate: e.target.value })}
                       required

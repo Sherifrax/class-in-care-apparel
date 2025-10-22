@@ -149,7 +149,7 @@ const Products = () => {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
             {filteredProducts.map((product, index) => <Card key={product.id} className="p-6 sm:p-8 glass border-medical-blue/20 hover:shadow-2xl hover:border-medical-blue/40 transition-all duration-500 group animate-apple-reveal-stagger relative overflow-hidden rounded-3xl bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-sm hover:scale-[1.02] hover:-translate-y-2" style={{
             animationDelay: `${index * 0.1}s`
           }}>
@@ -164,7 +164,7 @@ const Products = () => {
                   <Heart className={cn("w-5 h-5", isFavorite(product.id) && "fill-current animate-apple-scale")} />
                 </Button>
 
-                <div className="rounded-3xl h-64 sm:h-72 mb-6 overflow-hidden relative shadow-xl group-hover:shadow-2xl transition-all duration-500">
+                <div className="rounded-3xl h-80 sm:h-72 mb-6 overflow-hidden relative shadow-xl group-hover:shadow-2xl transition-all duration-500">
                   <img src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   {product.images && product.images.length > 1 && <Badge className="absolute top-4 left-4 bg-black/80 text-white border-0 px-3 py-1 font-semibold backdrop-blur-sm">
                       <Eye className="w-4 h-4 mr-1" />
@@ -215,8 +215,8 @@ const Products = () => {
                   {/* Enhanced Colors */}
                   <div className="flex items-center gap-3">
                     <span className="text-sm text-muted-foreground font-medium">Colors:</span>
-                    <div className="flex gap-2">
-                      {product.colors.slice(0, 4).map((color, i) => <ColorSwatch key={i} color={color} size="sm" />)}
+                    <div className="flex gap-2 flex-wrap">
+                      {product.colors.slice(0, 4).map((color, i) => <ColorSwatch key={i} color={color} size="sm" className="w-8 h-8 sm:w-6 sm:h-6" />)}
                       {product.colors.length > 4 && <div className="text-xs text-muted-foreground font-medium">+{product.colors.length - 4}</div>}
                     </div>
                   </div>

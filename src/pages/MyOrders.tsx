@@ -43,6 +43,7 @@ interface Order {
   created_at: string;
   updated_at: string;
   payment_receipt_url?: string;
+  payment_deadline?: string;
   order_items?: OrderItem[];
 }
 
@@ -60,9 +61,18 @@ const MyOrdersContent: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Update current time every second for countdown
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -158,6 +168,21 @@ const MyOrdersContent: React.FC = () => {
       case 'cancelled': return 'border-red-200 bg-gradient-to-r from-red-50 to-red-100';
       default: return 'border-medical-blue/20 bg-gradient-to-r from-white/90 to-white/80';
     }
+  };
+
+  const getTimeRemaining = (deadline: string) => {
+    const deadlineDate = new Date(deadline);
+    const diff = deadlineDate.getTime() - currentTime.getTime();
+    
+    if (diff <= 0) {
+      return { expired: true, hours: 0, minutes: 0, seconds: 0 };
+    }
+    
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    return { expired: false, hours, minutes, seconds };
   };
 
   const handleUploadReceipt = async (orderId: string, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -313,20 +338,20 @@ const MyOrdersContent: React.FC = () => {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <Card key={order.id} className={`glass ${getStatusColor(order.status)} border-2 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01] overflow-hidden rounded-2xl backdrop-blur-xl`}>
-                <CardContent className="p-6">
-                  <div className="flex flex-col gap-6">
+              <Card key={order.id} className={`glass ${getStatusColor(order.status)} border-2 hover:shadow-luxury transition-all duration-300 hover:scale-[1.01] overflow-hidden rounded-2xl backdrop-blur-xl break-words`}>
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex flex-col gap-4 sm:gap-6">
                     {/* Header Section */}
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="p-4 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-2xl shadow-soft border border-medical-blue/20 flex-shrink-0">
-                          <Package className="w-7 h-7 text-medical-blue" />
+                    <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between gap-3 sm:gap-4">
+                      <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                        <div className="p-3 sm:p-4 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-2xl shadow-soft border border-medical-blue/20 flex-shrink-0">
+                          <Package className="w-6 h-6 sm:w-7 sm:h-7 text-medical-blue" />
                         </div>
-                        <div className="min-w-0">
-                          <h3 className="font-bold text-xl text-luxury-navy">
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-bold text-lg sm:text-xl text-luxury-navy break-all">
                             {order.order_reference ? `Order #${order.order_reference}` : `Order #${order.id.slice(0, 8)}`}
                           </h3>
-                          <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mt-2">
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-muted-foreground mt-2">
                             <div className="flex items-center gap-1.5">
                               <Calendar className="w-4 h-4 flex-shrink-0" />
                               <span className="whitespace-nowrap">{new Date(order.created_at).toLocaleDateString()}</span>
@@ -344,14 +369,14 @@ const MyOrdersContent: React.FC = () => {
                     </div>
                     
                     {/* Content Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                       {/* Total Amount */}
-                      <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
-                        <div className="text-sm font-medium text-muted-foreground mb-2">Total Amount</div>
-                        <div className="font-bold text-2xl bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+                      <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-4 sm:p-5 border border-medical-blue/10 shadow-soft">
+                        <div className="text-xs sm:text-sm font-medium text-muted-foreground mb-2">Total Amount</div>
+                        <div className="font-bold text-xl sm:text-2xl bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent break-words">
                           AED {order.total_amount.toFixed(2)}
                         </div>
-                        <div className="text-xs text-muted-foreground mt-2 space-y-1">
+                        <div className="text-xs text-muted-foreground mt-2 space-y-1 break-words">
                           <div>Subtotal: AED {order.subtotal.toFixed(2)}</div>
                           <div>Delivery {order.express_shipping ? '(⚡ Express)' : '(Standard)'}: AED {order.delivery_cost.toFixed(2)}</div>
                           {order.embroidery_requested && (
@@ -362,9 +387,9 @@ const MyOrdersContent: React.FC = () => {
                       
                       {/* Order Items */}
                       {order.order_items && order.order_items.length > 0 && (
-                        <div className="lg:col-span-2 bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
-                          <div className="text-sm font-medium text-muted-foreground mb-3">Order Items:</div>
-                          <div className="space-y-2 max-h-24 overflow-y-auto">
+                        <div className="sm:col-span-2 lg:col-span-2 bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-4 sm:p-5 border border-medical-blue/10 shadow-soft">
+                          <div className="text-xs sm:text-sm font-medium text-muted-foreground mb-3">Order Items:</div>
+                          <div className="space-y-2 max-h-32 overflow-y-auto pr-2">
                             {order.order_items.slice(0, 3).map((item) => (
                               <div key={item.id} className="text-sm flex justify-between items-center gap-3">
                                 <div className="flex-1 min-w-0">
@@ -398,15 +423,15 @@ const MyOrdersContent: React.FC = () => {
                     </div>
 
                     {/* Shipping Address Section */}
-                    <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-5 border border-medical-blue/10 shadow-soft">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-medical-teal/10 rounded-lg">
+                    <div className="bg-gradient-to-br from-white/60 to-white/40 rounded-2xl p-4 sm:p-5 border border-medical-blue/10 shadow-soft">
+                      <div className="flex items-center gap-2 sm:gap-3 mb-3">
+                        <div className="p-2 bg-medical-teal/10 rounded-lg flex-shrink-0">
                           <MapPin className="w-4 h-4 text-medical-teal" />
                         </div>
-                        <span className="font-semibold text-sm text-luxury-navy">Shipping Address</span>
+                        <span className="font-semibold text-xs sm:text-sm text-luxury-navy">Shipping Address</span>
                       </div>
                       {order.shipping_address ? (
-                        <div className="text-sm text-muted-foreground leading-relaxed">
+                        <div className="text-xs sm:text-sm text-muted-foreground leading-relaxed break-words">
                           {order.shipping_address.street_address_1 || order.shipping_address.line1}
                           {(order.shipping_address.street_address_2 || order.shipping_address.line2) && `, ${order.shipping_address.street_address_2 || order.shipping_address.line2}`}
                           <br />
@@ -420,6 +445,73 @@ const MyOrdersContent: React.FC = () => {
                         </p>
                       )}
                     </div>
+                    
+                    {/* Payment Deadline Countdown for Pending Payment Orders */}
+                    {order.status === 'pending_payment' && order.payment_deadline && !order.payment_receipt_url && (() => {
+                      const timeRemaining = getTimeRemaining(order.payment_deadline);
+                      return (
+                        <div className={`rounded-2xl p-4 sm:p-5 border shadow-soft ${
+                          timeRemaining.expired 
+                            ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-200' 
+                            : timeRemaining.hours < 2 
+                              ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200'
+                              : 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200'
+                        }`}>
+                          <div className="flex items-start gap-3">
+                            <div className={`p-2 rounded-lg flex-shrink-0 ${
+                              timeRemaining.expired 
+                                ? 'bg-red-200/50' 
+                                : timeRemaining.hours < 2 
+                                  ? 'bg-orange-200/50'
+                                  : 'bg-blue-200/50'
+                            }`}>
+                              <Clock className={`w-5 h-5 ${
+                                timeRemaining.expired 
+                                  ? 'text-red-700' 
+                                  : timeRemaining.hours < 2 
+                                    ? 'text-orange-700'
+                                    : 'text-blue-700'
+                              }`} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className={`font-semibold text-sm sm:text-base mb-1 ${
+                                timeRemaining.expired 
+                                  ? 'text-red-900' 
+                                  : timeRemaining.hours < 2 
+                                    ? 'text-orange-900'
+                                    : 'text-blue-900'
+                              }`}>
+                                {timeRemaining.expired ? 'Payment Deadline Expired' : 'Payment Deadline'}
+                              </h4>
+                              {timeRemaining.expired ? (
+                                <p className="text-xs sm:text-sm text-red-700 leading-relaxed">
+                                  The payment deadline has passed. Please contact support or place a new order.
+                                </p>
+                              ) : (
+                                <>
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <div className={`text-2xl sm:text-3xl font-bold ${
+                                      timeRemaining.hours < 2 ? 'text-orange-700' : 'text-blue-700'
+                                    }`}>
+                                      {String(timeRemaining.hours).padStart(2, '0')}:
+                                      {String(timeRemaining.minutes).padStart(2, '0')}:
+                                      {String(timeRemaining.seconds).padStart(2, '0')}
+                                    </div>
+                                  </div>
+                                  <p className={`text-xs sm:text-sm leading-relaxed ${
+                                    timeRemaining.hours < 2 ? 'text-orange-700' : 'text-blue-700'
+                                  }`}>
+                                    {timeRemaining.hours < 2 
+                                      ? 'Hurry! Upload your payment proof before the deadline expires.' 
+                                      : 'Time remaining to upload your payment proof and complete your order.'}
+                                  </p>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
                     
                     {/* Action Buttons Section */}
                     <div className="flex flex-col sm:flex-row gap-3 items-stretch">
@@ -458,12 +550,13 @@ const MyOrdersContent: React.FC = () => {
                                 size="sm"
                                 variant="outline"
                                 disabled={uploadingReceipt}
-                                className="w-full px-6 border-2 border-amber-300 hover:border-amber-400 hover:bg-amber-50 rounded-xl font-medium"
+                                className="w-full px-4 sm:px-6 border-2 border-amber-300 hover:border-amber-400 hover:bg-amber-50 rounded-xl font-medium text-xs sm:text-sm"
                                 asChild
                               >
                                 <span>
                                   <Upload className="w-4 h-4 mr-2" />
-                                  {uploadingReceipt ? 'Uploading...' : 'Upload Payment Proof'}
+                                  <span className="hidden sm:inline">{uploadingReceipt ? 'Uploading...' : 'Upload Payment Proof'}</span>
+                                  <span className="sm:hidden">{uploadingReceipt ? 'Uploading...' : 'Upload Receipt'}</span>
                                 </span>
                               </Button>
                             </label>
