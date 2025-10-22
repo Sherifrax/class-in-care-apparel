@@ -690,26 +690,26 @@ const AdminProductsContent: React.FC = () => {
               </div>
               
               <CardContent className="p-6 space-y-4">
-                <div>
-                  <h3 className="font-bold text-lg text-luxury-navy group-hover:text-medical-blue transition-colors">
+                <div className="min-w-0">
+                  <h3 className="font-bold text-lg text-luxury-navy group-hover:text-medical-blue transition-colors line-clamp-2 break-anywhere">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                  <p className="text-sm text-muted-foreground line-clamp-2 mt-1 break-anywhere">
                     {product.description}
                   </p>
                 </div>
                 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
                     <span className="text-xl font-bold text-luxury-navy">AED {product.price}</span>
                     {product.original_price && (
-                      <span className="text-sm text-muted-foreground line-through">
+                      <span className="text-sm text-muted-foreground line-through truncate">
                         AED {product.original_price}
                       </span>
                     )}
                   </div>
                   
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 shrink-0">
                     <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                     <span className="text-sm font-medium">{product.rating}</span>
                     <span className="text-xs text-muted-foreground">({product.reviews})</span>

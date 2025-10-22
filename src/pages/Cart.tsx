@@ -117,8 +117,8 @@ const Cart = () => {
                         />
                       </div>
                       
-                      <div className="flex-1 space-y-2">
-                        <h3 className="font-bold text-lg text-luxury-navy group-hover:text-medical-blue transition-colors">
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <h3 className="font-bold text-lg text-luxury-navy group-hover:text-medical-blue transition-colors break-anywhere">
                           {item.product.name}
                         </h3>
                       <p className="text-muted-foreground">Size: {item.size}</p>

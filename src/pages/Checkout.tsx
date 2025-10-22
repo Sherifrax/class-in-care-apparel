@@ -390,10 +390,10 @@ const CheckoutContent = () => {
               <Card className="border-amber-200 bg-amber-50">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3 text-amber-800">
-                    <Building2 className="w-6 h-6" />
-                    <div>
-                      <h3 className="font-semibold">Bank Transfer Payment</h3>
-                      <p className="text-sm text-amber-700 mt-1">
+                    <Building2 className="w-6 h-6 shrink-0" />
+                    <div className="min-w-0">
+                      <h3 className="font-semibold break-words">Bank Transfer Payment</h3>
+                      <p className="text-sm text-amber-700 mt-1 break-words">
                         After placing your order, you'll receive bank account details to complete your payment. Your order will be processed once we confirm the transfer.
                       </p>
                     </div>
@@ -413,8 +413,9 @@ const CheckoutContent = () => {
                       id="shipping-confirm" 
                       checked={shippingConfirmed}
                       onCheckedChange={(checked) => setShippingConfirmed(checked as boolean)}
+                      className="shrink-0"
                     />
-                    <label htmlFor="shipping-confirm" className="text-sm cursor-pointer">
+                    <label htmlFor="shipping-confirm" className="text-sm cursor-pointer break-words">
                       I confirm I will pay for shipping (AED {shippingCost.toFixed(2)} {expressShipping ? 'express' : 'standard'})
                     </label>
                   </div>
@@ -425,8 +426,9 @@ const CheckoutContent = () => {
                       id="size-confirm" 
                       checked={sizeGuideConfirmed}
                       onCheckedChange={(checked) => setSizeGuideConfirmed(checked as boolean)}
+                      className="shrink-0"
                     />
-                    <label htmlFor="size-confirm" className="text-sm cursor-pointer">
+                    <label htmlFor="size-confirm" className="text-sm cursor-pointer break-words">
                       I confirm I have selected my product according to the{' '}
                       <button 
                         type="button"

@@ -188,9 +188,9 @@ const Products = () => {
                 
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-luxury-navy line-clamp-2 group-hover:text-medical-blue transition-colors">{product.name}</h3>
-                      <p className="text-muted-foreground text-sm mt-2 line-clamp-2 leading-relaxed">{product.description}</p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-xl font-bold text-luxury-navy line-clamp-2 break-anywhere group-hover:text-medical-blue transition-colors">{product.name}</h3>
+                      <p className="text-muted-foreground text-sm mt-2 line-clamp-2 leading-relaxed break-anywhere">{product.description}</p>
                     </div>
                   </div>
                   
@@ -242,14 +242,15 @@ const Products = () => {
                     </div>}
                   
                   {/* Enhanced Price and CTA */}
-                  <div className="flex items-center justify-between pt-4 border-t border-medical-blue/10">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-medical-blue/10">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 min-w-0">
                       <span className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AED {product.price}</span>
-                      {product.original_price && <span className="text-lg text-muted-foreground line-through">AED {product.original_price}</span>}
+                      {product.original_price && <span className="text-lg text-muted-foreground line-through truncate">AED {product.original_price}</span>}
                     </div>
-                    <Button size="lg" className="gap-3 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white shadow-xl hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-2xl px-6 py-3 font-semibold" onClick={() => openProductDialog(product)} disabled={product.track_stock && product.stock_quantity === 0}>
+                    <Button size="lg" className="gap-2 sm:gap-3 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white shadow-xl hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-2xl px-4 sm:px-6 py-3 font-semibold shrink-0" onClick={() => openProductDialog(product)} disabled={product.track_stock && product.stock_quantity === 0}>
                       <ShoppingCart className="w-5 h-5" />
-                      {product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+                      <span className="hidden sm:inline">{product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}</span>
+                      <span className="sm:hidden">{product.track_stock && product.stock_quantity === 0 ? 'Out' : 'Add'}</span>
                     </Button>
                   </div>
                 </div>
