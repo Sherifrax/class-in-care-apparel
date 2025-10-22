@@ -37,16 +37,16 @@ const Features = () => {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="p-8 text-center shadow-card hover:shadow-luxury transition-shadow group">
+            <Card key={index} className="p-4 sm:p-6 md:p-8 text-center shadow-card hover:shadow-luxury transition-shadow group overflow-hidden break-words">
               <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-bold text-luxury-navy mb-4">
+              <h3 className="text-lg sm:text-xl font-bold text-luxury-navy mb-3 sm:mb-4 break-words">
                 {feature.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed break-words">
                 {feature.description}
               </p>
             </Card>

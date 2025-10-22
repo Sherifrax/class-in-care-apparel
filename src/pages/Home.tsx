@@ -70,47 +70,47 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-20">
             <div className="text-center group animate-apple-reveal-stagger animate-stagger-1">
-              <div className="relative mb-8">
-                <div className="w-24 h-24 bg-gradient-to-br from-medical-blue to-medical-teal rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 shadow-xl group-hover:shadow-glow">
-                  <Sparkles className="w-10 h-10 text-white" />
+              <div className="relative mb-6 sm:mb-8">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-medical-blue to-medical-teal rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 shadow-xl group-hover:shadow-glow">
+                  <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-accent-coral to-accent-mint rounded-full animate-apple-float"></div>
               </div>
-              <h3 className="text-2xl font-bold text-luxury-navy mb-4 group-hover:text-medical-blue transition-colors">Premium Quality</h3>
-              <p className="text-muted-foreground leading-relaxed">Luxury-inspired materials engineered for healthcare professionals who demand the best in comfort and style.</p>
+              <h3 className="text-xl sm:text-2xl font-bold text-luxury-navy mb-3 sm:mb-4 group-hover:text-medical-blue transition-colors break-words">Premium Quality</h3>
+              <p className="text-muted-foreground leading-relaxed break-words">Luxury-inspired materials engineered for healthcare professionals who demand the best in comfort and style.</p>
             </div>
 
             <div className="text-center group animate-apple-reveal-stagger animate-stagger-2">
-              <div className="relative mb-8">
-                <div className="w-24 h-24 bg-gradient-to-br from-medical-teal to-accent-mint rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 shadow-xl group-hover:shadow-glow">
-                  <Heart className="w-10 h-10 text-white" />
+              <div className="relative mb-6 sm:mb-8">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-medical-teal to-accent-mint rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 shadow-xl group-hover:shadow-glow">
+                  <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-medical-blue to-medical-blue-light rounded-full animate-apple-float" style={{animationDelay: '1s'}}></div>
               </div>
-              <h3 className="text-2xl font-bold text-luxury-navy mb-4 group-hover:text-medical-teal transition-colors">Comfort First</h3>
-              <p className="text-muted-foreground leading-relaxed">Designed for long shifts with breathable, flexible fabrics that move with you throughout your day.</p>
+              <h3 className="text-xl sm:text-2xl font-bold text-luxury-navy mb-3 sm:mb-4 group-hover:text-medical-teal transition-colors break-words">Comfort First</h3>
+              <p className="text-muted-foreground leading-relaxed break-words">Designed for long shifts with breathable, flexible fabrics that move with you throughout your day.</p>
             </div>
 
             <div className="text-center group animate-apple-reveal-stagger animate-stagger-3">
-              <div className="relative mb-8">
-                <div className="w-24 h-24 bg-gradient-to-br from-accent-coral to-accent-coral-light rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 shadow-xl group-hover:shadow-glow">
-                  <Users className="w-10 h-10 text-white" />
+              <div className="relative mb-6 sm:mb-8">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-accent-coral to-accent-coral-light rounded-3xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 shadow-xl group-hover:shadow-glow">
+                  <Users className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-medical-teal to-medical-teal-light rounded-full animate-apple-float" style={{animationDelay: '2s'}}></div>
               </div>
-              <h3 className="text-2xl font-bold text-luxury-navy mb-4 group-hover:text-accent-coral transition-colors">Trusted by Professionals</h3>
-              <p className="text-muted-foreground leading-relaxed">Join thousands of healthcare workers worldwide who choose AURA for their professional wardrobe.</p>
+              <h3 className="text-xl sm:text-2xl font-bold text-luxury-navy mb-3 sm:mb-4 group-hover:text-accent-coral transition-colors break-words">Trusted by Professionals</h3>
+              <p className="text-muted-foreground leading-relaxed break-words">Join thousands of healthcare workers worldwide who choose AURA for their professional wardrobe.</p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-16 items-center mb-24">
             <div className="animate-apple-reveal-stagger animate-stagger-4">
-              <h3 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-8 leading-tight">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-luxury-navy mb-6 sm:mb-8 leading-tight break-words">
                 Experience the <span className="bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AURA</span> Collection
               </h3>
-              <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
+              <p className="text-lg sm:text-xl text-muted-foreground mb-8 sm:mb-10 leading-relaxed break-words">
                 Our flagship collection combines performance sportswear technology with clinical elegance. 
                 From sleek full-sleeve sets that project authority to lightweight options for maximum flexibility.
               </p>
@@ -168,27 +168,27 @@ const Home = () => {
         </div>
 
         <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-24 animate-apple-reveal">
-            <h2 className="text-6xl md:text-7xl font-bold text-luxury-navy mb-8 leading-tight">
+          <div className="text-center mb-16 sm:mb-20 md:mb-24 animate-apple-reveal">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-luxury-navy mb-6 sm:mb-8 leading-tight break-words">
               The <span className="bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AURA</span> Collection
             </h2>
-            <p className="text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-light">
+            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-light break-words">
               Where medical precision meets modern elegance
             </p>
           </div>
 
           {/* Apple-Style Product Gallery */}
-          <div className="space-y-32">
+          <div className="space-y-20 sm:space-y-24 md:space-y-32">
             {featuredProducts.slice(0, 3).map((product, index) => (
-              <div key={product.id} className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-16 lg:gap-24`}>
+              <div key={product.id} className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-12 md:gap-16 lg:gap-24`}>
                 {/* Product Image */}
-                <div className="flex-1 animate-apple-reveal-stagger" style={{animationDelay: `${index * 0.2}s`}}>
+                <div className="flex-1 w-full animate-apple-reveal-stagger" style={{animationDelay: `${index * 0.2}s`}}>
                   <div className="relative group">
                     <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
                       <img 
                         src={product.images && product.images.length > 0 ? product.images[0] : product.image} 
                         alt={product.name} 
-                        className="w-full h-[600px] object-cover group-hover:scale-105 transition-transform duration-1000" 
+                        className="w-full h-[350px] sm:h-[450px] md:h-[500px] lg:h-[600px] object-cover group-hover:scale-105 transition-transform duration-1000" 
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/20 via-transparent to-transparent"></div>
                     </div>
@@ -200,9 +200,9 @@ const Home = () => {
                 </div>
 
                 {/* Product Description */}
-                <div className="flex-1 animate-apple-reveal-stagger" style={{animationDelay: `${index * 0.2 + 0.1}s`}}>
+                <div className="flex-1 w-full animate-apple-reveal-stagger" style={{animationDelay: `${index * 0.2 + 0.1}s`}}>
                   <div className="max-w-lg">
-                    <h3 className="text-5xl md:text-6xl font-bold text-luxury-navy mb-6 leading-tight">
+                    <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-luxury-navy mb-4 sm:mb-6 leading-tight break-words">
                       {product.name}
                     </h3>
                     
@@ -239,11 +239,12 @@ const Home = () => {
             <Link to="/products">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white px-12 py-6 text-xl font-semibold rounded-3xl shadow-2xl hover:shadow-glow transition-all duration-300 hover:scale-105 border-0"
+                className="bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white px-6 sm:px-8 md:px-12 py-3 sm:py-4 md:py-6 text-base sm:text-lg md:text-xl font-semibold rounded-3xl shadow-2xl hover:shadow-glow transition-all duration-300 hover:scale-105 border-0"
               >
-                <Sparkles className="w-6 h-6 mr-4" />
-                Discover All Products
-                <ArrowRight className="w-6 h-6 ml-4" />
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-4" />
+                <span className="hidden sm:inline">Discover All Products</span>
+                <span className="sm:hidden">Discover</span>
+                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 ml-2 sm:ml-4" />
               </Button>
             </Link>
           </div>

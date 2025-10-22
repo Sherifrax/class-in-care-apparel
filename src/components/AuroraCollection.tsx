@@ -40,21 +40,21 @@ const AuroraCollection = () => {
             <Award className="w-4 h-4 mr-2" />
             Premium Collection
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-luxury-navy mb-4 sm:mb-6 break-words">
             The AURA Collection
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed break-words">
             Our flagship collection exemplifies luxury medical apparel. Breathable, wrinkle-resistant, 
             and stretch-engineered fabrics designed for long shifts, high mobility, and everyday confidence.
           </p>
         </div>
         
         {/* Enhanced Main Content */}
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center mb-16 sm:mb-20">
           {/* Enhanced Image Section */}
           <div className="relative group animate-apple-reveal-stagger animate-stagger-1">
             <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-              <img src={fabricTexture} alt="Premium medical fabric texture" className="w-full h-[500px] object-cover group-hover:scale-110 transition-transform duration-700" />
+              <img src={fabricTexture} alt="Premium medical fabric texture" className="w-full h-[350px] sm:h-[400px] md:h-[500px] object-cover group-hover:scale-110 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/20 via-transparent to-transparent"></div>
               
               {/* Floating badges */}
@@ -83,27 +83,27 @@ const AuroraCollection = () => {
           </div>
           
           {/* Enhanced Features Section */}
-          <div className="space-y-8 animate-apple-reveal-stagger animate-stagger-2">
+          <div className="space-y-6 sm:space-y-8 animate-apple-reveal-stagger animate-stagger-2">
             <div>
-              <h3 className="text-4xl md:text-5xl font-bold text-luxury-navy mb-4">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-luxury-navy mb-3 sm:mb-4 break-words">
                 Engineered for <span className="bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">Excellence</span>
               </h3>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed break-words">
                 Every detail crafted with precision, every fabric chosen for performance, 
                 every design optimized for the modern healthcare professional.
               </p>
             </div>
             
-            <div className="space-y-6">
-              {features.map((feature, index) => <div key={index} className="group flex items-start space-x-6 p-6 rounded-2xl bg-gradient-to-r from-white/50 to-white/30 backdrop-blur-sm border border-white/20 hover:border-medical-blue/30 transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
-                  <div className={`w-14 h-14 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+            <div className="space-y-4 sm:space-y-6">
+              {features.map((feature, index) => <div key={index} className="group flex items-start space-x-4 sm:space-x-6 p-4 sm:p-5 md:p-6 rounded-2xl bg-gradient-to-r from-white/50 to-white/30 backdrop-blur-sm border border-white/20 hover:border-medical-blue/30 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] overflow-hidden">
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300 shadow-lg flex-shrink-0`}>
                     {feature.icon}
                   </div>
-                  <div className="flex-1">
-                    <h4 className="text-xl font-bold text-luxury-navy mb-2 group-hover:text-medical-blue transition-colors">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-lg sm:text-xl font-bold text-luxury-navy mb-2 group-hover:text-medical-blue transition-colors break-words">
                       {feature.title}
                     </h4>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-muted-foreground leading-relaxed break-words">
                       {feature.description}
                     </p>
                   </div>
