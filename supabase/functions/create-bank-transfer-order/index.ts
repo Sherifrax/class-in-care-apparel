@@ -62,10 +62,6 @@ serve(async (req) => {
     const { data: orderReference } = await supabase
       .rpc('generate_order_reference');
 
-    // Calculate payment deadline (24 hours from now)
-    const paymentDeadline = new Date();
-    paymentDeadline.setHours(paymentDeadline.getHours() + 24);
-
     // Create order with pending_payment status
     const { data: order, error: orderError } = await supabase
       .from('orders')
@@ -83,8 +79,7 @@ serve(async (req) => {
         status: 'pending_payment', // Awaiting bank transfer
         session_id: `bank_transfer_${Date.now()}_${user.id.slice(0, 8)}`, // Unique reference
         order_reference: orderReference, // Human-friendly reference
-        shipping_address: shippingAddress, // Store delivery address
-        payment_deadline: paymentDeadline.toISOString() // Add payment deadline
+        shipping_address: shippingAddress // Store delivery address
       })
       .select()
       .single();
