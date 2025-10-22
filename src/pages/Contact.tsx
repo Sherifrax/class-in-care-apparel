@@ -232,7 +232,8 @@ const Contact = () => {
                 <Button size="lg" className="w-full" type="submit" disabled={isSubmitting}>
                   {isSubmitting ? <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Sending Message...
+                      <span className="hidden sm:inline">Sending Message...</span>
+                      <span className="sm:hidden">Sending...</span>
                     </> : "Send Message"}
                 </Button>
               </form>
@@ -350,10 +351,11 @@ const Contact = () => {
             >
               <Button 
                 size="lg"
-                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+                className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
-                Chat with Dr. Bayan
+                <span className="hidden sm:inline">Chat with Dr. Bayan</span>
+                <span className="sm:hidden">Chat Now</span>
               </Button>
             </a>
           </div>

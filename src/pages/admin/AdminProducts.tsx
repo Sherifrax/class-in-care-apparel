@@ -321,10 +321,11 @@ const AdminProductsContent: React.FC = () => {
           <DialogTrigger asChild>
             <Button 
               onClick={() => openDialog()}
-              className="bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]"
+              className="w-full sm:w-auto bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add Product
+              <span className="hidden sm:inline">Add Product</span>
+              <span className="sm:hidden">Add</span>
             </Button>
           </DialogTrigger>
 
@@ -562,19 +563,19 @@ const AdminProductsContent: React.FC = () => {
                 {/* Fixed Footer with Action Buttons */}
                 <div className="flex-shrink-0 border-t border-medical-blue/20 bg-white/90 backdrop-blur-sm px-6 py-8">
                   <div className="flex justify-end gap-6">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => setIsDialogOpen(false)}
-                      className="px-8 border-2 border-medical-blue/20 hover:border-medical-blue hover:bg-medical-blue/5 hover:text-medical-blue h-12 transition-all duration-200 font-medium"
-                    >
-                      Cancel
-                    </Button>
-                    <Button 
-                      type="submit" 
-                      disabled={uploading}
-                      className="px-8 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] h-12 disabled:opacity-50 disabled:hover:scale-100 font-medium"
-                    >
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => setIsDialogOpen(false)}
+                    className="w-full sm:w-auto px-8 border-2 border-medical-blue/20 hover:border-medical-blue hover:bg-medical-blue/5 hover:text-medical-blue h-12 transition-all duration-200 font-medium"
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    disabled={uploading}
+                    className="w-full sm:w-auto px-8 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] h-12 disabled:opacity-50 disabled:hover:scale-100 font-medium"
+                  >
                       {uploading ? (
                         <>
                           <RefreshCw className="w-4 h-4 mr-2 animate-spin" />

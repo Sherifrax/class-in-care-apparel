@@ -150,7 +150,7 @@ const Products = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
-            {filteredProducts.map((product, index) => <Card key={product.id} className="p-6 sm:p-8 glass border-medical-blue/20 hover:shadow-2xl hover:border-medical-blue/40 transition-all duration-500 group animate-apple-reveal-stagger relative overflow-hidden rounded-3xl bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-sm hover:scale-[1.02] hover:-translate-y-2" style={{
+            {filteredProducts.map((product, index) => <Card key={product.id} className="p-4 sm:p-6 md:p-8 glass border-medical-blue/20 hover:shadow-2xl hover:border-medical-blue/40 transition-all duration-500 group animate-apple-reveal-stagger relative overflow-hidden rounded-3xl bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-sm hover:scale-[1.02] hover:-translate-y-2" style={{
             animationDelay: `${index * 0.1}s`
           }}>
                 {/* Enhanced Badge */}
@@ -247,7 +247,7 @@ const Products = () => {
                       <span className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">AED {product.price}</span>
                       {product.original_price && <span className="text-lg text-muted-foreground line-through truncate">AED {product.original_price}</span>}
                     </div>
-                    <Button size="lg" className="gap-2 sm:gap-3 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white shadow-xl hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-2xl px-4 sm:px-6 py-3 font-semibold shrink-0" onClick={() => openProductDialog(product)} disabled={product.track_stock && product.stock_quantity === 0}>
+                    <Button size="lg" className="gap-2 sm:gap-3 w-full sm:w-auto bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white shadow-xl hover:shadow-glow transition-all duration-300 hover:scale-105 rounded-2xl px-4 sm:px-6 py-3 font-semibold shrink-0" onClick={() => openProductDialog(product)} disabled={product.track_stock && product.stock_quantity === 0}>
                       <ShoppingCart className="w-5 h-5" />
                       <span className="hidden sm:inline">{product.track_stock && product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}</span>
                       <span className="sm:hidden">{product.track_stock && product.stock_quantity === 0 ? 'Out' : 'Add'}</span>
@@ -498,7 +498,7 @@ const Products = () => {
                     </div>
 
                     <Button 
-                      className="w-full h-14 text-lg bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-semibold" 
+                      className="w-full sm:w-auto h-14 text-lg bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02] rounded-xl font-semibold" 
                       onClick={handleAddToCart} 
                       disabled={!selectedSize || (selectedProduct.track_stock && (selectedProduct.stock_quantity === 0 || quantity > selectedProduct.stock_quantity))}
                     >
@@ -646,9 +646,9 @@ const Products = () => {
                       </span>
                     </div>
                   </div>
-                  <Button 
+                  <Button
                     size="lg"
-                    className="px-8 gap-2 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]"
+                    className="w-full sm:w-auto px-8 gap-2 bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-[1.02]"
                     onClick={() => {
                       setQuickViewProduct(null);
                       openProductDialog(quickViewProduct);

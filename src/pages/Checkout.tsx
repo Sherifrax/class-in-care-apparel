@@ -28,7 +28,7 @@ const CheckoutContent = () => {
             <p className="text-muted-foreground mb-4">
               Add some items to your cart first
             </p>
-            <Button onClick={() => navigate('/products')}>
+            <Button onClick={() => navigate('/products')} className="w-full sm:w-auto">
               Shop Now
             </Button>
           </CardContent>
