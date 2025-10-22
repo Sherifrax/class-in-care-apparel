@@ -160,37 +160,35 @@ const AdminDashboardContent: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-medical-blue/5 via-white to-medical-teal/5">
       <div className="container mx-auto px-6 py-8">
         {/* Enhanced Header with Glass Morphism */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 sm:mb-8 p-4 sm:p-6 glass rounded-2xl border border-white/20 shadow-luxury backdrop-blur-xl bg-gradient-to-r from-white/80 to-white/60 overflow-hidden">
-          <div className="space-y-1 sm:space-y-2 mb-4 md:mb-0">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent break-words">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 p-6 glass rounded-2xl border border-white/20 shadow-luxury backdrop-blur-xl bg-gradient-to-r from-white/80 to-white/60">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
               Dashboard Overview
             </h1>
-            <p className="text-base sm:text-lg text-muted-foreground break-words">Monitor your business performance and growth</p>
+            <p className="text-lg text-muted-foreground">Monitor your business performance and growth</p>
           </div>
-          <div className="flex flex-wrap gap-2 sm:gap-3 w-full md:w-auto">
+          <div className="flex flex-wrap gap-3 mt-4 lg:mt-0">
             <Button 
               onClick={() => navigate('/admin/products')} 
               variant="outline"
-              className="glass border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/10 transition-all duration-300 hover:scale-105 text-sm sm:text-base h-10 sm:h-11"
+              className="glass border-medical-blue/30 hover:border-medical-blue hover:bg-medical-blue/10 transition-all duration-300 hover:scale-105"
             >
               <Package className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Manage Products</span>
-              <span className="sm:hidden">Products</span>
+              Manage Products
             </Button>
             <Button 
               onClick={() => navigate('/admin/sales')}
-              className="bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-105 text-sm sm:text-base h-10 sm:h-11"
+              className="bg-gradient-to-r from-medical-blue to-medical-teal hover:from-medical-blue-light hover:to-medical-teal text-white shadow-lg hover:shadow-glow transition-all duration-300 hover:scale-105"
             >
               <BarChart3 className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">View Sales</span>
-              <span className="sm:hidden">Sales</span>
+              View Sales
               <ArrowUpRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
         </div>
 
         {/* Enhanced Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="group glass border-white/20 shadow-luxury backdrop-blur-xl bg-gradient-to-br from-medical-blue/10 via-white/80 to-medical-blue/5 hover:shadow-glow transition-all duration-300 hover:scale-105 animate-fade-in">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle className="text-sm font-semibold text-medical-blue">Total Orders</CardTitle>
@@ -199,7 +197,7 @@ const AdminDashboardContent: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-blue-light bg-clip-text text-transparent break-words">
+              <div className="text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-blue-light bg-clip-text text-transparent">
                 {stats.totalOrders}
               </div>
               <div className="flex items-center gap-2">
@@ -220,7 +218,7 @@ const AdminDashboardContent: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-teal to-medical-teal-light bg-clip-text text-transparent break-words">
+              <div className="text-3xl font-bold bg-gradient-to-r from-medical-teal to-medical-teal-light bg-clip-text text-transparent">
                 AED {stats.totalRevenue.toFixed(2)}
               </div>
               <div className="flex items-center gap-2">
@@ -241,7 +239,7 @@ const AdminDashboardContent: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-luxury-navy to-medical-blue bg-clip-text text-transparent break-words">
+              <div className="text-3xl font-bold bg-gradient-to-r from-luxury-navy to-medical-blue bg-clip-text text-transparent">
                 {stats.totalCustomers}
               </div>
               <div className="flex items-center gap-2">
@@ -262,7 +260,7 @@ const AdminDashboardContent: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent break-words">
+              <div className="text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
                 {stats.totalProducts}
               </div>
               <div className="flex items-center gap-2">
@@ -304,16 +302,16 @@ const AdminDashboardContent: React.FC = () => {
                 {stats.recentOrders.map((order, index) => (
                   <div 
                     key={order.id} 
-                    className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-5 glass rounded-xl border border-white/20 hover:shadow-medium transition-all duration-300 hover:scale-[1.02] animate-slide-in-left gap-4 overflow-hidden"
+                    className="group flex items-center justify-between p-5 glass rounded-xl border border-white/20 hover:shadow-medium transition-all duration-300 hover:scale-[1.02] animate-slide-in-left"
                     style={{animationDelay: `${index * 0.1}s`}}
                   >
-                    <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-                      <div className="p-2 sm:p-3 bg-gradient-to-br from-medical-blue/20 to-medical-teal/20 rounded-xl group-hover:from-medical-blue/30 group-hover:to-medical-teal/30 transition-all duration-300 flex-shrink-0">
-                        <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-medical-blue" />
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-gradient-to-br from-medical-blue/20 to-medical-teal/20 rounded-xl group-hover:from-medical-blue/30 group-hover:to-medical-teal/30 transition-all duration-300">
+                        <ShoppingBag className="w-5 h-5 text-medical-blue" />
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-luxury-navy truncate">Order #{order.id.slice(0, 8)}</p>
-                        <p className="text-xs sm:text-sm text-muted-foreground truncate max-w-[250px] sm:max-w-none">
+                      <div>
+                        <p className="font-semibold text-luxury-navy">Order #{order.id.slice(0, 8)}</p>
+                        <p className="text-sm text-muted-foreground">
                           {order.customer_email} • {new Date(order.created_at).toLocaleDateString('en-US', { 
                             month: 'short', 
                             day: 'numeric',
@@ -322,8 +320,8 @@ const AdminDashboardContent: React.FC = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
-                      <span className="font-bold text-base sm:text-lg bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent whitespace-nowrap">
+                    <div className="flex items-center gap-4">
+                      <span className="font-bold text-lg bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
                         AED {Number(order.total_amount).toFixed(2)}
                       </span>
                       {getStatusBadge(order.status)}

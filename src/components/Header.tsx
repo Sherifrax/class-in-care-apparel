@@ -340,12 +340,12 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <div className="lg:hidden flex items-center space-x-2">
               <Link to="/cart" className="relative">
-                <Button variant="ghost" size="sm" className="relative p-2 h-11 w-11">
+                <Button variant="ghost" size="sm" className="relative p-2">
                   <ShoppingCart className="h-5 w-5" />
                   {cartItemCount > 0 && (
                     <Badge 
                       variant="destructive" 
-                      className="absolute -top-1 -right-1 h-5 w-5 text-xs p-0 flex items-center justify-center"
+                      className="absolute -top-1 -right-1 h-4 w-4 text-xs p-0 flex items-center justify-center"
                     >
                       {cartItemCount}
                     </Badge>
