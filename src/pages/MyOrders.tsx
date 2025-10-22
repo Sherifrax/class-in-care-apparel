@@ -497,19 +497,24 @@ const MyOrdersContent: React.FC = () => {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
             <Card className="w-full max-w-5xl max-h-[90vh] overflow-y-auto glass border-2 border-medical-blue/30 shadow-luxury backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90 animate-scale-in rounded-3xl">
               <CardHeader className="sticky top-0 bg-gradient-to-r from-white/95 to-white/90 backdrop-blur-sm z-10 border-b border-medical-blue/20 rounded-t-3xl">
-                <CardTitle className="flex items-center justify-between text-3xl lg:text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-2xl">
-                      <Package className="w-6 h-6 text-medical-blue" />
+                <CardTitle className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xl sm:text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+                  <div className="flex items-start gap-3 min-w-0 flex-1">
+                    <div className="p-2 sm:p-3 bg-gradient-to-br from-medical-blue/10 to-medical-teal/10 rounded-2xl flex-shrink-0">
+                      <Package className="w-5 h-5 sm:w-6 sm:h-6 text-medical-blue" />
                     </div>
-                    <div>
-                      <div>Order Details - #{selectedOrder.id.slice(0, 8)}</div>
-                      <div className="text-sm font-normal text-muted-foreground mt-1">
+                    <div className="min-w-0 flex-1">
+                      <div className="break-anywhere line-clamp-2">
+                        Order Details - <span className="hidden sm:inline">#{selectedOrder.order_reference || selectedOrder.id.slice(0, 8)}</span>
+                        <span className="sm:hidden">#{selectedOrder.order_reference?.slice(0, 8) || selectedOrder.id.slice(0, 8)}</span>
+                      </div>
+                      <div className="text-xs sm:text-sm font-normal text-muted-foreground mt-1">
                         Placed on {new Date(selectedOrder.created_at).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
-                  {getStatusBadge(selectedOrder.status)}
+                  <div className="flex-shrink-0">
+                    {getStatusBadge(selectedOrder.status)}
+                  </div>
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-8 space-y-8">
@@ -624,15 +629,15 @@ const MyOrdersContent: React.FC = () => {
                     </h4>
                     <div className="space-y-3">
                       {selectedOrder.order_items?.map((item, index) => (
-                        <div key={item.id} className="flex justify-between items-center p-5 bg-white/60 rounded-2xl border border-purple-100 shadow-sm hover:shadow-md transition-all duration-200">
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center">
-                              <span className="font-bold text-purple-600">{index + 1}</span>
-                            </div>
-                             <div>
-                               <div className="font-semibold text-luxury-navy text-lg">{item.product_name}</div>
-                               <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                 <span>Size: <span className="font-medium">{item.size}</span></span>
+                         <div key={item.id} className="flex justify-between items-center p-5 bg-white/60 rounded-2xl border border-purple-100 shadow-sm hover:shadow-md transition-all duration-200">
+                           <div className="flex items-center gap-4 min-w-0 flex-1">
+                             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center flex-shrink-0">
+                               <span className="font-bold text-purple-600 text-sm sm:text-base">{index + 1}</span>
+                             </div>
+                             <div className="min-w-0 flex-1">
+                               <div className="font-semibold text-luxury-navy text-base sm:text-lg break-anywhere line-clamp-2">{item.product_name}</div>
+                               <div className="text-xs sm:text-sm text-muted-foreground flex flex-wrap items-center gap-2">
+                                 <span className="whitespace-nowrap">Size: <span className="font-medium">{item.size}</span></span>
                                  {item.color && (
                                    <>
                                      <span>•</span>
@@ -644,15 +649,17 @@ const MyOrdersContent: React.FC = () => {
                                  )}
                                </div>
                              </div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-lg font-bold text-purple-700">x{item.quantity}</div>
-                            <div className="text-sm text-muted-foreground">AED {item.unit_price.toFixed(2)} each</div>
-                            <div className="text-xs font-medium text-purple-600 mt-1">
-                              Total: AED {(item.unit_price * item.quantity).toFixed(2)}
-                            </div>
-                          </div>
-                        </div>
+                           </div>
+                           <div className="text-right flex-shrink-0 ml-3">
+                             <div className="text-base sm:text-lg font-bold text-purple-700">x{item.quantity}</div>
+                             <div className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
+                               AED {item.unit_price.toFixed(2)} <span className="hidden sm:inline">each</span>
+                             </div>
+                             <div className="text-xs font-medium text-purple-600 mt-1 whitespace-nowrap">
+                               Total: AED {(item.unit_price * item.quantity).toFixed(2)}
+                             </div>
+                           </div>
+                         </div>
                       ))}
                     </div>
                   </CardContent>

@@ -63,13 +63,13 @@ export const CustomerOrderTracking: React.FC<OrderTrackingProps> = ({
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Package className="w-5 h-5" />
+      <CardHeader className="p-4 sm:p-6">
+        <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+          <Package className="w-4 h-4 sm:w-5 sm:h-5" />
           Order Tracking
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
         {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm">

@@ -294,7 +294,9 @@ const Products = () => {
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90">
           {selectedProduct && <>
               <DialogHeader className="border-b border-medical-blue/20 pb-4">
-                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">{selectedProduct.name}</DialogTitle>
+                <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent break-anywhere line-clamp-2 pr-8">
+                  {selectedProduct.name}
+                </DialogTitle>
               </DialogHeader>
               
               <div className="space-y-6">
@@ -517,13 +519,13 @@ const Products = () => {
         <DialogContent className="max-w-5xl max-h-[95vh] p-0 glass border-medical-blue/30 backdrop-blur-xl bg-gradient-to-b from-white/95 to-white/90 overflow-hidden">
           {quickViewProduct && (
             <div className="flex flex-col h-full max-h-[95vh]">
-              <DialogHeader className="border-b border-medical-blue/20 pb-4 px-6 pt-6 flex-shrink-0">
-                <DialogTitle className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent">
+              <DialogHeader className="border-b border-medical-blue/20 pb-4 px-4 sm:px-6 pt-4 sm:pt-6 flex-shrink-0">
+                <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-medical-blue to-medical-teal bg-clip-text text-transparent break-anywhere line-clamp-2 pr-8">
                   {quickViewProduct.name}
                 </DialogTitle>
               </DialogHeader>
               
-              <div className="overflow-y-auto flex-1 px-6 py-6 space-y-6">
+              <div className="overflow-y-auto flex-1 px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
                 {/* Large Image Carousel */}
                 {quickViewProduct.images && quickViewProduct.images.length > 0 ? (
                   <div className="relative animate-fade-in">
