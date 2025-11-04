@@ -22,7 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Search, Users, Shield, UserCircle, Calendar, Copy, CheckCircle, Ban } from 'lucide-react';
+import { Loader2, Search, Users, Shield, UserCircle, Calendar, Copy, CheckCircle, Ban, Filter, Download, AlertCircle } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -377,79 +377,134 @@ export default function AdminUsers() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">User Management</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage user roles and permissions
-          </p>
+      <div className="space-y-8 p-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-luxury-navy to-medical-blue bg-clip-text text-transparent">
+              User Management
+            </h1>
+            <p className="text-muted-foreground">Manage user roles, permissions, and account access</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" className="border-medical-blue/30 hover:border-medical-blue">
+              <Download className="w-4 h-4 mr-2" />
+              Export Users
+            </Button>
+          </div>
         </div>
 
         {/* Statistics Cards */}
         {stats && (
-          <div className="grid gap-4 md:grid-cols-4">
-            <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.total_users}</div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="glass border-medical-blue/20 bg-gradient-to-br from-white/80 to-medical-blue/5 hover:shadow-glow transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Total Users</p>
+                    <p className="text-3xl font-bold text-luxury-navy">{stats.total_users}</p>
+                  </div>
+                  <div className="p-3 bg-medical-blue/10 rounded-xl">
+                    <Users className="w-6 h-6 text-medical-blue" />
+                  </div>
+                </div>
               </CardContent>
             </Card>
-            <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Admins</CardTitle>
-                <Shield className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.total_admins}</div>
+
+            <Card className="glass border-green-200 bg-gradient-to-br from-white/80 to-green-50 hover:shadow-glow transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Admins</p>
+                    <p className="text-3xl font-bold text-green-700">{stats.total_admins}</p>
+                  </div>
+                  <div className="p-3 bg-green-100 rounded-xl">
+                    <Shield className="w-6 h-6 text-green-600" />
+                  </div>
+                </div>
               </CardContent>
             </Card>
-            <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Customers</CardTitle>
-                <UserCircle className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.total_customers}</div>
+
+            <Card className="glass border-purple-200 bg-gradient-to-br from-white/80 to-purple-50 hover:shadow-glow transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Customers</p>
+                    <p className="text-3xl font-bold text-purple-700">{stats.total_customers}</p>
+                  </div>
+                  <div className="p-3 bg-purple-100 rounded-xl">
+                    <UserCircle className="w-6 h-6 text-purple-600" />
+                  </div>
+                </div>
               </CardContent>
             </Card>
-            <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Recent Signups</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.recent_signups}</div>
-                <p className="text-xs text-muted-foreground mt-1">Last 7 days</p>
+
+            <Card className="glass border-orange-200 bg-gradient-to-br from-white/80 to-orange-50 hover:shadow-glow transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Recent Signups</p>
+                    <p className="text-3xl font-bold text-orange-700">{stats.recent_signups}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Last 7 days</p>
+                  </div>
+                  <div className="p-3 bg-orange-100 rounded-xl">
+                    <Calendar className="w-6 h-6 text-orange-600" />
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
         )}
 
-        {/* Search and Filter Controls */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by name, email, or phone..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-          <Select value={roleFilter} onValueChange={(value: any) => setRoleFilter(value)}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Filter by role" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Users</SelectItem>
-              <SelectItem value="admin">Admins Only</SelectItem>
-              <SelectItem value="customer">Customers Only</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {/* Enhanced Search & Filter Section */}
+        <Card className="glass border-medical-blue/30 bg-gradient-to-r from-white/95 to-medical-blue/5 shadow-lg hover:shadow-xl transition-all duration-300">
+          <CardContent className="p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-medical-blue/10 rounded-lg">
+                <Filter className="w-5 h-5 text-medical-blue" />
+              </div>
+              <h3 className="text-lg font-semibold text-luxury-navy">Filter & Search Users</h3>
+            </div>
+            
+            <div className="flex flex-col lg:flex-row gap-6">
+              {/* Search Input - Takes up 8 parts */}
+              <div className="relative flex-1 lg:flex-[8]">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-medical-blue/60 h-5 w-5" />
+                <Input
+                  placeholder="Search by name, email, phone, or user ID..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-12 h-12 bg-white/70 border-2 border-medical-blue/20 focus:border-medical-blue/50 focus:ring-4 focus:ring-medical-blue/10 backdrop-blur-sm text-base font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                />
+              </div>
+              
+              {/* Role Filter - Fixed width */}
+              <div className="lg:w-[180px] lg:flex-shrink-0">
+                <Select value={roleFilter} onValueChange={(value: any) => setRoleFilter(value)}>
+                  <SelectTrigger className="h-12 bg-white/70 border-2 border-medical-blue/20 focus:border-medical-blue/50 focus:ring-4 focus:ring-medical-blue/10 backdrop-blur-sm text-base font-medium shadow-sm hover:shadow-md transition-all duration-200">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-medical-blue/50"></div>
+                      <SelectValue placeholder="Filter by role" />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent className="bg-white/95 backdrop-blur-md border-medical-blue/20">
+                    <SelectItem value="all" className="hover:bg-medical-blue/5">All Users</SelectItem>
+                    <SelectItem value="admin" className="hover:bg-blue-50">🛡️ Admins Only</SelectItem>
+                    <SelectItem value="customer" className="hover:bg-purple-50">👥 Customers Only</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            {/* Active Filters Indicator */}
+            {(searchQuery || roleFilter !== 'all') && (
+              <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground bg-medical-blue/5 px-4 py-2 rounded-lg">
+                <AlertCircle className="w-4 h-4" />
+                Showing {filteredUsers.length} of {users.length} users
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {loading ? (
           <div className="space-y-4">
@@ -492,7 +547,7 @@ export default function AdminUsers() {
           </div>
         ) : (
           <>
-            <div className="rounded-md border">
+            <div className="rounded-md border border-medical-blue/20 glass bg-gradient-to-r from-white/90 to-white/80 overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -508,8 +563,22 @@ export default function AdminUsers() {
                 <TableBody>
                   {currentUsers.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                        {searchQuery || roleFilter !== 'all' ? 'No users found matching your filters' : 'No users found'}
+                      <TableCell colSpan={7} className="p-0">
+                        <Card className="text-center py-16 glass border-medical-blue/20 bg-gradient-to-b from-white/90 to-white/80 m-4">
+                          <CardContent className="space-y-4">
+                            <div className="p-6 bg-medical-blue/10 rounded-full w-24 h-24 mx-auto flex items-center justify-center">
+                              <Users className="w-12 h-12 text-medical-blue" />
+                            </div>
+                            <div>
+                              <h3 className="text-lg font-semibold text-luxury-navy">No users found</h3>
+                              <p className="text-muted-foreground">
+                                {searchQuery || roleFilter !== 'all' 
+                                  ? 'Try adjusting your filters or search criteria' 
+                                  : 'Users will appear here once they sign up'}
+                              </p>
+                            </div>
+                          </CardContent>
+                        </Card>
                       </TableCell>
                     </TableRow>
                   ) : (
