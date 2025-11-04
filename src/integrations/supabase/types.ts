@@ -139,6 +139,7 @@ export type Database = {
           express_shipping: boolean | null
           id: string
           order_reference: string | null
+          payment_deadline: string | null
           payment_receipt_url: string | null
           payment_reminder_sent_at: string | null
           session_id: string | null
@@ -160,6 +161,7 @@ export type Database = {
           express_shipping?: boolean | null
           id?: string
           order_reference?: string | null
+          payment_deadline?: string | null
           payment_receipt_url?: string | null
           payment_reminder_sent_at?: string | null
           session_id?: string | null
@@ -181,6 +183,7 @@ export type Database = {
           express_shipping?: boolean | null
           id?: string
           order_reference?: string | null
+          payment_deadline?: string | null
           payment_receipt_url?: string | null
           payment_reminder_sent_at?: string | null
           session_id?: string | null
@@ -299,7 +302,7 @@ export type Database = {
           action: string
           created_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           user_agent: string | null
           user_id: string
         }
@@ -307,7 +310,7 @@ export type Database = {
           action: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id: string
         }
@@ -315,7 +318,7 @@ export type Database = {
           action?: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id?: string
         }
@@ -384,10 +387,7 @@ export type Database = {
         Args: { p_product_id: string; p_quantity: number }
         Returns: boolean
       }
-      generate_order_reference: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      generate_order_reference: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -395,10 +395,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_admin: {
-        Args: { user_id?: string }
-        Returns: boolean
-      }
+      is_admin: { Args: { user_id?: string }; Returns: boolean }
       log_profile_access: {
         Args: {
           p_action: string
