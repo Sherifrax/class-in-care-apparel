@@ -30,7 +30,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Processing contact form submission:", { firstName, lastName, email, interest });
 
     // Get admin email from environment variables
-    const adminEmail = Deno.env.get("ADMIN_NOTIFICATION_EMAIL");
+    const adminEmail = Deno.env.get("CUSTOMER_INQUIRY_EMAIL");
     if (!adminEmail) {
       throw new Error("Admin notification email not configured");
     }
