@@ -16,7 +16,8 @@ import {
   Settings, 
   LogOut, 
   User,
-  Search
+  Search,
+  Users
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -52,6 +53,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       href: '/admin/sales',
       icon: BarChart3,
       current: location.pathname === '/admin/sales'
+    },
+    {
+      name: 'Users',
+      href: '/admin/users',
+      icon: Users,
+      current: location.pathname === '/admin/users'
     }
   ];
 

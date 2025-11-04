@@ -31,6 +31,7 @@ import { AdminLogin } from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminSales from "./pages/admin/AdminSales";
+import AdminUsers from "./pages/admin/AdminUsers";
 import { AdminRedirectHandler } from "./components/admin/AdminRedirectHandler";
 import AdminProfile from "./components/admin/AdminProfile";
 import AdminSettings from "./components/admin/AdminSettings";
@@ -80,6 +81,7 @@ const AppContent = () => {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/products" element={<AdminProducts />} />
           <Route path="/admin/sales" element={<AdminSales />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/profile" element={<AdminProfile />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           
