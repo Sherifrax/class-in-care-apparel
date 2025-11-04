@@ -94,6 +94,10 @@ Deno.serve(async (req) => {
       const authUser = authUsers.find(au => au.id === profile.id);
       const userRole = userRoles.find(ur => ur.user_id === profile.id);
       
+      // Check if user is banned from metadata
+      const banned = authUser?.user_metadata?.banned === true;
+      const banReason = authUser?.user_metadata?.ban_reason || null;
+      
       return {
         id: profile.id,
         full_name: profile.full_name || 'Unknown',
@@ -102,8 +106,11 @@ Deno.serve(async (req) => {
         avatar_url: profile.avatar_url || '',
         created_at: profile.created_at,
         last_sign_in_at: authUser?.last_sign_in_at || null,
+        email_confirmed_at: authUser?.email_confirmed_at || null,
         role: userRole?.role || 'customer',
-        is_admin: userRole?.role === 'admin'
+        is_admin: userRole?.role === 'admin',
+        banned: banned,
+        ban_reason: banReason
       };
     });
 

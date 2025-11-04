@@ -22,7 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Search, Users, Shield, UserCircle, Calendar, Copy, CheckCircle } from 'lucide-react';
+import { Loader2, Search, Users, Shield, UserCircle, Calendar, Copy, CheckCircle, Ban } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,6 +41,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import { UserActionsMenu } from '@/components/admin/UserActionsMenu';
+import { BanUserDialog } from '@/components/admin/BanUserDialog';
+import { ResetPasswordDialog } from '@/components/admin/ResetPasswordDialog';
+import { UnbanUserDialog } from '@/components/admin/UnbanUserDialog';
+import { SendMagicLinkDialog } from '@/components/admin/SendMagicLinkDialog';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface UserWithRole {
   id: string;
@@ -52,6 +59,9 @@ interface UserWithRole {
   last_sign_in_at: string | null;
   role: 'admin' | 'customer';
   is_admin: boolean;
+  banned?: boolean;
+  ban_reason?: string;
+  email_confirmed_at?: string;
 }
 
 interface UserStats {
@@ -75,7 +85,15 @@ export default function AdminUsers() {
   const [actionLoading, setActionLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
+  
+  // New dialog states
+  const [banDialogOpen, setBanDialogOpen] = useState(false);
+  const [unbanDialogOpen, setUnbanDialogOpen] = useState(false);
+  const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false);
+  const [magicLinkDialogOpen, setMagicLinkDialogOpen] = useState(false);
+  
   const { toast } = useToast();
+  const { user: currentUser } = useAuth();
 
   const fetchUsers = async () => {
     try {
@@ -160,8 +178,8 @@ export default function AdminUsers() {
         if (error) throw error;
 
         toast({
-          title: 'Success',
-          description: `Admin role removed from ${selectedUser.full_name}`,
+          title: '✓ Admin role removed',
+          description: `${selectedUser.full_name} is now a customer`,
         });
       } else {
         // Add admin role
@@ -175,8 +193,8 @@ export default function AdminUsers() {
         if (error) throw error;
 
         toast({
-          title: 'Success',
-          description: `Admin role granted to ${selectedUser.full_name}`,
+          title: '✓ Admin role granted',
+          description: `${selectedUser.full_name} is now an admin`,
         });
       }
 
@@ -187,6 +205,169 @@ export default function AdminUsers() {
       toast({
         title: 'Error',
         description: 'Failed to update user role',
+        variant: 'destructive',
+      });
+    } finally {
+      setActionLoading(false);
+      setSelectedUser(null);
+    }
+  };
+
+  const handleBanUser = async (reason: string, notifyUser: boolean) => {
+    if (!selectedUser) return;
+
+    try {
+      setActionLoading(true);
+      setBanDialogOpen(false);
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('No session found');
+
+      const { data, error } = await supabase.functions.invoke('manage-user-account', {
+        body: {
+          action: 'ban-user',
+          userId: selectedUser.id,
+          reason,
+          notifyUser
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: '✓ User banned',
+        description: `${selectedUser.full_name} has been banned from the platform`,
+      });
+
+      await fetchUsers();
+    } catch (error: any) {
+      console.error('Error banning user:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to ban user',
+        variant: 'destructive',
+      });
+    } finally {
+      setActionLoading(false);
+      setSelectedUser(null);
+    }
+  };
+
+  const handleUnbanUser = async (notifyUser: boolean) => {
+    if (!selectedUser) return;
+
+    try {
+      setActionLoading(true);
+      setUnbanDialogOpen(false);
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('No session found');
+
+      const { data, error } = await supabase.functions.invoke('manage-user-account', {
+        body: {
+          action: 'unban-user',
+          userId: selectedUser.id,
+          notifyUser
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: '✓ User unbanned',
+        description: `${selectedUser.full_name} can now access the platform`,
+      });
+
+      await fetchUsers();
+    } catch (error: any) {
+      console.error('Error unbanning user:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to unban user',
+        variant: 'destructive',
+      });
+    } finally {
+      setActionLoading(false);
+      setSelectedUser(null);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!selectedUser) return;
+
+    try {
+      setActionLoading(true);
+      setResetPasswordDialogOpen(false);
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('No session found');
+
+      const { data, error } = await supabase.functions.invoke('manage-user-account', {
+        body: {
+          action: 'reset-password',
+          userId: selectedUser.id
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: '✓ Password reset sent',
+        description: `Reset email sent to ${selectedUser.email}`,
+      });
+    } catch (error: any) {
+      console.error('Error resetting password:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to reset password',
+        variant: 'destructive',
+      });
+    } finally {
+      setActionLoading(false);
+      setSelectedUser(null);
+    }
+  };
+
+  const handleSendMagicLink = async () => {
+    if (!selectedUser) return;
+
+    try {
+      setActionLoading(true);
+      setMagicLinkDialogOpen(false);
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('No session found');
+
+      const { data, error } = await supabase.functions.invoke('manage-user-account', {
+        body: {
+          action: 'send-magic-link',
+          userId: selectedUser.id
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: '✓ Magic link sent',
+        description: `Password reset link sent to ${selectedUser.email}`,
+      });
+    } catch (error: any) {
+      console.error('Error sending magic link:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to send magic link',
         variant: 'destructive',
       });
     } finally {
@@ -248,7 +429,7 @@ export default function AdminUsers() {
         {/* Statistics Cards */}
         {stats && (
           <div className="grid gap-4 md:grid-cols-4">
-            <Card>
+            <Card className="hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Users</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
@@ -257,7 +438,7 @@ export default function AdminUsers() {
                 <div className="text-2xl font-bold">{stats.total_users}</div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Admins</CardTitle>
                 <Shield className="h-4 w-4 text-muted-foreground" />
@@ -266,7 +447,7 @@ export default function AdminUsers() {
                 <div className="text-2xl font-bold">{stats.total_admins}</div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Customers</CardTitle>
                 <UserCircle className="h-4 w-4 text-muted-foreground" />
@@ -275,7 +456,7 @@ export default function AdminUsers() {
                 <div className="text-2xl font-bold">{stats.total_customers}</div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Recent Signups</CardTitle>
                 <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -312,8 +493,43 @@ export default function AdminUsers() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin" />
+          <div className="space-y-4">
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>User</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead className="hidden md:table-cell">Phone</TableHead>
+                    <TableHead className="hidden lg:table-cell">Joined</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Skeleton className="h-10 w-10 rounded-full" />
+                          <div className="space-y-2">
+                            <Skeleton className="h-4 w-32" />
+                            <Skeleton className="h-3 w-20" />
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell><Skeleton className="h-4 w-48" /></TableCell>
+                      <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-24" /></TableCell>
+                      <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-32" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-16" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                      <TableCell className="text-right"><Skeleton className="h-8 w-8 ml-auto" /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         ) : (
           <>
@@ -325,6 +541,7 @@ export default function AdminUsers() {
                     <TableHead>Email</TableHead>
                     <TableHead className="hidden md:table-cell">Phone</TableHead>
                     <TableHead className="hidden lg:table-cell">Joined</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead>Role</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -332,19 +549,26 @@ export default function AdminUsers() {
                 <TableBody>
                   {currentUsers.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                         {searchQuery || roleFilter !== 'all' ? 'No users found matching your filters' : 'No users found'}
                       </TableCell>
                     </TableRow>
                   ) : (
                     currentUsers.map((user) => (
-                      <TableRow key={user.id} className="group">
+                      <TableRow key={user.id} className="group hover:bg-muted/50">
                         <TableCell>
                           <div className="flex items-center gap-3">
-                            <Avatar className="h-10 w-10">
-                              <AvatarImage src={user.avatar_url} alt={user.full_name} />
-                              <AvatarFallback>{getInitials(user.full_name)}</AvatarFallback>
-                            </Avatar>
+                            <div className="relative">
+                              <Avatar className="h-10 w-10">
+                                <AvatarImage src={user.avatar_url} alt={user.full_name} />
+                                <AvatarFallback>{getInitials(user.full_name)}</AvatarFallback>
+                              </Avatar>
+                              {user.banned && (
+                                <div className="absolute -top-1 -right-1 bg-destructive rounded-full p-0.5">
+                                  <Ban className="h-3 w-3 text-destructive-foreground" />
+                                </div>
+                              )}
+                            </div>
                             <div>
                               <div className="font-medium">{user.full_name || 'Unknown'}</div>
                               <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -393,6 +617,19 @@ export default function AdminUsers() {
                           </div>
                         </TableCell>
                         <TableCell>
+                          {user.banned ? (
+                            <Badge variant="destructive" className="gap-1">
+                              <Ban className="h-3 w-3" />
+                              Banned
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="gap-1 border-green-500 text-green-600">
+                              <CheckCircle className="h-3 w-3" />
+                              Active
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell>
                           <Badge 
                             variant={user.is_admin ? 'default' : 'secondary'}
                             className="gap-1"
@@ -402,14 +639,28 @@ export default function AdminUsers() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleRoleToggle(user)}
+                          <UserActionsMenu
+                            user={user}
+                            currentUserId={currentUser?.id || ''}
+                            onToggleAdmin={() => handleRoleToggle(user)}
+                            onResetPassword={() => {
+                              setSelectedUser(user);
+                              setResetPasswordDialogOpen(true);
+                            }}
+                            onBanUser={() => {
+                              setSelectedUser(user);
+                              setBanDialogOpen(true);
+                            }}
+                            onUnbanUser={() => {
+                              setSelectedUser(user);
+                              setUnbanDialogOpen(true);
+                            }}
+                            onSendMagicLink={() => {
+                              setSelectedUser(user);
+                              setMagicLinkDialogOpen(true);
+                            }}
                             disabled={actionLoading}
-                          >
-                            {user.is_admin ? 'Remove Admin' : 'Make Admin'}
-                          </Button>
+                          />
                         </TableCell>
                       </TableRow>
                     ))
@@ -472,23 +723,70 @@ export default function AdminUsers() {
         <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>
-                {selectedUser?.is_admin ? 'Remove Admin Role?' : 'Grant Admin Role?'}
-              </AlertDialogTitle>
+              <AlertDialogTitle>Confirm Role Change</AlertDialogTitle>
               <AlertDialogDescription>
-                {selectedUser?.is_admin
-                  ? `Are you sure you want to remove admin privileges from ${selectedUser.full_name}? They will no longer be able to access the admin panel.`
-                  : `Are you sure you want to grant admin privileges to ${selectedUser?.full_name}? They will have full access to the admin panel.`}
+                {selectedUser && (
+                  <>
+                    Are you sure you want to {selectedUser.is_admin ? 'remove admin access from' : 'grant admin access to'}{' '}
+                    <strong>{selectedUser.full_name}</strong>?
+                  </>
+                )}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={confirmRoleChange}>
-                Confirm
+              <AlertDialogCancel disabled={actionLoading}>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmRoleChange} disabled={actionLoading}>
+                {actionLoading ? 'Processing...' : 'Confirm'}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* Ban User Dialog */}
+        {selectedUser && (
+          <BanUserDialog
+            open={banDialogOpen}
+            onOpenChange={setBanDialogOpen}
+            userName={selectedUser.full_name}
+            onConfirm={handleBanUser}
+            loading={actionLoading}
+          />
+        )}
+
+        {/* Unban User Dialog */}
+        {selectedUser && (
+          <UnbanUserDialog
+            open={unbanDialogOpen}
+            onOpenChange={setUnbanDialogOpen}
+            userName={selectedUser.full_name}
+            onConfirm={handleUnbanUser}
+            loading={actionLoading}
+          />
+        )}
+
+        {/* Reset Password Dialog */}
+        {selectedUser && (
+          <ResetPasswordDialog
+            open={resetPasswordDialogOpen}
+            onOpenChange={setResetPasswordDialogOpen}
+            userName={selectedUser.full_name}
+            userEmail={selectedUser.email}
+            onConfirm={handleResetPassword}
+            loading={actionLoading}
+          />
+        )}
+
+        {/* Send Magic Link Dialog */}
+        {selectedUser && (
+          <SendMagicLinkDialog
+            open={magicLinkDialogOpen}
+            onOpenChange={setMagicLinkDialogOpen}
+            userName={selectedUser.full_name}
+            userEmail={selectedUser.email}
+            onConfirm={handleSendMagicLink}
+            loading={actionLoading}
+          />
+        )}
       </div>
     </AdminLayout>
   );
