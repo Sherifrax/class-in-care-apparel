@@ -22,7 +22,6 @@ interface UserActionsMenuProps {
   user: UserWithRole;
   currentUserId: string;
   onToggleAdmin: () => void;
-  onResetPassword: () => void;
   onBanUser: () => void;
   onUnbanUser: () => void;
   onSendMagicLink: () => void;
@@ -33,7 +32,6 @@ export function UserActionsMenu({
   user,
   currentUserId,
   onToggleAdmin,
-  onResetPassword,
   onBanUser,
   onUnbanUser,
   onSendMagicLink,
@@ -80,19 +78,11 @@ export function UserActionsMenu({
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          onClick={() => handleAction(onResetPassword)}
-          className="cursor-pointer"
-        >
-          <KeyRound className="mr-2 h-4 w-4" />
-          Reset Password
-        </DropdownMenuItem>
-
-        <DropdownMenuItem
           onClick={() => handleAction(onSendMagicLink)}
           className="cursor-pointer"
         >
           <Mail className="mr-2 h-4 w-4" />
-          Send Password Reset Link
+          Send Login Link
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />

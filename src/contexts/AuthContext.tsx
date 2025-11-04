@@ -12,6 +12,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -128,6 +129,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     enhancedToast.info("Check your email", "We've sent you a password reset link.");
   };
 
+  const changePassword = async (currentPassword: string, newPassword: string) => {
+    if (!user?.email) {
+      enhancedToast.error("Error", "You must be logged in to change your password");
+      throw new Error("User not authenticated");
+    }
+
+    // First verify current password by attempting to sign in
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    });
+
+    if (signInError) {
+      enhancedToast.error("Incorrect Password", "The current password you entered is incorrect");
+      throw signInError;
+    }
+
+    // If current password is correct, update to new password
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (updateError) {
+      enhancedToast.error("Password Update Failed", updateError.message);
+      throw updateError;
+    }
+
+    // Log the password change in audit log
+    try {
+      await supabase.rpc('log_profile_access', {
+        p_user_id: user.id,
+        p_action: 'password_changed',
+      });
+    } catch (logError) {
+      console.error('Failed to log password change:', logError);
+    }
+
+    enhancedToast.success("Password Updated", "Your password has been changed successfully");
+  };
+
   const value = {
     user,
     session,
@@ -136,7 +177,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signIn,
     signOut,
     resetPassword,
+    changePassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}; 
+};

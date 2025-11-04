@@ -194,6 +194,8 @@ serve(async (req) => {
       }
 
       case 'send-magic-link': {
+        console.log('Generating and sending magic link for user:', userId);
+        
         // Get user's email
         const { data: targetUser, error: getUserError } = await supabaseAdmin.auth.admin.getUserById(userId);
         
@@ -201,22 +203,87 @@ serve(async (req) => {
           throw new Error('Could not retrieve user email');
         }
 
-        // Generate magic link (email link)
-        const { data, error } = await supabaseAdmin.auth.admin.generateLink({
+        // Generate magic link
+        const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
           type: 'magiclink',
-          email: targetUser.user.email
+          email: targetUser.user.email,
         });
 
-        if (error) throw error;
+        if (linkError) {
+          console.error('Error generating magic link:', linkError);
+          throw new Error(`Failed to generate magic link: ${linkError.message}`);
+        }
+
+        // Send email using Resend
+        try {
+          const Resend = (await import('npm:resend@2.0.0')).Resend;
+          const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
+          
+          const verifiedEmailFrom = Deno.env.get('VERIFIED_EMAIL_FROM') || 'onboarding@resend.dev';
+          
+          await resend.emails.send({
+            from: `Aura Medical <${verifiedEmailFrom}>`,
+            to: [targetUser.user.email],
+            subject: 'Your Login Link - Aura Medical',
+            html: `
+              <!DOCTYPE html>
+              <html>
+                <head>
+                  <meta charset="utf-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                </head>
+                <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px;">
+                  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+                      <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">Aura Medical</h1>
+                    </div>
+                    <div style="padding: 40px 30px;">
+                      <h2 style="color: #333333; margin: 0 0 20px 0; font-size: 24px;">Your Login Link</h2>
+                      <p style="color: #666666; line-height: 1.6; margin: 0 0 20px 0;">
+                        An administrator has sent you a secure login link. Click the button below to access your account:
+                      </p>
+                      <div style="text-align: center; margin: 30px 0;">
+                        <a href="${linkData.properties.action_link}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 14px 40px; border-radius: 6px; font-weight: 600; font-size: 16px;">
+                          Login to Your Account
+                        </a>
+                      </div>
+                      <div style="background-color: #f8f9fa; border-left: 4px solid #667eea; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                        <p style="color: #666666; margin: 0; font-size: 14px;">
+                          <strong>Security Note:</strong> This link is valid for 24 hours and can only be used once. After logging in, you can change your password in the account settings.
+                        </p>
+                      </div>
+                      <p style="color: #999999; font-size: 12px; line-height: 1.5; margin: 20px 0 0 0;">
+                        If you didn't request this login link, you can safely ignore this email. If you have concerns about your account security, please contact support.
+                      </p>
+                    </div>
+                    <div style="background-color: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #e9ecef;">
+                      <p style="color: #999999; font-size: 12px; margin: 0;">
+                        © ${new Date().getFullYear()} Aura Medical. All rights reserved.
+                      </p>
+                    </div>
+                  </div>
+                </body>
+              </html>
+            `,
+          });
+          
+          console.log('Magic link email sent successfully to:', targetUser.user.email);
+        } catch (emailError) {
+          console.error('Error sending magic link email:', emailError);
+          throw new Error('Failed to send magic link email');
+        }
 
         // Log the action
         await supabaseAdmin.from('admin_actions').insert({
           admin_id: user.id,
           target_user_id: userId,
-          action_type: 'send_magic_link'
+          action_type: 'send_magic_link',
         });
 
-        result = { success: true, message: 'Magic link sent successfully', data };
+        result = { 
+          success: true, 
+          message: `Magic link sent successfully to ${targetUser.user.email}` 
+        };
         break;
       }
 

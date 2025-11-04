@@ -43,7 +43,6 @@ import {
 } from '@/components/ui/pagination';
 import { UserActionsMenu } from '@/components/admin/UserActionsMenu';
 import { BanUserDialog } from '@/components/admin/BanUserDialog';
-import { ResetPasswordDialog } from '@/components/admin/ResetPasswordDialog';
 import { UnbanUserDialog } from '@/components/admin/UnbanUserDialog';
 import { SendMagicLinkDialog } from '@/components/admin/SendMagicLinkDialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -89,7 +88,6 @@ export default function AdminUsers() {
   // New dialog states
   const [banDialogOpen, setBanDialogOpen] = useState(false);
   const [unbanDialogOpen, setUnbanDialogOpen] = useState(false);
-  const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false);
   const [magicLinkDialogOpen, setMagicLinkDialogOpen] = useState(false);
   
   const { toast } = useToast();
@@ -298,45 +296,6 @@ export default function AdminUsers() {
     }
   };
 
-  const handleResetPassword = async () => {
-    if (!selectedUser) return;
-
-    try {
-      setActionLoading(true);
-      setResetPasswordDialogOpen(false);
-
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('No session found');
-
-      const { data, error } = await supabase.functions.invoke('manage-user-account', {
-        body: {
-          action: 'reset-password',
-          userId: selectedUser.id
-        },
-        headers: {
-          Authorization: `Bearer ${session.access_token}`
-        }
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: '✓ Password reset sent',
-        description: `Reset email sent to ${selectedUser.email}`,
-      });
-    } catch (error: any) {
-      console.error('Error resetting password:', error);
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to reset password',
-        variant: 'destructive',
-      });
-    } finally {
-      setActionLoading(false);
-      setSelectedUser(null);
-    }
-  };
-
   const handleSendMagicLink = async () => {
     if (!selectedUser) return;
 
@@ -360,8 +319,8 @@ export default function AdminUsers() {
       if (error) throw error;
 
       toast({
-        title: '✓ Magic link sent',
-        description: `Password reset link sent to ${selectedUser.email}`,
+        title: '✓ Login link sent',
+        description: `Login link sent successfully to ${selectedUser.email}`,
       });
     } catch (error: any) {
       console.error('Error sending magic link:', error);
@@ -643,10 +602,6 @@ export default function AdminUsers() {
                             user={user}
                             currentUserId={currentUser?.id || ''}
                             onToggleAdmin={() => handleRoleToggle(user)}
-                            onResetPassword={() => {
-                              setSelectedUser(user);
-                              setResetPasswordDialogOpen(true);
-                            }}
                             onBanUser={() => {
                               setSelectedUser(user);
                               setBanDialogOpen(true);
@@ -760,18 +715,6 @@ export default function AdminUsers() {
             onOpenChange={setUnbanDialogOpen}
             userName={selectedUser.full_name}
             onConfirm={handleUnbanUser}
-            loading={actionLoading}
-          />
-        )}
-
-        {/* Reset Password Dialog */}
-        {selectedUser && (
-          <ResetPasswordDialog
-            open={resetPasswordDialogOpen}
-            onOpenChange={setResetPasswordDialogOpen}
-            userName={selectedUser.full_name}
-            userEmail={selectedUser.email}
-            onConfirm={handleResetPassword}
             loading={actionLoading}
           />
         )}
