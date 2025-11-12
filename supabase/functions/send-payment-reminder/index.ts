@@ -125,24 +125,28 @@ serve(async (req) => {
                       <div class="bank-details">
                         <h3>💳 Bank Transfer Details</h3>
                         <div class="detail-row">
-                          <span class="detail-label">Cardholder Name:</span>
-                          <span class="detail-value">THUNAYAN HANI ABDULLA AL ZAABI</span>
+                          <span class="detail-label">Account Holder:</span>
+                          <span class="detail-value">Bayan Hares</span>
                         </div>
                         <div class="detail-row">
-                          <span class="detail-label">Account Name:</span>
-                          <span class="detail-value">THUNAYAN HANI ABDULLA AL ZAABI</span>
+                          <span class="detail-label">Bank Name:</span>
+                          <span class="detail-value">Wio Bank PJSC</span>
                         </div>
                         <div class="detail-row">
-                          <span class="detail-label">Card Number:</span>
-                          <span class="detail-value">5453 8010 3181 8062</span>
+                          <span class="detail-label">Bank Address:</span>
+                          <span class="detail-value">Etihad Airways Centre 5th Floor, Abu Dhabi, UAE</span>
                         </div>
                         <div class="detail-row">
                           <span class="detail-label">Account Number:</span>
-                          <span class="detail-value">1017558936401</span>
+                          <span class="detail-value">6696032109</span>
+                        </div>
+                        <div class="detail-row">
+                          <span class="detail-label">IBAN:</span>
+                          <span class="detail-value">AE370860000006696032109</span>
                         </div>
                         <div class="detail-row" style="border-bottom: none;">
-                          <span class="detail-label">IBAN:</span>
-                          <span class="detail-value">AE050260001017558936401</span>
+                          <span class="detail-label">BIC/SWIFT Code:</span>
+                          <span class="detail-value">WIOBAEADXXX</span>
                         </div>
                       </div>
                       

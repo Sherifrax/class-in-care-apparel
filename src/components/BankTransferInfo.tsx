@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, Copy, CheckCircle2, CreditCard, Hash, DollarSign } from 'lucide-react';
+import { Building2, Copy, CheckCircle2, Hash, DollarSign, MapPin, Globe } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const BankTransferInfo = () => {
@@ -10,10 +10,11 @@ const BankTransferInfo = () => {
 
   const bankDetails = {
     cardholderName: "Bayan Hares",
-    accountName: "ADIB",
-    cardNumber: "4333 6776 0854 5914",
-    accountNumber: "28645581",
-    iban: "AE510500000000028645581"
+    bankName: "Wio Bank PJSC",
+    bankAddress: "Etihad Airways Centre 5th Floor, Abu Dhabi, UAE",
+    accountNumber: "6696032109",
+    iban: "AE370860000006696032109",
+    bicSwift: "WIOBAEADXXX",
   };
 
   const copyToClipboard = (text: string, field: string) => {
@@ -42,22 +43,22 @@ const BankTransferInfo = () => {
         </div>
 
         <div className="space-y-3">
-          {/* Cardholder Name */}
+          {/* Account Holder */}
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
             <div className="flex items-center gap-3 flex-1">
-              <CreditCard className="w-4 h-4 text-gray-600" />
+              <DollarSign className="w-4 h-4 text-gray-600" />
               <div>
-                <p className="text-xs text-gray-600 font-medium">Cardholder Name</p>
+                <p className="text-xs text-gray-600 font-medium">Account Holder</p>
                 <p className="font-semibold text-luxury-navy">{bankDetails.cardholderName}</p>
               </div>
             </div>
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => copyToClipboard(bankDetails.cardholderName, "Cardholder Name")}
+              onClick={() => copyToClipboard(bankDetails.cardholderName, "Account Holder")}
               className="hover:bg-medical-blue/10"
             >
-              {copiedField === "Cardholder Name" ? (
+              {copiedField === "Account Holder" ? (
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
               ) : (
                 <Copy className="w-4 h-4" />
@@ -65,22 +66,22 @@ const BankTransferInfo = () => {
             </Button>
           </div>
 
-          {/* Account Name */}
+          {/* Bank Name */}
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
             <div className="flex items-center gap-3 flex-1">
               <Building2 className="w-4 h-4 text-gray-600" />
               <div>
-                <p className="text-xs text-gray-600 font-medium">Account Name (Bank)</p>
-                <p className="font-semibold text-luxury-navy">{bankDetails.accountName}</p>
+                <p className="text-xs text-gray-600 font-medium">Bank Name</p>
+                <p className="font-semibold text-luxury-navy">{bankDetails.bankName}</p>
               </div>
             </div>
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => copyToClipboard(bankDetails.accountName, "Account Name")}
+              onClick={() => copyToClipboard(bankDetails.bankName, "Bank Name")}
               className="hover:bg-medical-blue/10"
             >
-              {copiedField === "Account Name" ? (
+              {copiedField === "Bank Name" ? (
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
               ) : (
                 <Copy className="w-4 h-4" />
@@ -88,22 +89,22 @@ const BankTransferInfo = () => {
             </Button>
           </div>
 
-          {/* Card Number */}
+          {/* Bank Address */}
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
             <div className="flex items-center gap-3 flex-1">
-              <CreditCard className="w-4 h-4 text-gray-600" />
+              <MapPin className="w-4 h-4 text-gray-600" />
               <div>
-                <p className="text-xs text-gray-600 font-medium">Card Number</p>
-                <p className="font-semibold text-luxury-navy font-mono">{bankDetails.cardNumber}</p>
+                <p className="text-xs text-gray-600 font-medium">Bank Address</p>
+                <p className="font-semibold text-luxury-navy text-sm">{bankDetails.bankAddress}</p>
               </div>
             </div>
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => copyToClipboard(bankDetails.cardNumber.replace(/\s/g, ''), "Card Number")}
+              onClick={() => copyToClipboard(bankDetails.bankAddress, "Bank Address")}
               className="hover:bg-medical-blue/10"
             >
-              {copiedField === "Card Number" ? (
+              {copiedField === "Bank Address" ? (
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
               ) : (
                 <Copy className="w-4 h-4" />
@@ -116,7 +117,7 @@ const BankTransferInfo = () => {
             <div className="flex items-center gap-3 flex-1">
               <Hash className="w-4 h-4 text-gray-600" />
               <div>
-                <p className="text-xs text-gray-600 font-medium">Account Number</p>
+                <p className="text-xs text-gray-600 font-medium">Account Number <span className="text-xs text-muted-foreground">(for local transfers)</span></p>
                 <p className="font-semibold text-luxury-navy font-mono">{bankDetails.accountNumber}</p>
               </div>
             </div>
@@ -139,7 +140,7 @@ const BankTransferInfo = () => {
             <div className="flex items-center gap-3 flex-1">
               <DollarSign className="w-4 h-4 text-medical-blue" />
               <div>
-                <p className="text-xs text-medical-blue font-semibold">IBAN (Recommended)</p>
+                <p className="text-xs text-medical-blue font-semibold">IBAN <span className="text-xs font-normal">(for local & international)</span></p>
                 <p className="font-bold text-luxury-navy font-mono">{bankDetails.iban}</p>
               </div>
             </div>
@@ -150,6 +151,29 @@ const BankTransferInfo = () => {
               className="hover:bg-medical-blue/10"
             >
               {copiedField === "IBAN" ? (
+                <CheckCircle2 className="w-4 h-4 text-green-600" />
+              ) : (
+                <Copy className="w-4 h-4" />
+              )}
+            </Button>
+          </div>
+
+          {/* BIC/SWIFT */}
+          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center gap-3 flex-1">
+              <Globe className="w-4 h-4 text-gray-600" />
+              <div>
+                <p className="text-xs text-gray-600 font-medium">BIC/SWIFT Code <span className="text-xs text-muted-foreground">(for international)</span></p>
+                <p className="font-semibold text-luxury-navy font-mono">{bankDetails.bicSwift}</p>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => copyToClipboard(bankDetails.bicSwift, "BIC/SWIFT")}
+              className="hover:bg-medical-blue/10"
+            >
+              {copiedField === "BIC/SWIFT" ? (
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
               ) : (
                 <Copy className="w-4 h-4" />

@@ -34,7 +34,7 @@ const PaymentMethodsInfo = () => {
             <h4 className="font-semibold text-luxury-navy">Bank Transfer (Current Method)</h4>
           </div>
           <p className="text-sm text-muted-foreground mb-3">
-            Please transfer payment to our ADIB bank account. Your order will be processed once payment is confirmed.
+            Please transfer payment to our Wio Bank PJSC account. Your order will be processed once payment is confirmed.
           </p>
           <div className="flex items-start gap-2 text-sm">
             <Clock className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -46,7 +46,7 @@ const PaymentMethodsInfo = () => {
           <div className="flex items-start gap-2">
             <Shield className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
             <p className="text-sm text-green-800">
-              <strong>Secure Banking:</strong> All bank transfers are processed through ADIB's secure banking system. We'll send you confirmation once payment is received.
+              <strong>Secure Banking:</strong> All bank transfers are processed through Wio Bank's secure banking system. We'll send you confirmation once payment is received.
             </p>
           </div>
         </div>

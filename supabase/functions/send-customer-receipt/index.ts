@@ -96,24 +96,28 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="background-color: white; border-radius: 8px; padding: 20px; margin-bottom: 16px;">
           <table style="width: 100%; border-collapse: collapse;">
             <tr style="border-bottom: 1px solid #f3f4f6;">
-              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Cardholder Name:</td>
+              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Account Holder:</td>
               <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right;">Bayan Hares</td>
             </tr>
             <tr style="border-bottom: 1px solid #f3f4f6;">
-              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Account Name (Bank):</td>
-              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right;">ADIB</td>
+              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Bank Name:</td>
+              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right;">Wio Bank PJSC</td>
             </tr>
             <tr style="border-bottom: 1px solid #f3f4f6;">
-              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Card Number:</td>
-              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right; font-family: monospace;">4333 6776 0854 5914</td>
+              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Bank Address:</td>
+              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right;">Etihad Airways Centre 5th Floor, Abu Dhabi, UAE</td>
             </tr>
             <tr style="border-bottom: 1px solid #f3f4f6;">
               <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">Account Number:</td>
-              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right; font-family: monospace;">28645581</td>
+              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right; font-family: monospace;">6696032109</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+              <td style="padding: 12px 0; color: #2563eb; font-weight: 700;">IBAN:</td>
+              <td style="padding: 12px 0; color: #2563eb; font-weight: 700; text-align: right; font-family: monospace; font-size: 16px;">AE370860000006696032109</td>
             </tr>
             <tr>
-              <td style="padding: 12px 0; color: #2563eb; font-weight: 700;">IBAN:</td>
-              <td style="padding: 12px 0; color: #2563eb; font-weight: 700; text-align: right; font-family: monospace; font-size: 16px;">AE510500000000028645581</td>
+              <td style="padding: 12px 0; color: #6b7280; font-weight: 600;">BIC/SWIFT Code:</td>
+              <td style="padding: 12px 0; color: #111827; font-weight: 700; text-align: right; font-family: monospace;">WIOBAEADXXX</td>
             </tr>
           </table>
         </div>
