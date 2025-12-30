@@ -1,31 +1,4 @@
-import { Card } from "@/components/ui/card";
-import { Star, Play } from "lucide-react";
-import reviewVideo1 from "@/assets/review-video-1.mp4";
-import reviewVideo2 from "@/assets/review-video-2.mp4";
-import reviewVideo3 from "@/assets/review-video-3.mp4";
 const VideoReviews = () => {
-  const reviews = [{
-    id: 1,
-    video: reviewVideo1,
-    rating: 5,
-    reviewer: "Dr. Sarah Ahmed",
-    profession: "Emergency Medicine",
-    title: "Perfect for long shifts"
-  }, {
-    id: 2,
-    video: reviewVideo2,
-    rating: 5,
-    reviewer: "Nurse Fatima",
-    profession: "ICU Nurse",
-    title: "Incredibly comfortable"
-  }, {
-    id: 3,
-    video: reviewVideo3,
-    rating: 5,
-    reviewer: "Dr. Ahmed Hassan",
-    profession: "Surgeon",
-    title: "Professional and stylish"
-  }];
   return <section className="py-24 bg-gradient-to-b from-background via-soft-gray/30 to-background relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none">

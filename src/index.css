@@ -604,18 +604,11 @@
   @keyframes apple-reveal {
     0% {
       opacity: 0;
-      transform: translateY(60px) scale(0.95);
-      filter: blur(10px);
-    }
-    50% {
-      opacity: 0.8;
-      transform: translateY(20px) scale(0.98);
-      filter: blur(2px);
+      transform: translateY(30px);
     }
     100% {
       opacity: 1;
-      transform: translateY(0) scale(1);
-      filter: blur(0);
+      transform: translateY(0);
     }
   }
 
@@ -633,25 +626,19 @@
 
   @keyframes apple-glow {
     0%, 100% {
-      box-shadow: 0 0 20px hsl(var(--medical-blue) / 0.2);
+      box-shadow: 0 0 15px hsl(var(--medical-blue) / 0.15);
     }
     50% {
-      box-shadow: 0 0 40px hsl(var(--medical-blue) / 0.4), 0 0 80px hsl(var(--medical-teal) / 0.2);
+      box-shadow: 0 0 25px hsl(var(--medical-blue) / 0.25);
     }
   }
 
   @keyframes apple-float {
     0%, 100% {
-      transform: translateY(0px) rotate(0deg);
-    }
-    25% {
-      transform: translateY(-8px) rotate(1deg);
+      transform: translateY(0);
     }
     50% {
-      transform: translateY(-12px) rotate(0deg);
-    }
-    75% {
-      transform: translateY(-8px) rotate(-1deg);
+      transform: translateY(-8px);
     }
   }
 
@@ -872,5 +859,17 @@
 
   .notification-exit {
     animation: slide-in-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) reverse forwards;
+  }
+}
+
+/* Reduced Motion Support - Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
