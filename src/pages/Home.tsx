@@ -1,20 +1,11 @@
 import Hero from "@/components/Hero";
-import VideoReviews from "@/components/VideoReviews";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles, Heart, Users, Star, PlayCircle, Award, TrendingUp, Clock, Globe, Zap, Eye, Shirt } from "lucide-react";
+import { ArrowRight, Sparkles, Heart, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState } from "react";
-const Home = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const [mousePosition, setMousePosition] = useState({
-    x: 0,
-    y: 0
-  });
 
+const Home = () => {
   // Fetch featured products
   const {
     data: featuredProducts = []
@@ -31,31 +22,6 @@ const Home = () => {
       return data;
     }
   });
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: e.clientX,
-        y: e.clientY
-      });
-    };
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
-  const floatingElements = Array.from({
-    length: 20
-  }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 4 + 2,
-    delay: Math.random() * 5,
-    duration: Math.random() * 10 + 10
-  }));
   return <div className="min-h-screen">
       <Hero />
       
@@ -201,7 +167,7 @@ const Home = () => {
             }}>
                   <div className="relative group">
                     <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
-                      <img src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} className="w-full h-[600px] object-cover group-hover:scale-105 transition-transform duration-1000" />
+                      <img src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} loading="lazy" className="w-full h-[600px] object-cover group-hover:scale-105 transition-transform duration-1000" />
                       <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/20 via-transparent to-transparent"></div>
                     </div>
                     
