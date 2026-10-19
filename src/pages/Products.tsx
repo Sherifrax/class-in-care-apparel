@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { ColorSwatch } from "@/components/ColorSwatch";
 import { ColorSelector } from "@/components/ColorSelector";
 import { COLOR_ORDER } from "@/constants/colors";
+import ProductImage from "@/components/ProductImage";
 interface Product {
   id: string;
   name: string;
@@ -165,7 +166,7 @@ const Products = () => {
                 </Button>
 
                 <div className="rounded-3xl h-64 sm:h-72 mb-6 overflow-hidden relative shadow-xl group-hover:shadow-2xl transition-all duration-500">
-                  <img src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <ProductImage src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   {product.images && product.images.length > 1 && <Badge className="absolute top-4 left-4 bg-black/80 text-white border-0 px-3 py-1 font-semibold backdrop-blur-sm">
                       <Eye className="w-4 h-4 mr-1" />
                       +{product.images.length - 1} more
@@ -302,7 +303,7 @@ const Products = () => {
                   {selectedProduct.images && selectedProduct.images.length > 1 ? (
                     <div className="space-y-3">
                       <div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
-                        <img 
+                        <ProductImage
                           src={selectedProduct.images[currentImageIndex]} 
                           alt={selectedProduct.name} 
                           className="w-full h-80 object-cover"
@@ -325,7 +326,7 @@ const Products = () => {
                                 : "border-transparent hover:border-medical-blue/50"
                             )}
                           >
-                            <img 
+                            <ProductImage
                               src={image} 
                               alt={`${selectedProduct.name} ${index + 1}`} 
                               className="w-full h-full object-cover"
@@ -336,7 +337,7 @@ const Products = () => {
                     </div>
                   ) : (
                     <div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
-                      <img 
+                      <ProductImage
                         src={selectedProduct.images && selectedProduct.images.length > 0 ? selectedProduct.images[0] : selectedProduct.image} 
                         alt={selectedProduct.name} 
                         className="w-full h-80 object-cover"
@@ -527,7 +528,7 @@ const Products = () => {
                 {quickViewProduct.images && quickViewProduct.images.length > 0 ? (
                   <div className="relative animate-fade-in">
                     <div className="relative h-[400px] md:h-[600px] rounded-2xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5 shadow-luxury group">
-                      <img 
+                      <ProductImage
                         src={quickViewProduct.images[currentImageIndex] || quickViewProduct.image} 
                         alt={quickViewProduct.name}
                         className="w-full h-full object-contain transition-all duration-500 group-hover:scale-105"
@@ -588,7 +589,7 @@ const Products = () => {
                                 : "border-transparent hover:border-medical-blue/50"
                             )}
                           >
-                            <img 
+                            <ProductImage
                               src={image} 
                               alt={`${quickViewProduct.name} ${index + 1}`}
                               className="w-full h-full object-cover group-hover:brightness-110 transition-all duration-300"
@@ -603,7 +604,7 @@ const Products = () => {
                   </div>
                 ) : (
                   <div className="relative h-[400px] md:h-[600px] rounded-2xl overflow-hidden bg-gradient-to-br from-medical-blue/5 to-medical-teal/5 shadow-luxury animate-fade-in">
-                    <img 
+                    <ProductImage
                       src={quickViewProduct.image} 
                       alt={quickViewProduct.name}
                       className="w-full h-full object-contain"

@@ -14,6 +14,7 @@ import { AdminLayout } from '@/components/admin/AdminLayout';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { ColorChipSelector } from '@/components/admin/ColorChipSelector';
+import ProductImage from '@/components/ProductImage';
 
 interface Product {
   id: string;
@@ -368,7 +369,7 @@ const AdminProductsContent: React.FC = () => {
                           <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-48 overflow-y-auto p-2 bg-white/50 rounded-xl">
                             {editingProduct.images.map((imageUrl, index) => (
                               <div key={index} className="relative group">
-                                <img
+                                <ProductImage
                                   src={imageUrl}
                                   alt={`Product ${index + 1}`}
                                   className="w-full h-24 object-cover rounded-lg border-2 border-medical-blue/10 group-hover:border-medical-blue/30 transition-all"
@@ -662,7 +663,7 @@ const AdminProductsContent: React.FC = () => {
             <Card key={product.id} className="group glass border-medical-blue/20 bg-gradient-to-b from-white/90 to-white/80 hover:shadow-luxury transition-all duration-300 hover:scale-[1.02] overflow-hidden">
               <div className="relative">
                 {product.images && product.images.length > 0 ? (
-                  <img
+                  <ProductImage
                     src={product.images[0]}
                     alt={product.name}
                     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"

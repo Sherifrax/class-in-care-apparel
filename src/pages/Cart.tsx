@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ColorSwatch } from '@/components/ColorSwatch';
+import ProductImage from '@/components/ProductImage';
 
 const Cart = () => {
   const { items, loading, updateQuantity, removeFromCart, getTotalPrice, getTotalItems } = useCart();
@@ -110,7 +111,7 @@ const Cart = () => {
                   <CardContent className="p-6">
                     <div className="flex items-center gap-6">
                       <div className="relative overflow-hidden rounded-xl">
-                        <img
+                        <ProductImage
                           src={item.product.image}
                           alt={item.product.name}
                           className="w-20 h-20 sm:w-24 sm:h-24 object-cover group-hover:scale-105 transition-transform duration-300"

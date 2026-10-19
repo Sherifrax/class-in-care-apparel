@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ColorSelector } from '@/components/ColorSelector';
+import ProductImage from '@/components/ProductImage';
 
 interface Product {
   id: string;
@@ -159,7 +160,7 @@ const Favorites = () => {
         {favoriteProducts.map((product) => (
           <Card key={product.id} className="group overflow-hidden hover:shadow-lg transition-shadow">
             <div className="relative aspect-square overflow-hidden">
-              <img
+              <ProductImage
                 src={product.image}
                 alt={product.name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -265,7 +266,7 @@ const Favorites = () => {
               <div className="space-y-4">
                 {/* Product Preview */}
                 <div className="flex gap-4">
-                  <img 
+                  <ProductImage
                     src={selectedProduct.image} 
                     alt={selectedProduct.name}
                     className="w-24 h-24 object-cover rounded-lg"

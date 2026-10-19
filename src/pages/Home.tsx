@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles, Heart, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import ProductImage from "@/components/ProductImage";
 
 const Home = () => {
   // Fetch featured products
@@ -167,7 +168,7 @@ const Home = () => {
             }}>
                   <div className="relative group">
                     <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-br from-medical-blue/5 to-medical-teal/5">
-                      <img src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} loading="lazy" className="w-full h-[600px] object-cover group-hover:scale-105 transition-transform duration-1000" />
+                      <ProductImage src={product.images && product.images.length > 0 ? product.images[0] : product.image} alt={product.name} loading="lazy" className="w-full h-[600px] object-cover group-hover:scale-105 transition-transform duration-1000" />
                       <div className="absolute inset-0 bg-gradient-to-t from-luxury-navy/20 via-transparent to-transparent"></div>
                     </div>
                     

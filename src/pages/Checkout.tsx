@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useSizeGuide } from '@/contexts/SizeGuideContext';
 import PaymentMethodsInfo from '@/components/PaymentMethodsInfo';
 import BankTransferInfo from '@/components/BankTransferInfo';
+import ProductImage from '@/components/ProductImage';
 
 const CheckoutContent = () => {
   const { items, getTotalPrice } = useCart();
@@ -559,7 +560,7 @@ const CheckoutContent = () => {
                   <div className="space-y-3">
                     {items.map((item) => (
                       <div key={item.id} className="flex items-center gap-3">
-                        <img
+                        <ProductImage
                           src={item.product.image}
                           alt={item.product.name}
                           className="w-12 h-12 object-cover rounded"
