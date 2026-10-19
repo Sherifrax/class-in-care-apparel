@@ -1,0 +1,9 @@
+.git
+node_modules
+.node_modules-cloud-backup
+node_modules.cloud-backup
+dist
+.env*
+.cursor
+supabase/.temp
+vite.config.*.timestamp-*.mjs

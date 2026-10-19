@@ -1,4 +1,19 @@
-# Welcome to your Lovable project
+# Aura Client Project
+
+React and Vite storefront for Aura, backed by Supabase.
+
+## Local setup
+
+```sh
+npm ci
+cp .env.example .env.development.local
+npm run dev
+```
+
+Set the three `VITE_SUPABASE_*` values in `.env.development.local` for your
+Supabase project. Local environment files are intentionally excluded from Git.
+
+The Supabase schema and Edge Functions are versioned under `supabase/`.
 
 ## Project info
 
