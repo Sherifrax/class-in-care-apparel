@@ -32,7 +32,7 @@ const PaymentSuccess = () => {
       }
     }
 
-    // Process Stripe payment (when re-enabled)
+    // Process the completed Stripe Checkout session.
     if (sessionId && !isBankTransfer) {
       processPayment(sessionId);
     }
@@ -58,7 +58,7 @@ const PaymentSuccess = () => {
   const processPayment = async (sessionId: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('process-payment', {
-        body: { sessionId }
+        body: { session_id: sessionId }
       });
 
       if (error) {

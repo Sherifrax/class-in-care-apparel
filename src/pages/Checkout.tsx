@@ -5,14 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { ShieldCheck, ArrowRight, Truck, Zap, Building2 } from 'lucide-react';
+import { Truck, Zap, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useSizeGuide } from '@/contexts/SizeGuideContext';
 import PaymentMethodsInfo from '@/components/PaymentMethodsInfo';
-import BankTransferInfo from '@/components/BankTransferInfo';
 import ProductImage from '@/components/ProductImage';
 
 const CheckoutContent = () => {
@@ -46,16 +45,6 @@ const CheckoutContent = () => {
   const [expressShipping, setExpressShipping] = useState(false);
   const { openSizeGuide } = useSizeGuide();
 
-  // Shipping address state
-  const [shippingAddress, setShippingAddress] = useState({
-    fullName: '',
-    phone: '',
-    street1: '',
-    street2: '',
-    emirate: '',
-    country: 'United Arab Emirates'
-  });
-
   const STANDARD_SHIPPING = 25;
   const EXPRESS_SHIPPING = 50;
   const EMBROIDERY_COST = 25;
@@ -64,120 +53,9 @@ const CheckoutContent = () => {
   const embroideryCost = embroideryRequested ? EMBROIDERY_COST : 0;
   const finalTotal = getTotalPrice() + shippingCost + embroideryCost;
   
-  // STRIPE PAYMENT - TEMPORARILY DISABLED
-  // Keeping this code intact for easy re-enablement once Stripe documents are approved
-  /*
   const handleProceedToCheckout = async () => {
-    if (!shippingConfirmed) {
-      toast({
-        title: "Confirmation Required",
-        description: "Please confirm that your shipping address is correct.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!sizeGuideConfirmed) {
-      toast({
-        title: "Confirmation Required",
-        description: "Please confirm that you have reviewed the size guide.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      for (const item of items) {
-        const { data: isAvailable } = await supabase.rpc('check_stock_availability', {
-          p_product_id: item.product_id,
-          p_quantity: item.quantity
-        });
-
-        if (!isAvailable) {
-          throw new Error(`${item.name} is currently out of stock or doesn't have sufficient quantity available.`);
-        }
-      }
-
-      const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: {
-          currency: 'AED',
-          cartItems: items,
-          subtotal: getTotalPrice(),
-          deliveryCost: shippingCost,
-          embroideryCost: embroideryCost,
-          embroideryRequested,
-          embroideryDetails,
-          expressShipping,
-          totalAmount: finalTotal
-        }
-      });
-
-      if (error) throw error;
-      if (data?.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Checkout error:', error);
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to initiate checkout. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-  */
-
-  // BANK TRANSFER PAYMENT - TEMPORARY IMPLEMENTATION
-  const handleProceedToCheckout = async () => {
-    // Validate shipping address
-    if (!shippingAddress.fullName.trim()) {
-      toast({
-        title: "Shipping Address Required",
-        description: "Please enter your full name.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!shippingAddress.phone.trim()) {
-      toast({
-        title: "Contact Number Required",
-        description: "Please enter your phone number.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate UAE phone format
-    const phoneRegex = /^(\+971|00971|0)?[1-9][0-9]{7,8}$/;
-    if (!phoneRegex.test(shippingAddress.phone.replace(/[\s-]/g, ''))) {
-      toast({
-        title: "Invalid Phone Number",
-        description: "Please enter a valid UAE phone number.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!shippingAddress.street1.trim()) {
-      toast({
-        title: "Address Required",
-        description: "Please enter your street address.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!shippingAddress.emirate.trim()) {
-      toast({
-        title: "Emirate Required",
-        description: "Please select your emirate.",
-        variant: "destructive",
-      });
+    if (embroideryRequested && !embroideryDetails.trim()) {
+      toast({ title: "Embroidery Details Required", description: "Please enter the text you'd like embroidered.", variant: "destructive" });
       return;
     }
 
@@ -199,84 +77,31 @@ const CheckoutContent = () => {
       return;
     }
 
-    if (embroideryRequested && embroideryDetails.trim().length === 0) {
-      toast({
-        title: "Embroidery Details Required",
-        description: "Please enter the text you'd like embroidered.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (embroideryRequested && embroideryDetails.trim().length > 20) {
-      toast({
-        title: "Embroidery Text Too Long",
-        description: "Embroidery text must be 20 characters or less.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setLoading(true);
 
     try {
-      // Check stock availability
-      for (const item of items) {
-        const { data: product, error } = await supabase
-          .from('products')
-          .select('stock_quantity, track_stock, name')
-          .eq('id', item.product_id || item.id)
-          .single();
-
-        if (error) {
-          throw new Error(`Failed to check stock for ${item.product.name}`);
-        }
-
-        if (product?.track_stock && product.stock_quantity < item.quantity) {
-          throw new Error(`Insufficient stock for ${product.name}. Only ${product.stock_quantity} items available.`);
-        }
-      }
-
-      // Create bank transfer order
-      const { data, error } = await supabase.functions.invoke('create-bank-transfer-order', {
+      const { data, error } = await supabase.functions.invoke('create-payment', {
         body: {
-          cartItems: items.map(item => ({
-            product_id: item.product_id || item.id,
-            name: item.product.name,
-            price: item.product.price,
-            size: item.size,
-            color: item.color,
-            quantity: item.quantity
-          })),
-          subtotal: getTotalPrice(),
-          deliveryCost: shippingCost,
-          embroideryCost: embroideryCost,
-          embroideryRequested,
-          embroideryDetails: embroideryRequested ? embroideryDetails.trim() : null,
-          expressShipping,
-          totalAmount: finalTotal,
           currency: 'AED',
-          shippingAddress: {
-            full_name: shippingAddress.fullName,
-            phone: shippingAddress.phone,
-            street_address_1: shippingAddress.street1,
-            street_address_2: shippingAddress.street2,
-            emirate: shippingAddress.emirate,
-            country: shippingAddress.country
-          }
+          cart_items: items,
+          shipping_cost: shippingCost,
+          embroidery_requested: embroideryRequested,
+          embroidery_details: embroideryRequested ? embroideryDetails.trim() : null,
+          express_shipping: expressShipping
         }
       });
 
       if (error) throw error;
-
-      // Navigate to success page with order details
-      navigate(`/payment-success?order_id=${data.order_id}&payment_method=bank_transfer`);
-      
-    } catch (error: any) {
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data?.error || "Payment checkout could not be started.");
+      }
+    } catch (error) {
       console.error('Checkout error:', error);
       toast({
         title: "Error",
-        description: error.message || "Failed to create order. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to initiate checkout. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -293,110 +118,13 @@ const CheckoutContent = () => {
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Checkout Info */}
             <div className="space-y-6">
-              {/* Shipping Address Form */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Delivery Address</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="fullName" className="text-sm font-medium mb-2 block">
-                        Full Name <span className="text-red-500">*</span>
-                      </label>
-                      <Input
-                        id="fullName"
-                        placeholder="Enter your full name"
-                        value={shippingAddress.fullName}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, fullName: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="phone" className="text-sm font-medium mb-2 block">
-                        Phone Number <span className="text-red-500">*</span>
-                      </label>
-                      <Input
-                        id="phone"
-                        placeholder="+971 XX XXX XXXX"
-                        value={shippingAddress.phone}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="street1" className="text-sm font-medium mb-2 block">
-                      Street Address <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      id="street1"
-                      placeholder="House/Flat number, Street name"
-                      value={shippingAddress.street1}
-                      onChange={(e) => setShippingAddress({ ...shippingAddress, street1: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="street2" className="text-sm font-medium mb-2 block">
-                      Apartment, suite, etc. (optional)
-                    </label>
-                    <Input
-                      id="street2"
-                      placeholder="Additional address details"
-                      value={shippingAddress.street2}
-                      onChange={(e) => setShippingAddress({ ...shippingAddress, street2: e.target.value })}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="emirate" className="text-sm font-medium mb-2 block">
-                      Emirate <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      id="emirate"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      value={shippingAddress.emirate}
-                      onChange={(e) => setShippingAddress({ ...shippingAddress, emirate: e.target.value })}
-                      required
-                    >
-                      <option value="">Select Emirate</option>
-                      <option value="Abu Dhabi">Abu Dhabi</option>
-                      <option value="Dubai">Dubai</option>
-                      <option value="Sharjah">Sharjah</option>
-                      <option value="Ajman">Ajman</option>
-                      <option value="Umm Al Quwain">Umm Al Quwain</option>
-                      <option value="Ras Al Khaimah">Ras Al Khaimah</option>
-                      <option value="Fujairah">Fujairah</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="country" className="text-sm font-medium mb-2 block">
-                      Country
-                    </label>
-                    <Input
-                      id="country"
-                      value={shippingAddress.country}
-                      readOnly
-                      className="bg-muted"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Bank Transfer Notice */}
-              <Card className="border-amber-200 bg-amber-50">
+              <Card className="border-blue-200 bg-blue-50">
                 <CardContent className="p-6">
-                  <div className="flex items-center gap-3 text-amber-800">
-                    <Building2 className="w-6 h-6" />
+                  <div className="flex items-center gap-3 text-blue-900">
+                    <CreditCard className="w-6 h-6" />
                     <div>
-                      <h3 className="font-semibold">Bank Transfer Payment</h3>
-                      <p className="text-sm text-amber-700 mt-1">
-                        After placing your order, you'll receive bank account details to complete your payment. Your order will be processed once we confirm the transfer.
-                      </p>
+                      <h3 className="font-semibold">Secure Stripe Checkout (Sandbox)</h3>
+                      <p className="text-sm text-blue-800 mt-1">You’ll complete your test payment on Stripe’s secure checkout page. Sandbox payments do not charge a real card.</p>
                     </div>
                   </div>
                 </CardContent>
@@ -525,8 +253,8 @@ const CheckoutContent = () => {
                       </>
                     ) : (
                       <>
-                        <Building2 className="w-4 h-4 mr-2" />
-                        Place Order (Bank Transfer)
+                        <CreditCard className="w-4 h-4 mr-2" />
+                        Continue to Secure Payment
                       </>
                     )}
                   </Button>
@@ -545,8 +273,6 @@ const CheckoutContent = () => {
               
               <PaymentMethodsInfo />
               
-              {/* Bank Transfer Details Preview */}
-              <BankTransferInfo />
             </div>
             
             {/* Order Summary */}
