@@ -80,6 +80,18 @@ const CheckoutContent = () => {
     setLoading(true);
 
     try {
+      for (const item of items) {
+        const { data: isAvailable, error: stockError } = await supabase.rpc('check_stock_availability', {
+          p_product_id: item.product_id,
+          p_quantity: item.quantity,
+        });
+
+        if (stockError) throw stockError;
+        if (!isAvailable) {
+          throw new Error(`${item.product.name} is out of stock or does not have enough quantity available.`);
+        }
+      }
+
       const { data, error } = await supabase.functions.invoke('create-payment', {
         body: {
           currency: 'AED',
