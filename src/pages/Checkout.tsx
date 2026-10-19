@@ -18,6 +18,21 @@ const CheckoutContent = () => {
   const { items, getTotalPrice } = useCart();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [shippingConfirmed, setShippingConfirmed] = useState(false);
+  const [sizeGuideConfirmed, setSizeGuideConfirmed] = useState(false);
+  const [embroideryRequested, setEmbroideryRequested] = useState(false);
+  const [embroideryDetails, setEmbroideryDetails] = useState('');
+  const [expressShipping, setExpressShipping] = useState(false);
+  const { openSizeGuide } = useSizeGuide();
+
+  const STANDARD_SHIPPING = 25;
+  const EXPRESS_SHIPPING = 50;
+  const EMBROIDERY_COST = 25;
+
+  const shippingCost = expressShipping ? EXPRESS_SHIPPING : STANDARD_SHIPPING;
+  const embroideryCost = embroideryRequested ? EMBROIDERY_COST : 0;
+  const finalTotal = getTotalPrice() + shippingCost + embroideryCost;
 
   if (items.length === 0) {
     return (
@@ -36,22 +51,6 @@ const CheckoutContent = () => {
       </div>
     );
   }
-
-  const [loading, setLoading] = useState(false);
-  const [shippingConfirmed, setShippingConfirmed] = useState(false);
-  const [sizeGuideConfirmed, setSizeGuideConfirmed] = useState(false);
-  const [embroideryRequested, setEmbroideryRequested] = useState(false);
-  const [embroideryDetails, setEmbroideryDetails] = useState('');
-  const [expressShipping, setExpressShipping] = useState(false);
-  const { openSizeGuide } = useSizeGuide();
-
-  const STANDARD_SHIPPING = 25;
-  const EXPRESS_SHIPPING = 50;
-  const EMBROIDERY_COST = 25;
-
-  const shippingCost = expressShipping ? EXPRESS_SHIPPING : STANDARD_SHIPPING;
-  const embroideryCost = embroideryRequested ? EMBROIDERY_COST : 0;
-  const finalTotal = getTotalPrice() + shippingCost + embroideryCost;
   
   const handleProceedToCheckout = async () => {
     if (embroideryRequested && !embroideryDetails.trim()) {
